@@ -8,10 +8,10 @@ class BaseModel(models.Model):
     name = models.CharField(max_length=255)
     slug = models.SlugField(unique=True, blank=True, max_length=50)
     created_by = models.ForeignKey(
-        User, on_delete=models.SET_NULL, null=True, related_name="created_by_who"
+        User, on_delete=models.SET_NULL, null=True, related_name="created_by"
     )
     updated_by = models.ForeignKey(
-        User, on_delete=models.SET_NULL, null=True, related_name="updated_by_who"
+        User, on_delete=models.SET_NULL, null=True, related_name="updated_by"
     )
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)

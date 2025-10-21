@@ -22,7 +22,8 @@ def send_email(recipient_email, subject, html_body):
 from authentication.services.emails.templates.reset import reset_password_template
 def reset_email_password(recipient_email, employee_name, code):
     subject = "Reset Password"
-    html_body = reset_password_template.format(employee_name=employee_name, code=code)
+    # Template expects {user} and {code}
+    html_body = reset_password_template.format(user=employee_name, code=code)
     send_email(recipient_email, subject, html_body)
 
 
@@ -30,7 +31,8 @@ def reset_email_password(recipient_email, employee_name, code):
 from authentication.services.emails.templates.register import register_user_template
 def new_account_email(recipient_email, client_name):
     subject = "New account created"
-    html_body = register_user_template.format(client_name=client_name)
+    # Template expects {user}
+    html_body = register_user_template.format(user=client_name)
     send_email(recipient_email, subject, html_body)
 
 
@@ -38,5 +40,6 @@ def new_account_email(recipient_email, client_name):
 from authentication.services.emails.templates.confirm_reset import confirm_reset_template
 def confirm_reset_email(recipient_email, client_name):
     subject = "Confirm password reset"
-    html_body = confirm_reset_template.format(client_name=client_name)
+    # Template expects {user}
+    html_body = confirm_reset_template.format(user=client_name)
     send_email(recipient_email, subject, html_body)
