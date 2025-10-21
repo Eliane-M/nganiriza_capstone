@@ -11,3 +11,65 @@ class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = '__all__'
+
+class ProfileSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Profile
+        fields = '__all__'
+
+        read_only_fields = ["id", "slug", "created_at", "updated_at", "user", "account", "is_anonymized"]
+
+    def validate_preferred_language(self, value):
+        valid = dict(Profile.LANGUAGE_CHOICES)
+        if value not in valid:
+            raise serializers.ValidationError(f"Invalid language. Choose one of {list(valid.keys())}")
+        return value
+
+class ConversationsSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Conversations
+        fields = '__all__'
+
+    def create(self, validated_data):
+        user = self.context['request'].user
+        return Conversations.objects.create(user=user, **validated_data)
+
+    def get_last_message(self, obj):
+        m = obj.messages.order_by("-id").first()
+        if not m:
+            return None
+        return {"id": m.id, "role": m.role, "content": m.content[:160], "created_at": m.created_at}
+
+    def validate_language(self, val):
+        valid = {c[0] for c in LANGUAGE_CHOICES}
+        if val not in valid:
+            raise serializers.ValidationError(f"language must be one of {sorted(valid)}")
+        return val
+
+class MessagesSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Messages
+        fields = '__all__'
+
+    def validate_role(self, value):
+        if value not in dict(Messages.ROLE_CHOICES):
+            raise serializers.ValidationError("Invalid role")
+        return value
+
+class ArticleSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Article
+        indexes = [models.Index(fields=["locale","is_published","updated_at"])]
+        ordering = ["-updated_at"]
+        fields = '__all__'
+
+class MessageFeedbackSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = MessageFeedback
+        fields = '__all__'
+
+class ServiceProviderSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ServiceProvider
+        fields = '__all__'
+
