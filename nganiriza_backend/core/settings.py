@@ -36,6 +36,8 @@ INSTALLED_APPS = [
     'base',
     'authentication',
     'corsheaders',
+    "drf_spectacular",
+    "drf_spectacular_sidecar",
 ]
 
 MIDDLEWARE = [
@@ -164,7 +166,13 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 REST_FRAMEWORK = {
     "DEFAULT_AUTHENTICATION_CLASSES": (
         "rest_framework_simplejwt.authentication.JWTAuthentication",
+        "rest_framework.authentication.SessionAuthentication",
+        "rest_framework.authentication.BasicAuthentication",
     ),
+    "DEFAULT_PERMISSION_CLASSES": [
+        "rest_framework.permissions.IsAuthenticated",
+    ],
+    "DEFAULT_SCHEMA_CLASS": "drf_spectacular.openapi.AutoSchema",
 }
 
 
@@ -188,6 +196,33 @@ SIMPLE_JWT = {
     'USER_ID_CLAIM': 'user_id',
     "AUTH_TOKEN_CLASSES": ("rest_framework_simplejwt.tokens.AccessToken",),
     'TOKEN_TYPE_CLAIM': 'token_type',
+}
+
+
+SPECTACULAR_SETTINGS = {
+    "TITLE": "Nganiriza API",
+    "DESCRIPTION": "Conversational AI + SRH education endpoints (auth, profiles, conversations, messages, articles).",
+    "VERSION": "1.0.0",
+    "SERVERS": [{"url": "/api", "description": "Default API root"}],
+    "CONTACT": {"name": "NGANIRIZA", "email": "munezeroeliane761@gmail.com"},
+    "LICENSE": {"name": "Proprietary"},
+    # Auth buttons in the UI:
+    "SECURITY": [{"BearerAuth": []}],
+    "COMPONENT_SPLIT_REQUEST": True,  
+    "SCHEMA_PATH_PREFIX": r"/api",   
+    # Optional: show enum names instead of raw values
+    "ENUM_NAME_OVERRIDES": { },
+}
+
+
+SPECTACULAR_SETTINGS["AUTHENTICATION_WHITELIST"] = [
+    "rest_framework.authentication.SessionAuthentication",
+    "rest_framework_simplejwt.authentication.JWTAuthentication",
+]
+SPECTACULAR_SETTINGS["COMPONENTS"] = {
+    "securitySchemes": {
+        "BearerAuth": {"type": "http", "scheme": "bearer", "bearerFormat": "JWT"}
+    }
 }
 
 # Email configuration
