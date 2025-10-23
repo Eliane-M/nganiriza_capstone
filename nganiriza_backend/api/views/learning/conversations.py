@@ -5,6 +5,17 @@ from models.serializers import ConversationsSerializer, MessagesSerializer
 from rest_framework.response import Response
 from rest_framework import status
 
+from drf_spectacular.utils import extend_schema, OpenApiParameter, OpenApiResponse
+from models.serializers import ConversationsSerializer, MessagesSerializer, ArticleSerializer
+
+@extend_schema(
+    tags=["Conversations"],
+    request=None,
+    responses={201: ConversationsSerializer},
+    summary="Create a new conversation",
+    description="Creates a conversation for the authenticated user."
+)
+
 
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
@@ -44,6 +55,11 @@ def list_conversations(request):
         return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
 
 
+@extend_schema(
+    tags=["Conversations"],
+    responses={200: ConversationsSerializer, 404: OpenApiResponse(description="Not found")},
+    summary="Get one conversation"
+)
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def get_conversation(request, pk):
