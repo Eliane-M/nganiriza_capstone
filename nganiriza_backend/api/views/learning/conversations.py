@@ -1,22 +1,23 @@
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
 from models.models import Conversations
-from models.serializers import ConversationsSerializer, MessagesSerializer
+from models.serializers import ConversationsSerializer, MessagesSerializer, ConversationCreateSerialzer
 from rest_framework.response import Response
 from rest_framework import status
 
 from drf_spectacular.utils import extend_schema, OpenApiParameter, OpenApiResponse
 from models.serializers import ConversationsSerializer, MessagesSerializer, ArticleSerializer
+from .services.docs_helper import *
 
-@extend_schema(
-    tags=["Conversations"],
-    request=None,
-    responses={201: ConversationsSerializer},
-    summary="Create a new conversation",
-    description="Creates a conversation for the authenticated user."
-)
+# @extend_schema(
+#     tags=["Conversations"],
+#     request=ConversationCreateSerialzer,
+#     responses={201: ConversationsSerializer},
+#     summary="Create a new conversation",
+#     description="Creates a conversation for the authenticated user."
+# )
 
-
+@api_doc("Conversations", request=ConversationCreateSerialzer, responses={201: ConversationsSerializer})
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def create_conversation(request):

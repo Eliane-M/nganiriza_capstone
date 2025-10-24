@@ -25,6 +25,11 @@ class ProfileSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError(f"Invalid language. Choose one of {list(valid.keys())}")
         return value
 
+class ConversationCreateSerialzer(serializers.Serializer):
+    title = serializers.CharField(required=False, allow_blank=True, max_length=255)
+    language = serializers.ChoiceField(choices=[("rw","rw"),("en","en"),("fr","fr")], default="en")
+    channel  = serializers.ChoiceField(choices=[("web","web"),("sms","sms"),("ussd","ussd")], default="web")
+
 class ConversationsSerializer(serializers.ModelSerializer):
     class Meta:
         model = Conversations
@@ -46,6 +51,10 @@ class ConversationsSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError(f"language must be one of {sorted(valid)}")
         return val
 
+class MessageCreateSerializer(serializers.Serializer):
+    role    = serializers.ChoiceField(choices=[("user","user"),("assistant","assistant"),("system","system")], default="user")
+    content = serializers.CharField()
+
 class MessagesSerializer(serializers.ModelSerializer):
     class Meta:
         model = Messages
@@ -55,6 +64,13 @@ class MessagesSerializer(serializers.ModelSerializer):
         if value not in dict(Messages.ROLE_CHOICES):
             raise serializers.ValidationError("Invalid role")
         return value
+
+class ArticleCreateSerializer(serializers.Serializer):
+    locale = serializers.ChoiceField(choices=[("rw","rw"),("en","en"),("fr","fr")], default="rw")
+    title  = serializers.CharField(max_length=255)
+    body_md = serializers.CharField()
+    tags   = serializers.ListField(child=serializers.CharField(), required=False)
+    is_published = serializers.BooleanField(default=True)
 
 class ArticleSerializer(serializers.ModelSerializer):
     class Meta:
