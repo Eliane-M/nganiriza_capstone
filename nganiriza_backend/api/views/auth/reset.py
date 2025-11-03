@@ -2,13 +2,23 @@ from django.utils import timezone
 import random
 import string
 from models.models import ResetPassword, ResetPasswordConfirmation
+from models.serializers import PasswordResetRequestSerializer, PasswordResetConfirmSerializer
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework import status
 from django.contrib.auth.models import User
 from authentication.services.emails.emails import *
 from django.contrib.auth.hashers import make_password
+from drf_spectacular.utils import extend_schema
+from models.serializers import LogoutRequestSerializer
 
+
+@extend_schema(
+    tags=["Auth"],
+    request=PasswordResetRequestSerializer,
+    responses={200: dict, 400: dict, 404: dict, 500: dict},
+    auth=[]
+)
 @api_view(["POST"])
 def password_reset_request(request):
     email = request.data.get("email")
@@ -35,6 +45,12 @@ def password_reset_request(request):
         return Response({"error": "An error occurred while sending password reset email"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 
+@extend_schema(
+    tags=["Auth"],
+    request=PasswordResetConfirmSerializer,
+    responses={200: dict, 400: dict, 500: dict},
+    auth=[]
+)
 @api_view(["POST"])
 def password_reset_confirm(request):
     code = request.data.get("code")

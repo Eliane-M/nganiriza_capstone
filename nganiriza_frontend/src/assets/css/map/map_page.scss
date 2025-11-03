@@ -1,0 +1,46 @@
+@import '../../components/Variables/variables.scss';
+
+.map-page {
+  @extend .container-page;
+
+  .controls {
+    padding: 1rem;
+
+    .panel {
+      @extend %card;
+      margin-bottom: 1rem;
+
+      .get-location {
+        width: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: $color-teal-100;
+        color: $color-teal-700;
+        border-radius: 0.75rem;
+        padding: 0.5rem 1rem;
+        border: none;
+        cursor: pointer;
+
+        .spinner {
+          width: 1rem;
+          height: 1rem;
+          border: 2px solid $color-teal-700;
+          border-top-color: transparent;
+          border-radius: 999px;
+          margin-right: 0.5rem;
+          animation: spin 1s linear infinite;
+        }
+      }
+
+      @keyframes spin {
+        to { transform: rotate(360deg); }
+      }
+    }
+  }
+
+  .map-wrap {
+    flex: 1;
+    position: relative;
+  }
+}

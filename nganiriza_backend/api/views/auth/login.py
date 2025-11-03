@@ -2,9 +2,20 @@ from django.contrib.auth import authenticate
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework.response import Response
 from rest_framework import status
-from rest_framework.decorators import api_view
+from rest_framework.decorators import api_view, permission_classes
+from rest_framework.permissions import AllowAny
+from drf_spectacular.utils import extend_schema, OpenApiParameter
+from models.serializers import LoginRequestSerializer, LoginResponseSerializer
 
+
+@extend_schema(
+    tags=["Auth"],
+    request=LoginRequestSerializer,
+    responses={200: LoginResponseSerializer, 400: dict, 404: dict, 500: dict},
+    auth=[]
+)
 @api_view(["POST"])
+@permission_classes([AllowAny])
 def login_api(request):
     username = request.data.get("username")
     password = request.data.get("password")

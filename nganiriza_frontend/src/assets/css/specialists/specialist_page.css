@@ -1,0 +1,400 @@
+.specialist-page-v2 {
+  min-height: 100vh;
+  background: linear-gradient(to bottom, #fdf4ff, #faf5ff);
+  padding-bottom: 4rem;
+}
+.specialist-page-v2 .hero-section {
+  text-align: center;
+  padding: 3rem 1.5rem 2rem;
+  max-width: 900px;
+  margin: 0 auto;
+}
+.specialist-page-v2 .hero-section h1 {
+  font-size: 2rem;
+  font-weight: 800;
+  color: #18181b;
+  margin-bottom: 1rem;
+  line-height: 1.2;
+}
+@media (min-width: 768px) {
+  .specialist-page-v2 .hero-section h1 {
+    font-size: 2.75rem;
+  }
+}
+.specialist-page-v2 .hero-section h1 .highlight {
+  background: linear-gradient(to right, #a855f7, #d946ef);
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+.specialist-page-v2 .hero-section .subtitle {
+  font-size: 1rem;
+  color: #52525b;
+  line-height: 1.6;
+  max-width: 700px;
+  margin: 0 auto;
+}
+@media (min-width: 768px) {
+  .specialist-page-v2 .hero-section .subtitle {
+    font-size: 1.125rem;
+  }
+}
+.specialist-page-v2 .hero-section .loading-spinner {
+  font-size: 1.125rem;
+  color: #52525b;
+  padding: 2rem;
+}
+.specialist-page-v2 .hero-section .error-message {
+  padding: 2rem;
+}
+.specialist-page-v2 .hero-section .error-message p {
+  color: #dc2626;
+  font-size: 1rem;
+  margin-bottom: 1rem;
+}
+.specialist-page-v2 .hero-section .error-message .retry-button {
+  padding: 0.75rem 1.5rem;
+  background: #a855f7;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.specialist-page-v2 .hero-section .error-message .retry-button:hover {
+  background: rgb(155.5365168539, 60.6460674157, 245.8539325843);
+}
+.specialist-page-v2 .search-filter-section {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0 1.5rem 2rem;
+}
+.specialist-page-v2 .search-filter-section .search-box {
+  display: flex;
+  align-items: center;
+  background: #ffffff;
+  border: 2px solid #e9d5ff;
+  border-radius: 12px;
+  padding: 0.875rem 1.25rem;
+  margin-bottom: 1.5rem;
+  transition: all 0.2s;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+.specialist-page-v2 .search-filter-section .search-box:focus-within {
+  border-color: #a855f7;
+  box-shadow: 0 0 0 3px rgba(168, 85, 247, 0.1);
+}
+.specialist-page-v2 .search-filter-section .search-box .search-icon {
+  color: #71717a;
+  margin-right: 0.75rem;
+  flex-shrink: 0;
+}
+.specialist-page-v2 .search-filter-section .search-box input {
+  flex: 1;
+  border: none;
+  background: transparent;
+  font-size: 0.95rem;
+  color: #18181b;
+  outline: none;
+}
+.specialist-page-v2 .search-filter-section .search-box input::-moz-placeholder {
+  color: #71717a;
+}
+.specialist-page-v2 .search-filter-section .search-box input::placeholder {
+  color: #71717a;
+}
+.specialist-page-v2 .search-filter-section .specialty-filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  justify-content: center;
+}
+@media (min-width: 768px) {
+  .specialist-page-v2 .search-filter-section .specialty-filters {
+    justify-content: flex-start;
+  }
+}
+.specialist-page-v2 .search-filter-section .specialty-filters .specialty-pill {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.625rem 1.25rem;
+  border-radius: 9999px;
+  border: 2px solid transparent;
+  background: #ffffff;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #18181b;
+  cursor: pointer;
+  transition: all 0.2s;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+.specialist-page-v2 .search-filter-section .specialty-filters .specialty-pill .icon {
+  font-size: 1rem;
+}
+.specialist-page-v2 .search-filter-section .specialty-filters .specialty-pill:hover {
+  background: rgba(168, 85, 247, 0.05);
+  border-color: rgba(168, 85, 247, 0.2);
+  color: #a855f7;
+}
+.specialist-page-v2 .search-filter-section .specialty-filters .specialty-pill.active {
+  background: #a855f7;
+  color: white;
+  border-color: #a855f7;
+  box-shadow: 0 4px 6px -1px rgba(168, 85, 247, 0.3);
+}
+.specialist-page-v2 .specialists-grid {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0 1.5rem;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.5rem;
+}
+@media (min-width: 768px) {
+  .specialist-page-v2 .specialists-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+@media (min-width: 1024px) {
+  .specialist-page-v2 .specialists-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+.specialist-page-v2 .specialists-grid .specialist-card-v2 {
+  background: #ffffff;
+  border: 2px solid #e9d5ff;
+  border-radius: 16px;
+  padding: 1.5rem;
+  transition: all 0.3s ease;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+.specialist-page-v2 .specialists-grid .specialist-card-v2:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  border-color: rgba(168, 85, 247, 0.3);
+}
+.specialist-page-v2 .specialists-grid .specialist-card-v2 .card-header {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 1.25rem;
+}
+.specialist-page-v2 .specialists-grid .specialist-card-v2 .card-header .specialist-avatar {
+  width: 4rem;
+  height: 4rem;
+  border-radius: 12px;
+  -o-object-fit: cover;
+     object-fit: cover;
+  border: 3px solid #e9d5ff;
+  flex-shrink: 0;
+}
+.specialist-page-v2 .specialists-grid .specialist-card-v2 .card-header .specialist-info {
+  flex: 1;
+  min-width: 0;
+}
+.specialist-page-v2 .specialists-grid .specialist-card-v2 .card-header .specialist-info h3 {
+  font-size: 1.125rem;
+  font-weight: 700;
+  color: #18181b;
+  margin-bottom: 0.25rem;
+}
+.specialist-page-v2 .specialists-grid .specialist-card-v2 .card-header .specialist-info .specialty-tag {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #a855f7;
+  margin-bottom: 0.5rem;
+}
+.specialist-page-v2 .specialists-grid .specialist-card-v2 .card-header .specialist-info .rating-row {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  font-size: 0.875rem;
+}
+.specialist-page-v2 .specialists-grid .specialist-card-v2 .card-header .specialist-info .rating-row .star {
+  font-size: 1rem;
+}
+.specialist-page-v2 .specialists-grid .specialist-card-v2 .card-header .specialist-info .rating-row .rating-value {
+  font-weight: 600;
+  color: #18181b;
+}
+.specialist-page-v2 .specialists-grid .specialist-card-v2 .card-header .specialist-info .rating-row .review-count {
+  color: #52525b;
+}
+.specialist-page-v2 .specialists-grid .specialist-card-v2 .card-details {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  margin-bottom: 1.25rem;
+  padding-bottom: 1.25rem;
+  border-bottom: 1px solid #e9d5ff;
+}
+.specialist-page-v2 .specialists-grid .specialist-card-v2 .card-details .detail-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.875rem;
+  color: #52525b;
+}
+.specialist-page-v2 .specialists-grid .specialist-card-v2 .card-details .detail-item .detail-icon {
+  font-size: 1rem;
+  flex-shrink: 0;
+}
+.specialist-page-v2 .specialists-grid .specialist-card-v2 .card-details .detail-item.languages {
+  color: #71717a;
+}
+.specialist-page-v2 .specialists-grid .specialist-card-v2 .card-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+.specialist-page-v2 .specialists-grid .specialist-card-v2 .card-footer .price-tag .price {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #18181b;
+}
+.specialist-page-v2 .specialists-grid .specialist-card-v2 .card-footer .book-button {
+  flex: 1;
+  max-width: 200px;
+  padding: 0.75rem 1.5rem;
+  background: #a855f7;
+  color: white;
+  border: none;
+  border-radius: 12px;
+  font-size: 0.875rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  box-shadow: 0 4px 6px -1px rgba(168, 85, 247, 0.3);
+}
+.specialist-page-v2 .specialists-grid .specialist-card-v2 .card-footer .book-button:hover {
+  background: rgb(155.5365168539, 60.6460674157, 245.8539325843);
+  transform: translateY(-1px);
+  box-shadow: 0 6px 12px -2px rgba(168, 85, 247, 0.4);
+}
+.specialist-page-v2 .specialists-grid .specialist-card-v2 .card-footer .book-button:active {
+  transform: translateY(0);
+}
+.specialist-page-v2 .specialists-grid .empty-state {
+  grid-column: 1/-1;
+  text-align: center;
+  padding: 3rem 1rem;
+  color: #52525b;
+  font-size: 1rem;
+}
+
+.specialist-page {
+  min-height: 100vh;
+  background: linear-gradient(to bottom, #ffffff, #fafafa);
+}
+.specialist-page .page-header {
+  background: rgba(255, 255, 255, 0.8);
+  -webkit-backdrop-filter: blur(12px);
+  backdrop-filter: blur(12px);
+  background-color: rgba(255, 255, 255, 0.6); /* fallback for browsers without backdrop-filter */
+  border-bottom: 1px solid rgba(228, 228, 231, 0.7);
+  padding: 2rem 1.5rem;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+.specialist-page .page-header h1 {
+  font-size: 2rem;
+  font-weight: 800;
+  background: linear-gradient(to right, #6366f1, #8b5cf6, #ec4899);
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  text-align: center;
+}
+@media (min-width: 768px) {
+  .specialist-page .page-header h1 {
+    font-size: 2.5rem;
+  }
+}
+.specialist-page .body {
+  max-width: 1024px;
+  margin: 0 auto;
+  padding: 2rem 1rem;
+}
+@media (min-width: 768px) {
+  .specialist-page .body {
+    padding: 3rem 1.5rem;
+  }
+}
+.specialist-page .body > h2 {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #18181b;
+  margin-bottom: 1.5rem;
+  margin-top: 2rem;
+}
+.specialist-page .filters {
+  background: #ffffff;
+  border: 1px solid #e9d5ff;
+  border-radius: 1.25rem;
+  padding: 1.5rem;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+  margin-bottom: 2rem;
+}
+.specialist-page .filters .input-row {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.875rem 1.25rem;
+  background: #fafafa;
+  border: 2px solid #e9d5ff;
+  border-radius: 1rem;
+  transition: all 0.2s;
+}
+.specialist-page .filters .input-row:focus-within {
+  border-color: #8b5cf6;
+  box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.1);
+}
+.specialist-page .filters .input-row input {
+  flex: 1;
+  border: none;
+  background: transparent;
+  font-size: 0.95rem;
+  color: #18181b;
+  outline: none;
+}
+.specialist-page .filters .input-row input::-moz-placeholder {
+  color: #71717a;
+}
+.specialist-page .filters .input-row input::placeholder {
+  color: #71717a;
+}
+.specialist-page .filters .pill-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+.specialist-page .filters .pill-row .pill {
+  padding: 0.5rem 1rem;
+  border-radius: 9999px;
+  border: 1px solid #e9d5ff;
+  background: transparent;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #52525b;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.specialist-page .filters .pill-row .pill:hover {
+  background: rgba(139, 92, 246, 0.05);
+  border-color: rgba(139, 92, 246, 0.3);
+  color: #8b5cf6;
+}
+.specialist-page .filters .pill-row .pill.active {
+  background: linear-gradient(to right, #6366f1, #8b5cf6, #ec4899);
+  color: white;
+  border-color: transparent;
+  box-shadow: 0 4px 6px -1px rgba(139, 92, 246, 0.3);
+}
+.specialist-page .empty {
+  text-align: center;
+  padding: 3rem 1rem;
+  color: #52525b;
+}/*# sourceMappingURL=specialist_page.css.map */

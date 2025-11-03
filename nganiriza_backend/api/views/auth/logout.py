@@ -2,7 +2,15 @@ from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework import status
+from drf_spectacular.utils import extend_schema
+from models.serializers import LogoutRequestSerializer
 
+
+@extend_schema(
+    tags=["Auth"],
+    request=LogoutRequestSerializer,
+    responses={200: dict, 400: dict},
+)
 @api_view(['POST'])
 def logout_api(request):
     try:

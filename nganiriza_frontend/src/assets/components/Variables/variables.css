@@ -1,0 +1,73 @@
+.container-page {
+  min-height: 100vh;
+  background: #f3e8ff;
+  display: flex;
+  flex-direction: column;
+}
+
+.page-header {
+  background: #7e22ce;
+  color: #ffffff;
+  padding: 1rem;
+  display: flex;
+  align-items: center;
+}
+.page-header h1 {
+  font-weight: 600;
+  margin: 0 auto;
+  font-size: 1.25rem;
+}
+
+.input-row {
+  display: flex;
+  align-items: center;
+  border: 1px solid #d1d5db;
+  border-radius: 0.5rem;
+  padding: 0.5rem;
+}
+.input-row input {
+  flex: 1;
+  outline: none;
+  border: none;
+  font-size: 0.95rem;
+  background: transparent;
+}
+
+.pill-row {
+  display: flex;
+  overflow-x: auto;
+  gap: 0.5rem;
+}
+.pill-row .pill {
+  padding: 0.25rem 0.75rem;
+  border-radius: 999px;
+  font-size: 0.85rem;
+  white-space: nowrap;
+  background: #e5e7eb;
+  color: #374151;
+  border: none;
+  cursor: pointer;
+}
+.pill-row .pill.active {
+  background: #7e22ce;
+  color: #ffffff;
+}
+
+.btn-primary {
+  background: #7e22ce;
+  color: #ffffff;
+  border-radius: 999px;
+  padding: 0.5rem;
+  border: none;
+  cursor: pointer;
+}
+.btn-primary:hover {
+  filter: brightness(0.95);
+}
+
+.notice-muted {
+  font-size: 0.75rem;
+  color: #4b5563;
+  margin-top: 0.5rem;
+  text-align: center;
+}/*# sourceMappingURL=variables.css.map */

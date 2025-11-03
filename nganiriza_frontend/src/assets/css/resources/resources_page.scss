@@ -1,0 +1,34 @@
+@import '../../components/Variables/variables.scss';
+
+.resources-page {
+  @extend .container-page;
+
+  .body {
+    padding: 1rem;
+
+    .search-card {
+      @extend %card;
+      margin-bottom: 1.5rem;
+
+      .use-location {
+        margin-top: 1rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: $color-teal-100;
+        color: $color-teal-700;
+        padding: 0.5rem 1rem;
+        border-radius: 0.75rem;
+        border: none;
+        cursor: pointer;
+      }
+    }
+
+    h2 {
+      font-size: 1.125rem;
+      font-weight: 600;
+      margin-bottom: 1rem;
+      color: $color-gray-700;
+    }
+  }
+}

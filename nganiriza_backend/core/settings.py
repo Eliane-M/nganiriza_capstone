@@ -166,7 +166,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 REST_FRAMEWORK = {
     "DEFAULT_AUTHENTICATION_CLASSES": (
         "rest_framework_simplejwt.authentication.JWTAuthentication",
-        "rest_framework.authentication.SessionAuthentication",
+        # "rest_framework.authentication.SessionAuthentication",
         "rest_framework.authentication.BasicAuthentication",
     ),
     "DEFAULT_PERMISSION_CLASSES": [
@@ -203,20 +203,31 @@ SPECTACULAR_SETTINGS = {
     "TITLE": "Nganiriza API",
     "DESCRIPTION": "Conversational AI + SRH education endpoints (auth, profiles, conversations, messages, articles).",
     "VERSION": "1.0.0",
-    "SERVERS": [{"url": "/api", "description": "Default API root"}],
+    # "SERVERS": [{"url": "/api", "description": "Default API root"}],
     "CONTACT": {"name": "NGANIRIZA", "email": "munezeroeliane761@gmail.com"},
     "LICENSE": {"name": "Proprietary"},
+    "SERVICE_INCLUDE_SCHEMA": False,
     # Auth buttons in the UI:
     "SECURITY": [{"BearerAuth": []}],
     "COMPONENT_SPLIT_REQUEST": True,  
-    "SCHEMA_PATH_PREFIX": r"/api",   
+    # "SCHEMA_PATH_PREFIX": r"/api",   
     # Optional: show enum names instead of raw values
     "ENUM_NAME_OVERRIDES": { },
+    "SERVE_PERMISSIONS": ["rest_framework.permissions.AllowAny"],
+    "APPEND_COMPONENTS": {
+        "securitySchemes": {
+            "BearerAuth": {
+                "type": "http",
+                "scheme": "bearer",
+                "bearerFormat": "JWT"
+            }
+        }
+    },
 }
 
 
 SPECTACULAR_SETTINGS["AUTHENTICATION_WHITELIST"] = [
-    "rest_framework.authentication.SessionAuthentication",
+    # "rest_framework.authentication.SessionAuthentication",
     "rest_framework_simplejwt.authentication.JWTAuthentication",
 ]
 SPECTACULAR_SETTINGS["COMPONENTS"] = {
