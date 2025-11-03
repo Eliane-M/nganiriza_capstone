@@ -136,7 +136,6 @@ python-dotenv==1.1.0
 python-multipart==0.0.20
 python-postmark==0.6.0
 pytz==2025.1
-pywin32==308
 PyYAML==6.0.3
 pyzmq==26.2.1
 referencing==0.36.2
