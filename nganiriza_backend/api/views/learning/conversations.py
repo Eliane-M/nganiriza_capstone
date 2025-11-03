@@ -1,23 +1,20 @@
+from django.http import response
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
 from models.models import Conversations
-from models.serializers import ConversationsSerializer, MessagesSerializer, ConversationCreateSerialzer
+from models.serializers import ConversationsSerializer, MessagesSerializer, ConversationCreateSerializer, MessageCreateSerializer
 from rest_framework.response import Response
 from rest_framework import status
-
+from drf_spectacular.types import OpenApiTypes
 from drf_spectacular.utils import extend_schema, OpenApiParameter, OpenApiResponse
-from models.serializers import ConversationsSerializer, MessagesSerializer, ArticleSerializer
 from .services.docs_helper import *
 
-# @extend_schema(
-#     tags=["Conversations"],
-#     request=ConversationCreateSerialzer,
-#     responses={201: ConversationsSerializer},
-#     summary="Create a new conversation",
-#     description="Creates a conversation for the authenticated user."
-# )
-
-@api_doc("Conversations", request=ConversationCreateSerialzer, responses={201: ConversationsSerializer})
+@extend_schema(
+    tags=["Conversations"],
+    request=ConversationCreateSerializer,
+    responses={201: ConversationsSerializer},
+    summary="Create a new conversation"
+)
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def create_conversation(request):
@@ -33,6 +30,15 @@ def create_conversation(request):
         return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
 
 
+@extend_schema(
+    tags=["Conversations"],
+    parameters=[
+        OpenApiParameter(name="page", location=OpenApiParameter.QUERY, required=False, type=OpenApiTypes.INT),
+        OpenApiParameter(name="page_size", location=OpenApiParameter.QUERY, required=False, type=OpenApiTypes.INT),
+    ],
+    responses={200: dict, 404: dict},
+    summary="List my conversations"
+)
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def list_conversations(request):
@@ -74,6 +80,11 @@ def get_conversation(request, pk):
         return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
 
 
+@extend_schema(
+    tags=["Conversations"],
+    responses={200: dict, 404: dict},
+    summary="Delete my conversation (by current user)"
+)
 @api_view(['DELETE'])
 def delete_conversation(request):
     # Extract the user from the request
@@ -90,6 +101,21 @@ def delete_conversation(request):
 
 
 # messages for a conversation
+@extend_schema(
+    tags=["Messages"],
+    parameters=[
+        OpenApiParameter(name="before", location=OpenApiParameter.QUERY, required=False, type=str, description="message id"),
+        OpenApiParameter(name="limit", location=OpenApiParameter.QUERY, required=False, type=OpenApiTypes.INT),
+    ],
+    responses={200: MessagesSerializer(many=True)},
+    summary="List messages in a conversation"
+)
+@extend_schema(
+    tags=["Messages"],
+    request=MessageCreateSerializer,
+    responses={201: MessagesSerializer, 404: dict, 400: dict},
+    summary="Post a new user message to a conversation"
+)
 @api_view(["GET","POST"])
 @permission_classes([IsAuthenticated])
 def conversation_messages(request, pk):
@@ -102,7 +128,7 @@ def conversation_messages(request, pk):
         before = request.GET.get("before")  # ISO datetime or message id (extend later)
         qs = conv.messages.all()
         if before:
-            qs = qs.filter(~Q(id=before))  # placeholder; adapt as you like
+            qs = qs.filter(id=before)
         page_size = min(int(request.GET.get("limit", 50)), 200)
         data = MessagesSerializer(qs.order_by("-created_at")[:page_size], many=True).data
         return Response(list(reversed(data)), status=200)

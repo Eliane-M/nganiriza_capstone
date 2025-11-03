@@ -1,0 +1,139 @@
+.education_page .topics-wrap .did-you-know, .education_page .topics-wrap .topic-card {
+  background: #ffffff;
+  border-radius: 0.75rem;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  padding: 1rem;
+}
+
+.container-page, .education_page {
+  min-height: 100vh;
+  background: #f3e8ff;
+  display: flex;
+  flex-direction: column;
+}
+
+.page-header {
+  background: #7e22ce;
+  color: #ffffff;
+  padding: 1rem;
+  display: flex;
+  align-items: center;
+}
+.page-header h1 {
+  font-weight: 600;
+  margin: 0 auto;
+  font-size: 1.25rem;
+}
+
+.input-row {
+  display: flex;
+  align-items: center;
+  border: 1px solid #d1d5db;
+  border-radius: 0.5rem;
+  padding: 0.5rem;
+}
+.input-row input {
+  flex: 1;
+  outline: none;
+  border: none;
+  font-size: 0.95rem;
+  background: transparent;
+}
+
+.pill-row {
+  display: flex;
+  overflow-x: auto;
+  gap: 0.5rem;
+}
+.pill-row .pill {
+  padding: 0.25rem 0.75rem;
+  border-radius: 999px;
+  font-size: 0.85rem;
+  white-space: nowrap;
+  background: #e5e7eb;
+  color: #374151;
+  border: none;
+  cursor: pointer;
+}
+.pill-row .pill.active {
+  background: #7e22ce;
+  color: #ffffff;
+}
+
+.btn-primary {
+  background: #7e22ce;
+  color: #ffffff;
+  border-radius: 999px;
+  padding: 0.5rem;
+  border: none;
+  cursor: pointer;
+}
+.btn-primary:hover {
+  filter: brightness(0.95);
+}
+
+.notice-muted {
+  font-size: 0.75rem;
+  color: #4b5563;
+  margin-top: 0.5rem;
+  text-align: center;
+}
+
+.education_page .topics-wrap {
+  padding: 1rem;
+}
+.education_page .topics-wrap h2 {
+  font-size: 1.125rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+  color: #374151;
+}
+.education_page .topics-wrap .grid {
+  display: grid;
+  gap: 1rem;
+}
+.education_page .topics-wrap .topic-card {
+  display: flex;
+  align-items: center;
+  border: 1px solid #e5e7eb;
+}
+.education_page .topics-wrap .topic-card .icon-wrap {
+  background: #ffffff;
+  border-radius: 999px;
+  padding: 0.5rem;
+  margin-right: 0.75rem;
+  display: inline-flex;
+}
+.education_page .topics-wrap .topic-card .title {
+  font-size: 1.125rem;
+  font-weight: 500;
+}
+.education_page .topics-wrap .topic-card.purple {
+  background: #f3e8ff;
+  color: #6b21a8;
+  border-color: #e9d5ff;
+}
+.education_page .topics-wrap .topic-card.pink {
+  background: #fce7f3;
+  color: #9d174d;
+  border-color: #fbcfe8;
+}
+.education_page .topics-wrap .topic-card.blue {
+  background: #dbeafe;
+  color: #1d4ed8;
+  border-color: #bfdbfe;
+}
+.education_page .topics-wrap .topic-card.teal {
+  background: #ccfbf1;
+  color: #0f766e;
+  border-color: #99f6e4;
+}
+.education_page .topics-wrap .did-you-know h3 {
+  color: #7e22ce;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+}
+.education_page .topics-wrap .did-you-know p {
+  color: #374151;
+  font-size: 0.95rem;
+}/*# sourceMappingURL=education_page.css.map */

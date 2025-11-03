@@ -1,0 +1,462 @@
+// Variables
+$primary-color: #a855f7;
+$accent-color: #d946ef;
+$text-dark: #18181b;
+$text-medium: #52525b;
+$text-light: #71717a;
+$bg-light: #faf5ff;
+$bg-white: #ffffff;
+$border-color: #e9d5ff;
+$star-color: #fbbf24;
+
+$mobile: 640px;
+$tablet: 768px;
+$desktop: 1024px;
+
+// New Design Styles
+.specialist-page-v2 {
+  min-height: 100vh;
+  background: linear-gradient(to bottom, #fdf4ff, #faf5ff);
+  padding-bottom: 4rem;
+
+  .hero-section {
+    text-align: center;
+    padding: 3rem 1.5rem 2rem;
+    max-width: 900px;
+    margin: 0 auto;
+
+    h1 {
+      font-size: 2rem;
+      font-weight: 800;
+      color: $text-dark;
+      margin-bottom: 1rem;
+      line-height: 1.2;
+
+      @media (min-width: $tablet) {
+        font-size: 2.75rem;
+      }
+
+      .highlight {
+        background: linear-gradient(to right, $primary-color, $accent-color);
+        background-clip: text;
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+      }
+    }
+
+    .subtitle {
+      font-size: 1rem;
+      color: $text-medium;
+      line-height: 1.6;
+      max-width: 700px;
+      margin: 0 auto;
+
+      @media (min-width: $tablet) {
+        font-size: 1.125rem;
+      }
+    }
+
+    .loading-spinner {
+      font-size: 1.125rem;
+      color: $text-medium;
+      padding: 2rem;
+    }
+
+    .error-message {
+      padding: 2rem;
+      
+      p {
+        color: #dc2626;
+        font-size: 1rem;
+        margin-bottom: 1rem;
+      }
+
+      .retry-button {
+        padding: 0.75rem 1.5rem;
+        background: $primary-color;
+        color: white;
+        border: none;
+        border-radius: 8px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.2s;
+
+        &:hover {
+          background: darken($primary-color, 5%);
+        }
+      }
+    }
+  }
+
+  .search-filter-section {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 0 1.5rem 2rem;
+
+    .search-box {
+      display: flex;
+      align-items: center;
+      background: $bg-white;
+      border: 2px solid $border-color;
+      border-radius: 12px;
+      padding: 0.875rem 1.25rem;
+      margin-bottom: 1.5rem;
+      transition: all 0.2s;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+
+      &:focus-within {
+        border-color: $primary-color;
+        box-shadow: 0 0 0 3px rgba($primary-color, 0.1);
+      }
+
+      .search-icon {
+        color: $text-light;
+        margin-right: 0.75rem;
+        flex-shrink: 0;
+      }
+
+      input {
+        flex: 1;
+        border: none;
+        background: transparent;
+        font-size: 0.95rem;
+        color: $text-dark;
+        outline: none;
+
+        &::placeholder {
+          color: $text-light;
+        }
+      }
+    }
+
+    .specialty-filters {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+      justify-content: center;
+
+      @media (min-width: $tablet) {
+        justify-content: flex-start;
+      }
+
+      .specialty-pill {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.625rem 1.25rem;
+        border-radius: 9999px;
+        border: 2px solid transparent;
+        background: $bg-white;
+        font-size: 0.875rem;
+        font-weight: 600;
+        color: $text-dark;
+        cursor: pointer;
+        transition: all 0.2s;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+
+        .icon {
+          font-size: 1rem;
+        }
+
+        &:hover {
+          background: rgba($primary-color, 0.05);
+          border-color: rgba($primary-color, 0.2);
+          color: $primary-color;
+        }
+
+        &.active {
+          background: $primary-color;
+          color: white;
+          border-color: $primary-color;
+          box-shadow: 0 4px 6px -1px rgba($primary-color, 0.3);
+        }
+      }
+    }
+  }
+
+  .specialists-grid {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 0 1.5rem;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+
+    @media (min-width: $tablet) {
+      grid-template-columns: repeat(2, 1fr);
+    }
+
+    @media (min-width: $desktop) {
+      grid-template-columns: repeat(3, 1fr);
+    }
+
+    .specialist-card-v2 {
+      background: $bg-white;
+      border: 2px solid $border-color;
+      border-radius: 16px;
+      padding: 1.5rem;
+      transition: all 0.3s ease;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+
+      &:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1),
+                    0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        border-color: rgba($primary-color, 0.3);
+      }
+
+      .card-header {
+        display: flex;
+        gap: 1rem;
+        margin-bottom: 1.25rem;
+
+        .specialist-avatar {
+          width: 4rem;
+          height: 4rem;
+          border-radius: 12px;
+          object-fit: cover;
+          border: 3px solid $border-color;
+          flex-shrink: 0;
+        }
+
+        .specialist-info {
+          flex: 1;
+          min-width: 0;
+
+          h3 {
+            font-size: 1.125rem;
+            font-weight: 700;
+            color: $text-dark;
+            margin-bottom: 0.25rem;
+          }
+
+          .specialty-tag {
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: $primary-color;
+            margin-bottom: 0.5rem;
+          }
+
+          .rating-row {
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+            font-size: 0.875rem;
+
+            .star {
+              font-size: 1rem;
+            }
+
+            .rating-value {
+              font-weight: 600;
+              color: $text-dark;
+            }
+
+            .review-count {
+              color: $text-medium;
+            }
+          }
+        }
+      }
+
+      .card-details {
+        display: flex;
+        flex-direction: column;
+        gap: 0.75rem;
+        margin-bottom: 1.25rem;
+        padding-bottom: 1.25rem;
+        border-bottom: 1px solid $border-color;
+
+        .detail-item {
+          display: flex;
+          align-items: center;
+          gap: 0.5rem;
+          font-size: 0.875rem;
+          color: $text-medium;
+
+          .detail-icon {
+            font-size: 1rem;
+            flex-shrink: 0;
+          }
+
+          &.languages {
+            color: $text-light;
+          }
+        }
+      }
+
+      .card-footer {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 1rem;
+
+        .price-tag {
+          .price {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: $text-dark;
+          }
+        }
+
+        .book-button {
+          flex: 1;
+          max-width: 200px;
+          padding: 0.75rem 1.5rem;
+          background: $primary-color;
+          color: white;
+          border: none;
+          border-radius: 12px;
+          font-size: 0.875rem;
+          font-weight: 600;
+          cursor: pointer;
+          transition: all 0.2s;
+          box-shadow: 0 4px 6px -1px rgba($primary-color, 0.3);
+
+          &:hover {
+            background: darken($primary-color, 5%);
+            transform: translateY(-1px);
+            box-shadow: 0 6px 12px -2px rgba($primary-color, 0.4);
+          }
+
+          &:active {
+            transform: translateY(0);
+          }
+        }
+      }
+    }
+
+    .empty-state {
+      grid-column: 1 / -1;
+      text-align: center;
+      padding: 3rem 1rem;
+      color: $text-medium;
+      font-size: 1rem;
+    }
+  }
+}
+
+// Original styles (kept for backward compatibility)
+.specialist-page {
+  min-height: 100vh;
+  background: linear-gradient(to bottom, #ffffff, #fafafa);
+
+  .page-header {
+    background: rgba(255, 255, 255, 0.8);
+    -webkit-backdrop-filter: blur(12px);
+    backdrop-filter: blur(12px);
+    background-color: rgba(255, 255, 255, 0.6); /* fallback for browsers without backdrop-filter */
+    border-bottom: 1px solid rgba(228, 228, 231, 0.7);
+    padding: 2rem 1.5rem;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+
+    h1 {
+      font-size: 2rem;
+      font-weight: 800;
+      background: linear-gradient(to right, #6366f1, #8b5cf6, #ec4899);
+      background-clip: text;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      text-align: center;
+
+      @media (min-width: $tablet) {
+        font-size: 2.5rem;
+      }
+    }
+  }
+
+  .body {
+    max-width: 1024px;
+    margin: 0 auto;
+    padding: 2rem 1rem;
+
+    @media (min-width: $tablet) {
+      padding: 3rem 1.5rem;
+    }
+
+    > h2 {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: $text-dark;
+      margin-bottom: 1.5rem;
+      margin-top: 2rem;
+    }
+  }
+
+  .filters {
+    background: $bg-white;
+    border: 1px solid $border-color;
+    border-radius: 1.25rem;
+    padding: 1.5rem;
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+    margin-bottom: 2rem;
+
+    .input-row {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      padding: 0.875rem 1.25rem;
+      background: #fafafa;
+      border: 2px solid $border-color;
+      border-radius: 1rem;
+      transition: all 0.2s;
+
+      &:focus-within {
+        border-color: #8b5cf6;
+        box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.1);
+      }
+
+      input {
+        flex: 1;
+        border: none;
+        background: transparent;
+        font-size: 0.95rem;
+        color: $text-dark;
+        outline: none;
+
+        &::placeholder {
+          color: $text-light;
+        }
+      }
+    }
+
+    .pill-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+
+      .pill {
+        padding: 0.5rem 1rem;
+        border-radius: 9999px;
+        border: 1px solid $border-color;
+        background: transparent;
+        font-size: 0.875rem;
+        font-weight: 500;
+        color: $text-medium;
+        cursor: pointer;
+        transition: all 0.2s;
+
+        &:hover {
+          background: rgba(139, 92, 246, 0.05);
+          border-color: rgba(139, 92, 246, 0.3);
+          color: #8b5cf6;
+        }
+
+        &.active {
+          background: linear-gradient(to right, #6366f1, #8b5cf6, #ec4899);
+          color: white;
+          border-color: transparent;
+          box-shadow: 0 4px 6px -1px rgba(139, 92, 246, 0.3);
+        }
+      }
+    }
+  }
+
+  .empty {
+    text-align: center;
+    padding: 3rem 1rem;
+    color: $text-medium;
+  }
+}

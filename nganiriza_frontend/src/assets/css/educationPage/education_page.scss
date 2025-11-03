@@ -1,0 +1,77 @@
+@import '../../components/Variables/variables.scss';
+
+.education_page {
+  @extend .container-page;
+
+  .topics-wrap {
+    padding: 1rem;
+
+    h2 {
+      font-size: 1.125rem;
+      font-weight: 600;
+      margin-bottom: 1rem;
+      color: $color-gray-700;
+    }
+
+    .grid {
+      display: grid;
+      gap: 1rem;
+    }
+
+    .topic-card {
+      @extend %card;
+      display: flex;
+      align-items: center;
+      border: 1px solid $color-gray-200;
+
+      .icon-wrap {
+        background: $color-white;
+        border-radius: 999px;
+        padding: 0.5rem;
+        margin-right: 0.75rem;
+        display: inline-flex;
+      }
+
+      .title {
+        font-size: 1.125rem;
+        font-weight: 500;
+      }
+
+      &.purple {
+        background: #f3e8ff;
+        color: #6b21a8;
+        border-color: #e9d5ff;
+      }
+      &.pink {
+        background: #fce7f3;
+        color: #9d174d;
+        border-color: #fbcfe8;
+      }
+      &.blue {
+        background: #dbeafe;
+        color: #1d4ed8;
+        border-color: #bfdbfe;
+      }
+      &.teal {
+        background: #ccfbf1;
+        color: #0f766e;
+        border-color: #99f6e4;
+      }
+    }
+
+    .did-you-know {
+      @extend %card;
+
+      h3 {
+        color: $color-primary-600;
+        font-weight: 600;
+        margin-bottom: 0.5rem;
+      }
+
+      p {
+        color: $color-gray-700;
+        font-size: 0.95rem;
+      }
+    }
+  }
+}

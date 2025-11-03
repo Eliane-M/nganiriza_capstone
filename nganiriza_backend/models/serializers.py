@@ -25,10 +25,41 @@ class ProfileSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError(f"Invalid language. Choose one of {list(valid.keys())}")
         return value
 
-class ConversationCreateSerialzer(serializers.Serializer):
-    title = serializers.CharField(required=False, allow_blank=True, max_length=255)
-    language = serializers.ChoiceField(choices=[("rw","rw"),("en","en"),("fr","fr")], default="en")
-    channel  = serializers.ChoiceField(choices=[("web","web"),("sms","sms"),("ussd","ussd")], default="web")
+
+class LoginRequestSerializer(serializers.Serializer):
+    username = serializers.CharField()
+    password = serializers.CharField(write_only=True)
+
+class LoginUserInfoSerializer(serializers.Serializer):
+    first_name = serializers.CharField(allow_blank=True, required=False)
+    last_name = serializers.CharField(allow_blank=True, required=False)
+
+class LoginResponseSerializer(serializers.Serializer):
+    message = serializers.CharField()
+    refresh = serializers.CharField()
+    access = serializers.CharField()
+    role = serializers.ChoiceField(choices=[("admin","admin"),("user","user")])
+    user = LoginUserInfoSerializer()
+
+class LogoutRequestSerializer(serializers.Serializer):
+    refresh = serializers.CharField()
+
+class PasswordResetRequestSerializer(serializers.Serializer):
+    email = serializers.EmailField()
+
+class PasswordResetConfirmSerializer(serializers.Serializer):
+    email = serializers.EmailField()
+    code = serializers.CharField(max_length=6)
+    new_password = serializers.CharField(write_only=True)
+
+class SignupRequestSerializer(serializers.Serializer):
+    email = serializers.EmailField()
+    full_name = serializers.CharField()
+    password = serializers.CharField(write_only=True)
+    date_of_birth = serializers.DateField(required=False, allow_null=True)
+    place_of_origin = serializers.CharField(required=False, allow_null=True)
+    phone_number = serializers.CharField(required=False, allow_blank=True)
+
 
 class ConversationsSerializer(serializers.ModelSerializer):
     class Meta:
@@ -51,9 +82,11 @@ class ConversationsSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError(f"language must be one of {sorted(valid)}")
         return val
 
-class MessageCreateSerializer(serializers.Serializer):
-    role    = serializers.ChoiceField(choices=[("user","user"),("assistant","assistant"),("system","system")], default="user")
-    content = serializers.CharField()
+class ConversationCreateSerializer(serializers.Serializer):
+    title = serializers.CharField(required=False, allow_blank=True)
+    language = serializers.ChoiceField(choices=[c[0] for c in LANGUAGE_CHOICES], default="eng")
+    channel = serializers.ChoiceField(choices=["web", "sms", "ussd"], default="web")
+
 
 class MessagesSerializer(serializers.ModelSerializer):
     class Meta:
@@ -65,12 +98,10 @@ class MessagesSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError("Invalid role")
         return value
 
-class ArticleCreateSerializer(serializers.Serializer):
-    locale = serializers.ChoiceField(choices=[("rw","rw"),("en","en"),("fr","fr")], default="rw")
-    title  = serializers.CharField(max_length=255)
-    body_md = serializers.CharField()
-    tags   = serializers.ListField(child=serializers.CharField(), required=False)
-    is_published = serializers.BooleanField(default=True)
+class MessageCreateSerializer(serializers.Serializer):
+    role = serializers.ChoiceField(choices=["user", "assistant", "system"], default="user")
+    content = serializers.CharField()
+
 
 class ArticleSerializer(serializers.ModelSerializer):
     class Meta:
