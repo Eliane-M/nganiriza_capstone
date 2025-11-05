@@ -3,7 +3,7 @@ import random
 import string
 from models.models import ResetPassword, ResetPasswordConfirmation
 from models.serializers import PasswordResetRequestSerializer, PasswordResetConfirmSerializer
-from rest_framework.decorators import api_view
+from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
 from rest_framework import status
 from django.contrib.auth.models import User
@@ -20,6 +20,7 @@ from models.serializers import LogoutRequestSerializer
     auth=[]
 )
 @api_view(["POST"])
+@permission_classes([])
 def password_reset_request(request):
     email = request.data.get("email")
     if not email:
@@ -52,6 +53,7 @@ def password_reset_request(request):
     auth=[]
 )
 @api_view(["POST"])
+@permission_classes([])
 def password_reset_confirm(request):
     code = request.data.get("code")
     email = request.data.get("email")

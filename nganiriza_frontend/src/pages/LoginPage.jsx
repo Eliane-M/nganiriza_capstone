@@ -102,7 +102,6 @@ const LoginForm = () => {
                 onClick={() => setShowPwd((s) => !s)}
                 aria-label={showPwd ? 'Hide password' : 'Show password'}
               >
-                👁️
               </button>
             </div>
           </div>
@@ -117,7 +116,7 @@ const LoginForm = () => {
               <span className="checkmark"></span>
               Remember me
             </label>
-            <Link to="/forgot-password" className="forgot-link">
+            <Link to="/reset-password" className="forgot-link">
               Forgot password?
             </Link>
           </div>
