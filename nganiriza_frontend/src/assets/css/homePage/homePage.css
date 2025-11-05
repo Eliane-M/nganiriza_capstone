@@ -122,7 +122,7 @@
   }
 }
 .hero-section .hero-content .hero-title .gradient-text {
-  background: linear-gradient(to right, #6366f1, #8b5cf6, #ec4899);
+  background: linear-gradient(to right, #ff6bce, #8b5cf6, #ec4899);
   background-clip: text;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -149,12 +149,12 @@
   margin-top: 2rem;
   display: flex;
   flex-wrap: wrap;
-  gap: 0.75rem;
+  gap: 1rem;
 }
 .hero-section .hero-visual .hero-image {
   width: 40%;
   border-radius: 1.5rem;
-  background: linear-gradient(to right, #6366f1, #8b5cf6, #ec4899);
+  background: linear-gradient(to right, #ff6bce, #8b5cf6, #ec4899);
   opacity: 0.9;
   box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
 }
@@ -174,7 +174,7 @@
   transition: all 0.2s;
 }
 .btn.btn-primary {
-  background: linear-gradient(to right, #6366f1, #8b5cf6, #ec4899);
+  background: linear-gradient(to right, #ff6bce, #8b5cf6, #ec4899);
   color: white;
   box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
 }
@@ -224,7 +224,7 @@
 }
 .features-section .feature-card {
   border-radius: 1rem;
-  border: 1px solid #e4e4e7;
+  border: 1px solid #e0e0e0;
   background: #ffffff;
   padding: 1.5rem;
   text-align: left;
@@ -260,7 +260,7 @@
   box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
 }
 .features-section .feature-icon-wrapper.gradient-primary {
-  background: linear-gradient(to right, #6366f1, #8b5cf6, #ec4899);
+  background: linear-gradient(to right, #ff6bce, #8b5cf6, #ec4899);
 }
 .features-section .feature-icon-wrapper.gradient-pink {
   background: linear-gradient(to bottom right, #ec4899, rgb(231.202970297, 25.797029703, 127.2475247525));
@@ -297,7 +297,7 @@
   margin-top: 3.5rem;
   border-radius: 1.5rem;
   padding: 2.5rem 2rem;
-  background: linear-gradient(to right, #6366f1, #8b5cf6, #ec4899);
+  background: linear-gradient(to right, #ff6bce, #8b5cf6, #ec4899);
   color: white;
 }
 .cta-band .cta-content {
@@ -318,7 +318,7 @@
 }
 
 .footer {
-  border-top: 1px solid rgba(228, 228, 231, 0.7);
+  border-top: 1px solid rgba(224, 224, 224, 0.7);
 }
 :global(.dark) .footer {
   border-top-color: rgba(39, 39, 42, 0.7);

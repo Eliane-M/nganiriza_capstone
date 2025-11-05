@@ -76,7 +76,7 @@
   position: sticky;
   top: 0;
   z-index: 40;
-  border-bottom: 1px solid rgba(228, 228, 231, 0.7);
+  border-bottom: 1px solid rgba(224, 224, 224, 0.7);
   background: rgba(255, 255, 255, 0.8);
   -webkit-backdrop-filter: blur(12px);
   backdrop-filter: blur(12px);
@@ -123,13 +123,13 @@
   height: 2rem;
   width: 2rem;
   border-radius: 0.75rem;
-  background: linear-gradient(to right, #6366f1, #8b5cf6, #ec4899);
+  background: linear-gradient(to right, #ff6bce, #8b5cf6, #ec4899);
 }
 .brand .brand-name {
   font-size: 1.25rem;
   font-weight: 800;
   letter-spacing: -0.025em;
-  background: linear-gradient(to right, #6366f1, #8b5cf6, #ec4899);
+  background: linear-gradient(to right, #ff6bce, #8b5cf6, #ec4899);
   background-clip: text;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -185,7 +185,7 @@
   gap: 0.5rem;
   padding: 0.25rem 0.5rem;
   border-radius: 0.75rem;
-  border: 1px solid #e4e4e7;
+  border: 1px solid #e0e0e0;
   background: transparent;
   cursor: pointer;
   transition: background 0.2s;
@@ -235,7 +235,7 @@
   height: 2rem;
   width: 2rem;
   border-radius: 50%;
-  background: linear-gradient(to right, #6366f1, #8b5cf6, #ec4899);
+  background: linear-gradient(to right, #ff6bce, #8b5cf6, #ec4899);
   display: grid;
   place-items: center;
   color: white;
@@ -249,7 +249,7 @@
   margin-top: 0.5rem;
   width: 16rem;
   border-radius: 0.75rem;
-  border: 1px solid #e4e4e7;
+  border: 1px solid #e0e0e0;
   background: #ffffff;
   padding: 0.5rem;
   box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
@@ -261,7 +261,7 @@
 .dropdown-menu .dropdown-section {
   padding: 0.5rem;
   padding-bottom: 0.5rem;
-  border-bottom: 1px solid #e4e4e7;
+  border-bottom: 1px solid #e0e0e0;
 }
 :global(.dark) .dropdown-menu .dropdown-section {
   border-bottom-color: #27272a;
@@ -269,7 +269,7 @@
 .dropdown-menu .dropdown-section .section-label {
   font-size: 0.75rem;
   margin-bottom: 0.25rem;
-  color: #71717a;
+  color: #bbb;
 }
 :global(.dark) .dropdown-menu .dropdown-section .section-label {
   color: #a1a1aa;
@@ -303,7 +303,7 @@
 }
 .dropdown-menu .dropdown-divider {
   margin-top: 0.5rem;
-  border-top: 1px solid #e4e4e7;
+  border-top: 1px solid #e0e0e0;
   padding-top: 0.5rem;
 }
 :global(.dark) .dropdown-menu .dropdown-divider {
@@ -318,7 +318,7 @@
   display: flex;
   padding: 0.5rem;
   border-radius: 0.5rem;
-  border: 1px solid #e4e4e7;
+  border: 1px solid #e0e0e0;
   background: transparent;
   cursor: pointer;
   transition: background 0.2s;
