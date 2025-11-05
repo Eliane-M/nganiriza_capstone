@@ -1,9 +1,13 @@
 import React from 'react';
 import Navbar from '../assets/components/Navbar.jsx';
+import { useNavigate } from 'react-router-dom';
 import '../assets/css/homePage/homePage.css';
 import hero_section from '../images/hero_section.jpg';
+import { useA2HS } from '../pwa/useA2HS.js'
 
-export function HomePage({ navigateTo }) {
+export function HomePage() {
+  const navigate = useNavigate();
+  
   const features = [
     {
       icon: (
@@ -13,7 +17,7 @@ export function HomePage({ navigateTo }) {
       ),
       title: 'AI Health Companion',
       desc: 'Get instant, accurate answers about your body and health changes',
-      onClick: () => navigateTo('chat'),
+      onClick: () => navigate('chat'),
       gradientClass: 'gradient-primary',
     },
     {
@@ -24,7 +28,7 @@ export function HomePage({ navigateTo }) {
       ),
       title: 'Expert Specialists',
       desc: 'Connect with certified healthcare professionals who understand you',
-      onClick: () => navigateTo('specialists'),
+      onClick: () => navigate('specialists'),
       gradientClass: 'gradient-pink',
     },
     {
@@ -35,7 +39,7 @@ export function HomePage({ navigateTo }) {
       ),
       title: 'Health Services Map',
       desc: 'Find nearby clinics, pharmacies, and emergency services instantly',
-      onClick: () => navigateTo('map'),
+      onClick: () => navigate('map'),
       gradientClass: 'gradient-orange',
     },
     {
@@ -46,10 +50,12 @@ export function HomePage({ navigateTo }) {
       ),
       title: 'Educational Resources',
       desc: 'Learn about your body with age-appropriate, medically accurate content',
-      onClick: () => navigateTo('learn'),
+      onClick: () => navigate('learn'),
       gradientClass: 'gradient-yellow',
     },
+    
   ];
+  const { canPrompt, promptInstall } = useA2HS()
 
   return (
     <div className="homepage">
@@ -74,23 +80,26 @@ export function HomePage({ navigateTo }) {
 
               <div className="hero-actions">
                 <button
-                  onClick={() => navigateTo('chat')}
+                  onClick={() => navigate('chat')}
                   className="btn btn-primary"
                 >
                   Start Chatting with AI
                 </button>
-                <button
-                  onClick={() => navigateTo('specialists')}
-                  className="btn btn-secondary"
-                >
-                  Find a Specialist
-                </button>
+                {canPrompt && (
+                  <button
+                    className="btn btn-primary"
+                    onClick={promptInstall}
+                  >
+                    Install App
+                  </button>
+                )}
+                {/* <button className='btn btn-primary' onClick={promptInstall}>Install App</button> */}
               </div>
             </div>
 
             {/* Right Visual */}
             <div className="hero-visual">
-              <img classname="hero-image"  alt=''/>
+              <img className="hero-image" src={hero_section} alt=''/>
             </div>
           </div>
         </div>
@@ -123,7 +132,7 @@ export function HomePage({ navigateTo }) {
                 Everything you need to feel confident and informed
               </h4>
               <button
-                onClick={() => navigateTo('signup')}
+                onClick={() => navigate('signup')}
                 className="btn btn-cta"
               >
                 Get Started Today
@@ -139,9 +148,9 @@ export function HomePage({ navigateTo }) {
           <div className="footer-content">
             <span>© {new Date().getFullYear()} Nganiriza</span>
             <div className="footer-links">
-              <button onClick={() => navigateTo('help')}>Help Center</button>
-              <button onClick={() => navigateTo('privacy')}>Privacy</button>
-              <button onClick={() => navigateTo('terms')}>Terms</button>
+              <button onClick={() => navigate('help')}>Help Center</button>
+              <button onClick={() => navigate('privacy')}>Privacy</button>
+              <button onClick={() => navigate('terms')}>Terms</button>
             </div>
           </div>
         </div>
