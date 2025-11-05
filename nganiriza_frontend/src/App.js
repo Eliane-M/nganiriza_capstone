@@ -9,20 +9,30 @@ import { ResourcesPage } from './pages/ResourcesPage';
 import { useState } from 'react';
 import SignupPage from './pages/SignupPage';
 import LoginForm from './pages/LoginPage';
+import { useA2HS } from './pwa/useA2HS'
+
 
 function App() {
+
   return (
-    <Router>
-      <Routes>
-        <Route path="/" element={<HomePage />} />
-        <Route path="/chat" element={<ChatPage />} />
-        <Route path="/specialists" element={<SpecialistPage />} />
-        <Route path="/map" element={<MapPage />} />
-        <Route path="/learn" element={<ResourcesPage />} />
-        <Route path="/signup" element={<SignupPage />} />
-        <Route path='/login' element={<LoginForm />} />
-      </Routes>
-    </Router>
+    <div>
+      {/* <h1>Welcome to Nganiriza</h1>
+      {canPrompt && (
+        <button onClick={promptInstall}>Install App</button>
+      )} */}
+      <Router>
+        <Routes>
+          <Route path="/" element={<HomePage />} />
+          <Route path="/chat" element={<ChatPage />} />
+          <Route path="/specialists" element={<SpecialistPage />} />
+          <Route path="/map" element={<MapPage />} />
+          <Route path="/learn" element={<ResourcesPage />} />
+          <Route path="/signup" element={<SignupPage />} />
+          <Route path='/login' element={<LoginForm />} />
+        </Routes>
+      </Router>
+    </div>
+    
   );
 }
 
