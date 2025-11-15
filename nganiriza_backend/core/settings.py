@@ -37,7 +37,7 @@ INSTALLED_APPS = [
     'authentication',
     'corsheaders',
     "drf_spectacular",
-    "drf_spectacular_sidecar",
+    "drf_spectacular_sidecar"
 ]
 
 MIDDLEWARE = [
@@ -54,6 +54,7 @@ MIDDLEWARE = [
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:3000",
     "http://127.0.0.1:8000",
+    "https://nganiriza-6k1e.onrender.com",
 ]
 
 
@@ -184,7 +185,7 @@ REST_FRAME_SIMPLEJWT = {
 }
 
 SIMPLE_JWT = {
-    "ACCESS_TOKEN_LIFETIME": timedelta(minutes=5),
+    "ACCESS_TOKEN_LIFETIME": timedelta(minutes=60),
     "REFRESH_TOKEN_LIFETIME": timedelta(days=3),
     "ROTATE_REFRESH_TOKENS": False,
     "BLACKLIST_AFTER_ROTATION": True,
@@ -246,3 +247,21 @@ EMAIL_HOST_USER = os.getenv("EMAIL_HOST_USER", "")
 EMAIL_HOST_PASSWORD = os.getenv("EMAIL_HOST_PASSWORD", "")
 # Ensure a default from email to avoid None errors
 DEFAULT_FROM_EMAIL = os.getenv("DEFAULT_FROM_EMAIL", EMAIL_HOST_USER or 'no-reply@localhost')
+
+
+# AI Model Configuration
+AI_MODEL_PATH = os.path.join(BASE_DIR, 'models', 'qwen2.5-0.5b-instruct-q5_k_m.gguf')
+AI_MODEL_CONTEXT_SIZE = 4096
+AI_MODEL_MAX_TOKENS = 512
+AI_MODEL_TEMPERATURE = 0.7
+AI_MODEL_N_GPU_LAYERS = 0
+
+
+# Cache settings for offline capability
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.db.DatabaseCache',
+        'LOCATION': 'ai_response_cache',
+        'TIMEOUT': None,  # Cache forever unless manually cleared
+    }
+}
