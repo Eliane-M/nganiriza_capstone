@@ -1,13 +1,9 @@
 from rest_framework import permissions
 
-class IsAdmin(permissions.BasePermission):
+class IsSpecialist(permissions.BasePermission):
     def has_permission(self, request, view):
-        return request.user.groups.filter(name='admin').exists()
+        return request.user.groups.filter(name='Specialist').exists()
 
 class IsUser(permissions.BasePermission):
     def has_permission(self, request, view):
-        return request.user.groups.filter(name='user').exists()
-
-class IsSuperAdmin(permissions.BasePermission):
-    def has_permission(self, request, view):
-        return request.user.groups.filter(name='superadmin').exists()
+        return request.user.groups.filter(name='User').exists()

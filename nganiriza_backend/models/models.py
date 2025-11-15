@@ -16,6 +16,21 @@ LANGUAGE_CHOICES = [
     ('fr', 'Français')
 ]
 
+USER_ROLES = [
+    ('user', 'User'),
+    ('specialist', 'Specialist'),
+    ('admin', 'Admin')
+]
+
+SPECIALTY_CHOICES = [
+    ('gynecology', 'Gynecology'),
+    ('adolescent', 'Adolescent Medicine'),
+    ('reproductive', 'Reproductive Health'),
+    ('mental', 'Mental Health'),
+    ('nutrition', 'Nutrition'),
+    ('general', 'General Practice')
+]
+
 
 class Province(models.Model):
     name = models.CharField(max_length=100)
@@ -36,11 +51,13 @@ class Village(models.Model):
     name = models.CharField(max_length=100)
     cell = models.ForeignKey(Cell, on_delete=models.CASCADE, related_name="villages")
 
+# For General Users
 
 class Account(BaseModel):
     user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     phone_number = models.CharField(max_length=15, blank=True, null=True)
     date_of_birth = models.DateField(blank=True, null=True)
+    role = models.CharField(choices=USER_ROLES, max_length=25, default='user')
     province = models.ForeignKey(Province, on_delete=models.SET_NULL, null=True, blank=True)
     district = models.ForeignKey(District, on_delete=models.SET_NULL, null=True, blank=True)
     sector = models.ForeignKey(Sector, on_delete=models.SET_NULL, null=True, blank=True)
@@ -120,6 +137,114 @@ class Profile(models.Model):
     def __str__(self):
         return getattr(self.user, "username", str(self.user))
 
+# For Specialists
+
+class SpecialistProfile(BaseModel):
+    specialist_account = models.OneToOneField(Account, on_delete=models.CASCADE, related_name='specialist_profile')
+    specialty = models.CharField(max_length=50, choices=SPECIALTY_CHOICES)
+    license_number = models.CharField(max_length=100, unique=True, blank=True, null=True)
+    years_of_experience = models.IntegerField(default=0)
+    bio = models.TextField(blank=True)
+    education = models.TextField(blank=True, help_text="Educational background")
+    certifications = models.JSONField(default=list, blank=True, help_text="List of certifications")
+    languages_spoken = models.JSONField(default=list, blank=True, help_text="Languages the specialist speaks")
+    
+    # Availability
+    availability = models.CharField(max_length=255, blank=True, help_text="e.g., Mon-Fri 9AM-5PM")
+    consultation_fee = models.DecimalField(max_digits=10, decimal_places=2, default=0.00)
+    
+    # Profile completeness
+    is_verified = models.BooleanField(default=False, help_text="Admin verification status")
+    profile_completed = models.BooleanField(default=False)
+    profile_image = models.ImageField(upload_to='specialist_profiles/', blank=True, null=True)
+    
+    # Ratings
+    average_rating = models.DecimalField(max_digits=3, decimal_places=2, default=0.00)
+    total_reviews = models.IntegerField(default=0)
+    
+    # Practice location
+    clinic_name = models.CharField(max_length=255, blank=True)
+    clinic_address = models.TextField(blank=True)
+    
+    def __str__(self):
+        return f"{self.account.user.get_full_name()} - {self.get_specialty_display()}"
+    
+    def calculate_profile_completeness(self):
+        """Calculate if profile is complete"""
+        required_fields = [
+            self.specialty,
+            self.bio,
+            self.education,
+            self.years_of_experience > 0,
+            self.consultation_fee > 0,
+            self.availability,
+            len(self.languages_spoken) > 0,
+        ]
+        self.profile_completed = all(required_fields)
+        return self.profile_completed
+
+class SpecialistAvailability(models.Model):
+    """Detailed availability schedule for specialists"""
+    specialist = models.ForeignKey(SpecialistProfile, on_delete=models.CASCADE, related_name='schedules')
+    day_of_week = models.CharField(max_length=10, choices=[
+        ('monday', 'Monday'),
+        ('tuesday', 'Tuesday'),
+        ('wednesday', 'Wednesday'),
+        ('thursday', 'Thursday'),
+        ('friday', 'Friday'),
+        ('saturday', 'Saturday'),
+        ('sunday', 'Sunday'),
+    ])
+    start_time = models.TimeField()
+    end_time = models.TimeField()
+    is_available = models.BooleanField(default=True)
+    
+    class Meta:
+        unique_together = ['specialist', 'day_of_week']
+        ordering = ['day_of_week', 'start_time']
+
+
+class Appointment(BaseModel):
+    """Appointment booking system"""
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='appointments')
+    specialist = models.ForeignKey(SpecialistProfile, on_delete=models.CASCADE, related_name='appointments')
+    appointment_date = models.DateField()
+    appointment_time = models.TimeField()
+    duration_minutes = models.IntegerField(default=30)
+    
+    status = models.CharField(max_length=20, choices=[
+        ('pending', 'Pending'),
+        ('confirmed', 'Confirmed'),
+        ('cancelled', 'Cancelled'),
+        ('completed', 'Completed'),
+    ], default='pending')
+    
+    notes = models.TextField(blank=True)
+    cancellation_reason = models.TextField(blank=True)
+    
+    class Meta:
+        ordering = ['-appointment_date', '-appointment_time']
+    
+    def __str__(self):
+        return f"{self.user.username} with {self.specialist} on {self.appointment_date}"
+
+
+class SpecialistReview(models.Model):
+    """Reviews for specialists"""
+    specialist = models.ForeignKey(SpecialistProfile, on_delete=models.CASCADE, related_name='reviews')
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    rating = models.IntegerField(choices=[(i, i) for i in range(1, 6)])  # 1-5 stars
+    comment = models.TextField(blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    
+    class Meta:
+        unique_together = ['specialist', 'user']
+        ordering = ['-created_at']
+    
+    def __str__(self):
+        return f"{self.user.username} - {self.rating} stars"
+
+
 class Conversations(BaseModel):
     CHANNEL_CHOICES = [
         ('web', 'web'),
@@ -190,3 +315,18 @@ class ServiceProvider(BaseModel):
         return self.name + " - " + self.type
 
 
+class QueryCache(models.Model):
+    query_hash = models.CharField(max_length=64, unique=True, db_index=True)
+    query_text = models.TextField()
+    response = models.TextField()
+    context = models.JSONField(default=dict, blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    accessed_count = models.IntegerField(default=0)
+    last_accessed = models.DateTimeField(auto_now=True)
+    
+    class Meta:
+        ordering = ['-last_accessed']
+        indexes = [
+            models.Index(fields=['query_hash']),
+            models.Index(fields=['-last_accessed']),
+        ]

@@ -1,4 +1,4 @@
-from django.contrib.auth.models import User
+from django.contrib.auth.models import User, Group
 from authentication.services.emails.emails import new_account_email
 from rest_framework.response import Response
 from rest_framework import status
@@ -7,7 +7,7 @@ from django.core.validators import validate_email
 from django.core.exceptions import ValidationError
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import AllowAny
-from models.models import Account, AccountEmail, Sector
+from models.models import Account, AccountEmail, Sector, USER_ROLES, SpecialistProfile
 from models.serializers import UserSerializer, SignupRequestSerializer
 from drf_spectacular.utils import extend_schema
 
@@ -75,11 +75,20 @@ def new_user(request):
     date_of_birth = request.data.get("date_of_birth")
     place_of_origin = request.data.get("place_of_origin")
     phone_number = request.data.get("phone_number")
+    role = request.data.get("role", "user")
     
     # Validate required fields
     if not email or not full_name or not password:
         return Response(
             {"error": "Email, password and names must not be empty"}, 
+            status=status.HTTP_400_BAD_REQUEST
+        )
+
+    # Validate role
+    valid_roles = [choice[0] for choice in USER_ROLES]
+    if role not in valid_roles:
+        return Response(
+            {"error": f"Invalid role. Must be one of {', '.join(valid_roles)}"},
             status=status.HTTP_400_BAD_REQUEST
         )
     
@@ -111,6 +120,26 @@ def new_user(request):
             password=make_password(password)
         )
 
+        if role == 'specialist':
+            user.is_staff = True
+            user.save()
+            
+            # Add to specialist group (create if doesn't exist)
+            specialist_group, _ = Group.objects.get_or_create(name='Specialist')
+            user.groups.add(specialist_group)
+        elif role == 'admin':
+            user.is_staff = True
+            user.is_superuser = True
+            user.save()
+            
+            admin_group, _ = Group.objects.get_or_create(name='Admin')
+            user.groups.add(admin_group)
+        else:
+            # Regular user
+            user_group, _ = Group.objects.get_or_create(name='User')
+            user.groups.add(user_group)
+
+
         # Create account with location
         sector = None
         if place_of_origin:
@@ -131,11 +160,22 @@ def new_user(request):
         account = Account.objects.create(
             user=user,
             sector=sector,
+            role=role,
             phone_number=phone_number,
             date_of_birth=date_of_birth,
+            created_by=user,
+            updated_by=user
         )
 
-        # Send welcome email (don't fail signup if email fails)
+         # If specialist, create specialist profile
+        if role == 'specialist':
+            SpecialistProfile.objects.create(
+                specialist_account=account,
+                specialty='general',  # Default, will be updated in onboarding
+                created_by=user,
+                updated_by=user
+            )
+        
         try:
             AccountEmail.objects.create(email=user.email)
             new_account_email(user.email, user.first_name)
@@ -152,6 +192,8 @@ def new_user(request):
             "sector": None,
             "cell": None,
             "village": None,
+            "is_specialist": role == 'specialist',
+            "profile_completed": False,
         }
         
         if account.village:
