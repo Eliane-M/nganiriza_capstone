@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useRef, useContext } from 'react';
-import { ChatBubble } from '../assets/components/ChatBubble.tsx';
-import { Send as SendIcon } from 'lucide-react';
+import { Send as SendIcon, Home, MessageCircle, Users, MapPin, ArrowLeft } from 'lucide-react';
 import { LanguageContext } from '../assets/components/context/LanguageContext.tsx';
+import { useNavigate } from 'react-router-dom';
 import '../assets/css/chat/chat_page.css';
 
 export function ChatPage() {
@@ -9,9 +9,9 @@ export function ChatPage() {
     {
       id: 1,
       text: {
-        en: "Hi! I'm your AI health companion. I'm here to provide accurate, supportive information about women's health and development. What would you like to know about today?",
-        fr: "Salut ! Je suis votre compagnon de santé IA. Je suis ici pour fournir des informations précises et utiles sur la santé et le développement des femmes. Que souhaitez-vous savoir aujourd'hui ?",
-        rw: "Muraho! Ndi umukunzi wawe w'ubuzima wa AI. Ndi hano gutanga amakuru akomeye kandi afasha ku buzima n'iterambere ry'abagore. Wifuza kumenya iki uyu munsi?"
+        en: "Hi! I'm your AI health companion. What would you like to know about women's health today?",
+        fr: "Salut ! Je suis votre compagnon IA. Que souhaitez-vous savoir sur la santé des femmes ?",
+        rw: "Muraho! Ndi umujyanama wawe wa AI. Wifuza kumenya iki ku buzima bw'abagore uyu munsi?"
       },
       isUser: false,
       timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
@@ -19,143 +19,143 @@ export function ChatPage() {
   ]);
 
   const [inputText, setInputText] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
   const messagesEndRef = useRef(null);
   const { language } = useContext(LanguageContext);
+  const navigate = useNavigate();
 
   const translations = {
-    placeholder: {
-      en: 'Ask me anything about women\'s health...',
-      fr: 'Demandez-moi n\'importe quoi sur la santé des femmes...',
-      rw: 'Mbaze ikintu cyose ku buzima bw\'abagore...'
-    },
-    quickQuestions: {
-      en: 'Quick questions to get started:',
-      fr: 'Questions rapides pour commencer :',
-      rw: 'Ibibazo byihuse kugirango utangire:'
-    },
-    disclaimer: {
-      en: 'Remember: This AI provides general information only. For medical concerns, please consult a healthcare professional.',
-      fr: 'N\'oubliez pas : cette IA fournit des informations générales uniquement. Pour les problèmes médicaux, veuillez consulter un professionnel de la santé.',
-      rw: 'Wibuke: Iyi AI itanga amakuru rusange gusa. Ku bibazo by\'ubuvuzi, nyamuneka ganiriza n\'umwuga w\'ubuzima.'
-    },
-    suggestions: {
-      en: [
-        'What changes should I expect during puberty?',
-        'How do I know if my period is normal?',
-        'What is reproductive health?'
-      ],
-      fr: [
-        'Quels changements dois-je attendre pendant la puberté ?',
-        'Comment savoir si mes règles sont normales ?',
-        'Qu\'est-ce que la santé reproductive ?'
-      ],
-      rw: [
-        'Ni izihe mpinduka nagomba gutegereza mu gihe cy\'ubwangavu?',
-        'Nzi nte niba igihe cyanjye cy\'ukwezi ari normal?',
-        'Ubuzima bw\'imyororokere ni iki?'
-      ]
-    },
-    aiResponse: {
-      en: 'Thank you for your question. This is a simulated response. In the actual application, this would be an AI-generated answer based on your specific question about women\'s health.',
-      fr: "Merci pour votre question. Ceci est une réponse simulée. Dans l'application réelle, ce serait une réponse générée par l'IA en fonction de votre question spécifique sur la santé des femmes.",
-      rw: "Urakoze kubaza ikibazo cyawe. Iyi ni inyunganizi y'igerageza. Mu gusohoka kwa nyuma, bizaba ari igisubizo cyakozwe na AI gishingiye ku kibazo cyawe kijyanye n'ubuzima bw'abagore."
-    }
+    placeholder: { en: "Type a message...", fr: "Écrivez un message...", rw: "Andika ubutumwa..." },
+    typing: { en: "AI is typing...", fr: "L'IA écrit...", rw: "AI iri kwandika..." },
+    back: { en: "Back", fr: "Retour", rw: "Subira inyuma" }
   };
 
-  useEffect(() => { 
-    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' }); 
+  useEffect(() => {
+    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages]);
 
-  const handleSend = () => {
-    if (inputText.trim() === '') return;
+  async function askAI(query) {
+    try {
+      const res = await fetch('/api/ai/query/', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ query, use_cache: true, language })
+      });
+      const data = await res.json();
+      return data.success ? data.response : "Sorry, I couldn't respond right now.";
+    } catch {
+      return translations.typing[language].replace('typing', 'connect');
+    }
+  }
 
-    const userMessage = {
-      id: messages.length + 1,
+  const handleSend = async () => {
+    if (!inputText.trim() || isLoading) return;
+
+    const userMsg = {
+      id: Date.now(),
       text: inputText,
       isUser: true,
       timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
     };
 
-    setMessages(prev => [...prev, userMessage]);
+    setMessages(prev => [...prev, userMsg]);
     setInputText('');
+    setIsLoading(true);
 
-    setTimeout(() => {
-      const aiMessage = {
-        id: messages.length + 2,
-        text: translations.aiResponse[language],
-        isUser: false,
-        timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
-      };
-      setMessages(prev => [...prev, aiMessage]);
-    }, 600);
+    const typing = { id: 'typing', isUser: false, isTyping: true };
+    setMessages(prev => [...prev, typing]);
+
+    const reply = await askAI(userMsg.text);
+
+    setMessages(prev => prev.filter(m => m.id !== 'typing').concat({
+      id: Date.now() + 1,
+      text: reply,
+      isUser: false,
+      timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+    }));
+
+    setIsLoading(false);
   };
 
-  const handleSuggestionClick = (suggestion) => {
-    setInputText(suggestion);
-  };
+  const navItems = [
+    { icon: Home, label: "Home", path: "/" },
+    { icon: MessageCircle, label: "Chat", path: "/chat", active: true },
+    { icon: Users, label: "Community", path: "/community" },
+    { icon: MapPin, label: "Map", path: "/map" }
+  ];
 
   return (
-    <div className="chat_page">
+    <div className="chat_page mobile-app">
+      {/* Mobile Header */}
+      <div className="mobile-header">
+        <button onClick={() => navigate(-1)} className="back-btn">
+          <ArrowLeft size={24} />
+        </button>
+        <div className="header-title">
+          <div className="avatar-small">AI</div>
+          <div>
+            <h3>AI Health Companion</h3>
+            <span className="online">Online</span>
+          </div>
+        </div>
+      </div>
+
       <div className="chat-container">
         <div className="messages-area">
-          {messages.map((message) => (
-            <ChatBubble
-              key={message.id}
-              message={typeof message.text === 'object' ? message.text[language] : message.text}
-              isUser={message.isUser}
-              timestamp={message.timestamp}
-            />
+          {messages.map(msg => (
+            <div key={msg.id} className={`chat-message ${msg.isUser ? 'user' : 'assistant'} ${msg.isTyping ? 'typing' : ''}`}>
+              {!msg.isUser && !msg.isTyping && (
+                <div className="avatar">
+                  <div className="avatar-img">AI</div>
+                </div>
+              )}
+
+              <div className="message-content">
+                {msg.isTyping ? (
+                  <div className="typing-bubble">
+                    <span></span><span></span><span></span>
+                  </div>
+                ) : (
+                  <div className="bubble">
+                    <p>{typeof msg.text === 'object' ? msg.text[language] : msg.text}</p>
+                    <span className="time">{msg.timestamp}</span>
+                  </div>
+                )}
+              </div>
+            </div>
           ))}
           <div ref={messagesEndRef} />
         </div>
 
         <div className="input-section">
-          {messages.length === 1 && (
-            <div className="quick-questions">
-              <p className="quick-questions-label">{translations.quickQuestions[language]}</p>
-              <div className="suggestions">
-                {translations.suggestions[language].map((suggestion, index) => (
-                  <button
-                    key={index}
-                    className="suggestion-pill"
-                    onClick={() => handleSuggestionClick(suggestion)}
-                  >
-                    {suggestion}
-                  </button>
-                ))}
-              </div>
-            </div>
-          )}
-
-          <div className="input-wrapper">
+          <div className="input-bar">
             <input
-              type="text"
               value={inputText}
-              onChange={(e) => setInputText(e.target.value)}
-              onKeyDown={(e) => e.key === 'Enter' && handleSend()}
+              onChange={e => setInputText(e.target.value)}
+              onKeyDown={e => e.key === 'Enter' && !e.shiftKey && handleSend()}
               placeholder={translations.placeholder[language]}
-              className="message-input"
+              disabled={isLoading}
             />
-            <button 
-              onClick={handleSend} 
-              className="send-button" 
-              aria-label="Send message"
-              disabled={!inputText.trim()}
-            >
-              <SendIcon size={20} />
+            <button onClick={handleSend} disabled={!inputText.trim() || isLoading}>
+              {isLoading ? <div className="send-spinner"></div> : <SendIcon size={22} />}
             </button>
           </div>
-
-          <p className="disclaimer-text">{translations.disclaimer[language]}</p>
         </div>
       </div>
 
-      <button className="talk-with-us-fab">
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-          <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
-        </svg>
-        <span>Talk with Us</span>
-      </button>
+      {/* Bottom Navigation Bar */}
+      <div className="bottom-nav">
+        {navItems.map((item, i) => (
+          <button
+            key={i}
+            onClick={() => navigate(item.path)}
+            className={`nav-item ${item.active ? 'active' : ''}`}
+          >
+            <item.icon size={24} />
+            <span>{item.label}</span>
+          </button>
+        ))}
+      </div>
     </div>
   );
 }

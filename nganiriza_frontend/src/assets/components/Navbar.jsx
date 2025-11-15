@@ -5,6 +5,7 @@ import { LanguageContext } from '../components/context/LanguageContext.tsx';
 import { AuthContext } from '../components/context/AuthContext.tsx';
 import { LanguageSwitcher } from '../components/LanguageSwitcher.tsx';
 import '../css/navbar/navbar.css';
+import nganiriza from '../../images/nganiriza.png';
 
 export default function Navbar() {
   const navigate = useNavigate();
@@ -50,7 +51,7 @@ export default function Navbar() {
         {/* Brand + Navigation */}
         <div className="navbar-left">
           <button onClick={() => handleNavigation('/')} className="brand">
-            <div className="brand-logo" />
+            {/* <div className="brand-logo" /> */}
             <span className="brand-name">Nganiriza</span>
           </button>
           

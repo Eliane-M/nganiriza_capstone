@@ -14,16 +14,14 @@ import ResetPassword from './pages/ResetPassword';
 import InvalidLink from './pages/InvalidLink';
 import VerifyCode from './pages/VerifyCode';
 import SetNewPassword from './pages/SetNewPassword';
+import SpecialistDashboard from './pages/SpecialistDashboard';
+import SpecialistOnboarding from './pages/SpecialistOnboarding';
 
 
 function App() {
 
   return (
     <div>
-      {/* <h1>Welcome to Nganiriza</h1>
-      {canPrompt && (
-        <button onClick={promptInstall}>Install App</button>
-      )} */}
       <Router>
         <Routes>
           <Route path="/" element={<HomePage />} />
@@ -37,6 +35,8 @@ function App() {
           <Route path='/invalid-link' element={<InvalidLink />} />
           <Route path='/verify-code' element={<VerifyCode />} />
           <Route path='/set-new-password' element={<SetNewPassword />} />
+          <Route path='/specialist/dashboard' element={<SpecialistDashboard />} />
+          <Route path='/specialist/onboard' element={<SpecialistOnboarding />} />
         </Routes>
       </Router>
     </div>

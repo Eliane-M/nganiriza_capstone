@@ -20,33 +20,69 @@ const LoginForm = () => {
     setLoading(true);
 
     try {
-      // Adjust payload/URL/response shape to your API contract
       const res = await axios.post(
-        `${BASE_URL}/api/auth/login/`,
+        `${BASE_URL}/api/auth/login/`,  // Make sure this matches your URL
         { 
-          username:email, 
+          username: email,  // Backend expects "username", you're using email as username
           password
         },
-        { headers: { 'Content-Type': 'application/json' } }
+        { 
+          headers: { 'Content-Type': 'application/json' },
+          withCredentials: false  // SimpleJWT doesn't need cookies by default
+        }
       );
 
-      // Example expected response
-      // { access_token, refresh_token, user: {...} }
-      const { access_token, refresh_token, user } = res.data || {};
+      // Correctly destructure your backend response
+      const { 
+        message, 
+        access, 
+        refresh, 
+        role, 
+        user 
+      } = res.data;
 
+      // Choose storage based on "Remember me"
       const storage = remember ? localStorage : sessionStorage;
-      if (access_token) storage.setItem('access_token', access_token);
-      if (refresh_token) storage.setItem('refresh_token', refresh_token);
-      if (user) storage.setItem('user', JSON.stringify(user));
 
-      navigate('/'); // or /dashboard
+      // Save tokens
+      storage.setItem('access_token', access);
+      storage.setItem('refresh_token', refresh);
+      storage.setItem('user_role', role);        // "admin" or "user"
+      storage.setItem('user', JSON.stringify(user));
+
+      // Optional: Save login state
+      storage.setItem('isLoggedIn', 'true');
+
+      // Success message (optional)
+      console.log(message);
+
+      // Redirect based on role
+      if (role === 'specialist') {
+        navigate('/specialist/dashboard');
+      } else {
+        navigate('/'); 
+      }
+
     } catch (err) {
-      const apiMsg =
-        err.response?.data?.detail ||
-        err.response?.data?.message ||
-        (err.response?.status === 401 ? 'Invalid email or password.' : null);
+      let errorMessage = 'Sign-in failed. Please try again.';
 
-      setErrMsg(apiMsg || 'Sign-in failed. Please try again.');
+      if (err.response) {
+        const data = err.response.data;
+
+        if (err.response.status === 400) {
+          errorMessage = data.error || 'Username and password are required.';
+        } else if (err.response.status === 404) {
+          errorMessage = data.error || 'Invalid credentials.';
+        } else if (err.response.status === 500) {
+          errorMessage = data.error || 'Server error. Try again later.';
+        } else if (err.response.status === 401) {
+          errorMessage = 'Unauthorized. Check your credentials.';
+        }
+      } else if (err.request) {
+        errorMessage = 'No response from server. Check your connection.';
+      }
+
+      setErrMsg(errorMessage);
     } finally {
       setLoading(false);
     }
@@ -55,8 +91,6 @@ const LoginForm = () => {
   return (
     <div className="auth-container">
       <div className="auth-card">
-
-        {/* simple header with Cancel -> Home */}
         <div className="login-header">
           <button
             type="button"
@@ -74,10 +108,10 @@ const LoginForm = () => {
 
         <form onSubmit={handleSubmit} className="auth-form">
           <div className="input-group">
-            <label>Email Address</label>
+            <label>Email Address (Username)</label>
             <input
-              type="email"
-              placeholder="Enter your email"
+              type="text"  // Use "text" or "email" — depends on whether email is username
+              placeholder="Enter your email or username"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               autoComplete="username"
@@ -102,6 +136,7 @@ const LoginForm = () => {
                 onClick={() => setShowPwd((s) => !s)}
                 aria-label={showPwd ? 'Hide password' : 'Show password'}
               >
+                {showPwd ? 'Hide' : 'Show'}
               </button>
             </div>
           </div>
@@ -141,13 +176,13 @@ const LoginForm = () => {
           </div>
 
           <p className="switch-link">
-            Don&apos;t have an account? <Link to="/signup">Sign up here</Link>
+            Don't have an account? <Link to="/signup">Sign up here</Link>
           </p>
         </form>
 
-        <button className="talk-btn" type="button">
+        {/* <button className="talk-btn" type="button">
           <span>Chat</span> Talk with Us
-        </button>
+        </button> */}
       </div>
     </div>
   );

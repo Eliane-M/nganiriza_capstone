@@ -94,12 +94,12 @@
   align-items: center;
   justify-content: space-around;
 }
-@media (min-width: 640px) {
+@media (min-width: 600px) {
   .navbar .navbar-container {
     padding: 0 1.5rem;
   }
 }
-@media (min-width: 1024px) {
+@media (min-width: 992px) {
   .navbar .navbar-container {
     padding: 0 2rem;
   }

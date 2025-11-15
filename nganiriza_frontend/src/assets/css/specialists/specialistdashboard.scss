@@ -1,0 +1,335 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+$primary: #e91e63;
+$background: #fdf3f8;
+$text: #333;
+$light-text: #666;
+$border: #eee;
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Inter', sans-serif;
+  background-color: $background;
+  color: $text;
+}
+
+.dashboard {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+  padding-bottom: 80px; // Space for mobile navbar
+
+  @media (min-width: 769px) {
+    padding-bottom: 20px;
+  }
+}
+
+// Header
+.dashboard-header {
+  margin-bottom: 24px;
+  h1 {
+    font-size: 28px;
+    font-weight: 700;
+    color: #2d1b3a;
+  }
+  p {
+    color: $light-text;
+    margin-top: 4px;
+  }
+}
+
+// Stats Grid
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 16px;
+  margin-bottom: 32px;
+
+  @media (max-width: 768px) {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+.stat-card {
+  background: white;
+  padding: 20px;
+  border-radius: 16px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+  display: flex;
+  align-items: center;
+  gap: 16px;
+
+  .stat-icon {
+    width: 48px;
+    height: 48px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+
+    &.today { background: #a78bfa; }
+    &.messages { background: #f472b6; }
+    &.patients { background: #60a5fa; }
+    &.week { background: #34d399; }
+  }
+
+  h3 {
+    font-size: 14px;
+    color: $light-text;
+    margin-bottom: 4px;
+  }
+
+  .stat-number {
+    font-size: 24px;
+    font-weight: 700;
+    color: #2d1b3a;
+  }
+}
+
+// Tabs
+.tabs {
+  display: flex;
+  gap: 24px;
+  border-bottom: 1px solid $border;
+  margin-bottom: 24px;
+
+  .tab {
+    padding: 12px 0;
+    border: none;
+    background: none;
+    font-size: 16px;
+    font-weight: 500;
+    color: $light-text;
+    cursor: pointer;
+    position: relative;
+
+    &.active {
+      color: $primary;
+      font-weight: 600;
+
+      &::after {
+        content: '';
+        position: absolute;
+        bottom: -1px;
+        left: 0;
+        right: 0;
+        height: 3px;
+        background: $primary;
+        border-radius: 2px;
+      }
+    }
+  }
+}
+
+// Appointments Section
+.appointments-section {
+  background: white;
+  border-radius: 16px;
+  padding: 24px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+}
+
+.section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+
+  h2 {
+    font-size: 20px;
+    font-weight: 600;
+  }
+
+  .add-appointment-btn {
+    background: $primary;
+    color: white;
+    border: none;
+    padding: 10px 16px;
+    border-radius: 12px;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+    transition: 0.2s;
+
+    &:hover {
+      background: #c2185b;
+    }
+  }
+}
+
+.appointments-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.appointment-card {
+  border: 1px solid $border;
+  border-radius: 12px;
+  padding: 16px;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  transition: 0.2s;
+
+  &:hover {
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  }
+
+  .patient-info {
+    display: flex;
+    gap: 16px;
+    flex: 1;
+  }
+
+  .avatar {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background: #f472b6;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 600;
+    font-size: 14px;
+    flex-shrink: 0;
+  }
+
+  .patient-name {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+    font-weight: 600;
+    margin-bottom: 4px;
+
+    .age {
+      font-weight: normal;
+      color: $light-text;
+      font-size: 14px;
+    }
+  }
+
+  .status-badge, .priority-tag {
+    font-size: 12px;
+    padding: 4px 8px;
+    border-radius: 20px;
+    font-weight: 500;
+  }
+
+  .concern {
+    color: $light-text;
+    margin: 4px 0;
+  }
+
+  .appointment-meta {
+    display: flex;
+    gap: 12px;
+    font-size: 14px;
+    color: $light-text;
+    margin: 8px 0;
+
+    .type-icon {
+      display: flex;
+      align-items: center;
+    }
+  }
+
+  .note {
+    font-size: 13px;
+    color: #666;
+    font-style: italic;
+    margin-top: 8px;
+  }
+
+  .appointment-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+
+    button {
+      padding: 8px 16px;
+      border-radius: 8px;
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+      border: none;
+    }
+
+    .accept-btn {
+      background: #10b981;
+      color: white;
+    }
+
+    .reschedule-btn {
+      background: #f3f4f6;
+      color: #374151;
+    }
+  }
+}
+
+// Mobile Bottom Navbar
+.mobile-navbar {
+  display: none;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: white;
+  border-top: 1px solid $border;
+  padding: 12px 0;
+  z-index: 1000;
+
+  @media (max-width: 768px) {
+    display: flex;
+    justify-content: space-around;
+  }
+
+  .nav-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    background: none;
+    border: none;
+    color: #9ca3af;
+    font-size: 12px;
+    cursor: pointer;
+
+    &.active {
+      color: $primary;
+    }
+  }
+}
+
+// Floating Chat
+.floating-chat {
+  position: fixed;
+  bottom: 80px;
+  right: 20px;
+  background: #2d1b3a;
+  color: white;
+  border: none;
+  padding: 14px 20px;
+  border-radius: 50px;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-weight: 500;
+  cursor: pointer;
+  z-index: 999;
+
+  @media (min-width: 769px) {
+    display: none;
+  }
+}

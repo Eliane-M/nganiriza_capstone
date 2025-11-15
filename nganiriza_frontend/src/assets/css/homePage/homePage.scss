@@ -1,4 +1,5 @@
 @import '../../components/Variables/variables.scss';
+// @import '../../../images/hero_section.jpg';
 
 // Mixins
 @mixin gradient-primary {
@@ -16,7 +17,7 @@
 @mixin container {
   max-width: 80%;
   margin: 0 auto;
-  padding: 0 1rem;
+  padding: 0 0;
 
   @media (min-width: $mobile) {
     padding: 0 1.5rem;
@@ -31,6 +32,11 @@
 .homepage {
   min-height: 90vh;
   background: linear-gradient(to bottom, $bg-light, $bg-gray);
+  padding-bottom: 80px; // Space for mobile bottom nav
+
+  @media (min-width: $tablet) {
+    padding-bottom: 0;
+  }
 
   .container {
     @include container;
@@ -42,8 +48,60 @@
   }
 }
 
+// Desktop Navbar (hidden on mobile)
+.desktop-navbar {
+  display: none;
+
+  @media (min-width: $tablet) {
+    display: block;
+  }
+}
+
 // Hero Section
 .hero-section {
+  position: relative;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  // margin-bottom: 2rem;
+
+  // DEFAULT: NO background on large screens
+  background-image: none;
+
+  // MOBILE + TABLET (≤1024px): use the image as background
+  @media (max-width: 1024px) {
+    margin-bottom: 2rem;
+    background-image: url('../../../images/hero_section.jpg'); // adjust path if needed
+    background-attachment:scroll; // optional: nice parallax feel on mobile
+
+    &::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(0, 0, 0, 0.63); // dark overlay for text readability
+      z-index: 1;
+    }
+
+    .container {
+      position: relative;
+      z-index: 1;
+    }
+
+    // Hide the inline image on mobile/tablet since background is used
+    .hero-visual {
+      display: none;
+    }
+  }
+
+  // LARGE DESKTOP (≥1024px): show inline image, no background
+  @media (min-width: 1024px) {
+    background-image: none !important;
+
+    .hero-visual {
+      display: block;
+    }
+  }
+
   .hero-grid {
     display: grid;
     grid-template-columns: 1fr;
@@ -52,11 +110,12 @@
     min-height: calc(100vh - 4rem);
     padding: 2.5rem 0;
 
-    @media (min-width: $desktop) {
+    @media (min-width: 1024px) {
       grid-template-columns: 7fr 5fr;
     }
   }
 
+  // Rest of your existing hero styles (title, text color, etc.)
   .hero-content {
     .hero-title {
       margin-top: 1rem;
@@ -66,12 +125,24 @@
       letter-spacing: -0.025em;
       color: $text-dark;
 
-      @media (min-width: $mobile) {
+      // White text on mobile/tablet when background image is active
+      @media (max-width: 1024px) {
+        color: white;
+      }
+
+      @media (min-width: 640px) {
         font-size: 3rem;
       }
 
       .gradient-text {
         @include gradient-text;
+
+        @media (max-width: 1024px) {
+          background: linear-gradient(to right, #f0abfc, #fbbf24, #fb923c);
+          background-clip: text;
+          -webkit-background-clip: text;
+          -webkit-text-fill-color: transparent;
+        }
       }
 
       :global(.dark) & {
@@ -91,6 +162,10 @@
       color: $text-medium;
       max-width: 42rem;
 
+      @media (max-width: 1024px) {
+        color: rgba(255, 255, 255, 0.901);
+      }
+
       :global(.dark) & {
         color: $dark-text-secondary;
       }
@@ -105,14 +180,19 @@
   }
 
   .hero-visual {
+    // Hidden by default on small screens (background takes over)
+    display: none;
+
+    @media (min-width: 1024px) {
+      display: block;
+    }
+
     .hero-image {
-        
-      // aspect-ratio: 8/3;
-      width: 40%;
+      width: 100%;
       border-radius: 1.5rem;
       @include gradient-primary;
       opacity: 0.9;
-      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+      box-shadow: 0 25px 50px -12px rgba(50, 50, 50, 0.43);
 
       :global(.dark) & {
         opacity: 0.8;
@@ -318,6 +398,13 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
+    flex-direction: column;
+    gap: 1rem;
+
+    @media (min-width: 360px) {
+      flex-direction: row;
+      gap: 0;
+    }
 
     :global(.dark) & {
       color: #a1a1aa;
@@ -337,6 +424,69 @@
 
       &:hover {
         text-decoration: underline;
+      }
+    }
+  }
+}
+
+// Mobile Bottom Navigation
+.bottom-navbar {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: white;
+  border-top: 1px solid $border-color;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  padding: 0.5rem 0;
+  z-index: 1000;
+  box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
+
+  @media (min-width: 768px ) {
+    display: none;
+  }
+
+  :global(.dark) & {
+    background: $dark-bg;
+    border-top-color: $dark-border;
+  }
+
+  .nav-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.25rem;
+    padding: 0.5rem 1rem;
+    background: none;
+    border: none;
+    color: $text-medium;
+    cursor: pointer;
+    transition: all 0.2s;
+    flex: 1;
+
+    svg {
+      width: 1.5rem;
+      height: 1.5rem;
+    }
+
+    span {
+      font-size: 0.75rem;
+      font-weight: 500;
+    }
+
+    &:hover,
+    &:active {
+      color: $brand-color;
+    }
+
+    :global(.dark) & {
+      color: $dark-text-secondary;
+
+      &:hover,
+      &:active {
+        color: #f9a8d4;
       }
     }
   }
