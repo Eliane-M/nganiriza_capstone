@@ -1,4 +1,5 @@
 import React from 'react';
+import { Send as SendIcon, Home, MessageCircle, Users, MapPin, ArrowLeft } from 'lucide-react';
 import Navbar from '../assets/components/Navbar.jsx';
 import { useNavigate } from 'react-router-dom';
 import '../assets/css/homePage/homePage.css';
@@ -57,6 +58,13 @@ export function HomePage() {
   ];
   const { canPrompt, promptInstall } = useA2HS()
 
+  const navItems = [
+    { icon: Home, label: "Home", path: "/", active: true},
+    { icon: MessageCircle, label: "Chat", path: "/chat" },
+    { icon: Users, label: "Community", path: "/community" },
+    { icon: MapPin, label: "Map", path: "/map" }
+  ];
+
   return (
     <div className="homepage">
       <Navbar />
@@ -99,7 +107,13 @@ export function HomePage() {
 
             {/* Right Visual */}
             <div className="hero-visual">
-              <img className="hero-image" src={hero_section} alt=''/>
+              {/* This image will be visible on desktop, background on mobile */}
+              <img 
+                className="hero-image"
+                src={hero_section} 
+                alt="Platform preview"
+                loading="lazy"
+              />
             </div>
           </div>
         </div>
@@ -155,6 +169,20 @@ export function HomePage() {
           </div>
         </div>
       </footer>
+
+      {/* Bottom Navbar (Mobile only) */}
+      <div className="bottom-navbar">
+        {navItems.map((item, i) => (
+          <button
+            key={i}
+            onClick={() => navigate(item.path)}
+            className={`nav-item ${item.active ? 'active' : ''}`}
+          >
+            <item.icon size={24} />
+            <span>{item.label}</span>
+          </button>
+        ))}
+      </div>
     </div>
   );
 }

@@ -1,96 +1,143 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Inter', sans-serif;
+  background: linear-gradient(to bottom, #f8f9ff, #fdf2f8);
+}
+
 .signup-container {
-  display: flex;
-  justify-content: center;
-  align-items: center;
   min-height: 100vh;
-  background: linear-gradient(to bottom, #fdf2f8, #f8f9fa);
-  padding: 20px;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 40px 20px;
+  position: relative;
+  background: linear-gradient(to bottom, #f8f9ff, #fdf2f8);
+}
+
+.logo {
+  margin-bottom: 20px;
+  .logo-icon {
+    width: 60px;
+    height: 60px;
+    background: linear-gradient(135deg, #ff6bce, #9f57f3);
+    border-radius: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 28px;
+    font-weight: bold;
+    box-shadow: 0 8px 20px rgba(255, 107, 206, 0.3);
+  }
 }
 
 .signup-card {
   background: white;
-  border-radius: 16px;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
-  padding: 32px;
+  border-radius: 24px;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.08);
+  padding: 40px;
   max-width: 480px;
   width: 100%;
   position: relative;
+  overflow: hidden;
+}
+
+.cancel-btn {
+  position: absolute;
+  top: 16px;
+  left: 16px;
+  background: white;
+  border: 1px solid #e5e7eb;
+  padding: 8px 16px;
+  border-radius: 12px;
+  font-size: 14px;
+  color: #666;
+  cursor: pointer;
+  transition: 0.2s;
+
+  &:hover {
+    background: #f9fafb;
+  }
 }
 
 .header {
   text-align: center;
-  margin-bottom: 28px;
+  margin-bottom: 32px;
 
   h2 {
-    margin: 0 0 8px;
-    font-size: 24px;
-    font-weight: 600;
-    color: #333;
+    font-size: 28px;
+    font-weight: 700;
+    color: #1a1a1a;
+    margin-bottom: 8px;
   }
 
   p {
-    margin: 0;
     color: #777;
-    font-size: 14px;
+    font-size: 15px;
   }
 }
 
 .signup-form {
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: 20px;
 }
 
 .user-type-selector {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  font-size: 14px;
-  color: #555;
-  margin-bottom: 8px;
+  .label {
+    display: block;
+    font-size: 14px;
+    color: #555;
+    margin-bottom: 12px;
+    font-weight: 500;
+  }
 
   .toggle-buttons {
     display: flex;
-    background: #f5f5f5;
-    border-radius: 12px;
+    background: #fdf2f8;
+    border-radius: 16px;
     overflow: hidden;
-    border: 1px solid #e0e0e0;
+    border: 2px solid transparent;
   }
 
   .toggle-btn {
     flex: 1;
-    padding: 10px 16px;
+    padding: 16px;
     border: none;
     background: transparent;
-    font-size: 14px;
-    font-weight: 500;
-    color: #777;
+    font-weight: 600;
+    font-size: 15px;
+    color: #999;
     cursor: pointer;
-    transition: all 0.3s ease;
+    transition: 0.3s;
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 6px;
-
-    .icon {
-      font-size: 16px;
-    }
+    gap: 8px;
 
     &.active {
       background: linear-gradient(135deg, #ff6bce, #ff8ad4);
       color: white;
-      box-shadow: 0 2px 8px rgba(255, 107, 206, 0.3);
+      border-radius: 14px;
+      margin: 4px;
+      box-shadow: 0 4px 12px rgba(255, 107, 206, 0.3);
     }
   }
 }
 
 .name-fields {
   display: flex;
-  gap: 12px;
+  gap: 16px;
 
-  .input-group {
-    flex: 1;
+  @media (max-width: 480px) {
+    flex-direction: column;
   }
 }
 
@@ -99,18 +146,18 @@
   flex-direction: column;
 
   label {
-    font-size: 13px;
-    color: #555;
-    margin-bottom: 6px;
+    font-size: 14px;
+    color: #444;
+    margin-bottom: 8px;
     font-weight: 500;
   }
 
   input {
-    padding: 12px 14px;
+    padding: 14px 16px;
     border: 1.5px solid #e0e0e0;
-    border-radius: 10px;
-    font-size: 14px;
-    transition: border 0.3s ease;
+    border-radius: 12px;
+    font-size: 15px;
+    transition: all 0.3s;
 
     &::placeholder {
       color: #bbb;
@@ -119,7 +166,7 @@
     &:focus {
       outline: none;
       border-color: #ff6bce;
-      box-shadow: 0 0 0 3px rgba(255, 107, 206, 0.1);
+      box-shadow: 0 0 0 4px rgba(255, 107, 206, 0.15);
     }
   }
 
@@ -131,15 +178,16 @@
 .password-wrapper {
   position: relative;
 
-  .eye-icon {
+  .eye-btn {
     position: absolute;
-    right: 12px;
+    right: 14px;
     top: 50%;
     transform: translateY(-50%);
-    font-size: 16px;
-    color: #aaa;
+    background: none;
+    border: none;
     cursor: pointer;
-    // user-select: none;
+    color: #999;
+    padding: 4px;
   }
 }
 
@@ -150,7 +198,6 @@
     font-size: 13px;
     color: #555;
     cursor: pointer;
-    // user-select: none;
 
     input {
       opacity: 0;
@@ -158,20 +205,20 @@
     }
 
     .checkmark {
-      width: 18px;
-      height: 18px;
+      width: 20px;
+      height: 20px;
       border: 2px solid #ddd;
-      border-radius: 6px;
-      margin-right: 10px;
+      border-radius: 8px;
+      margin-right: 12px;
       position: relative;
-      transition: all 0.2s;
+      transition: 0.2s;
 
       &::after {
         content: '';
         position: absolute;
         display: none;
-        left: 5px;
-        top: 1px;
+        left: 6px;
+        top: 2px;
         width: 5px;
         height: 10px;
         border: solid white;
@@ -183,46 +230,45 @@
     input:checked ~ .checkmark {
       background: linear-gradient(135deg, #ff6bce, #ff8ad4);
       border-color: #ff6bce;
-
-      &::after {
-        display: block;
-      }
+      &::after { display: block; }
     }
   }
 }
 
 .create-account-btn {
-  margin-top: 12px;
-  padding: 14px;
-  background: linear-gradient(135deg, #ff6bce, #ff8ad4);
+  margin-top: 8px;
+  padding: 16px;
+  background: linear-gradient(135deg, #ff6bce, #9f57f3);
   color: white;
   font-weight: 600;
-  font-size: 15px;
+  font-size: 16px;
   border: none;
-  border-radius: 12px;
+  border-radius: 16px;
   cursor: pointer;
-  transition: transform 0.2s, box-shadow 0.2s;
+  transition: all 0.3s;
 
   &:hover {
-    transform: translateY(-1px);
-    box-shadow: 0 8px 20px rgba(255, 107, 206, 0.3);
+    transform: translateY(-2px);
+    box-shadow: 0 10px 25px rgba(255, 107, 206, 0.4);
   }
 
-  &:active {
-    transform: translateY(0);
+  &:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+    transform: none;
   }
 }
 
 .signin-link {
   text-align: center;
-  font-size: 13px;
+  margin-top: 20px;
+  font-size: 14px;
   color: #777;
-  margin-top: 16px;
 
   a {
     color: #ff6bce;
+    font-weight: 600;
     text-decoration: none;
-    font-weight: 500;
 
     &:hover {
       text-decoration: underline;
@@ -230,67 +276,31 @@
   }
 }
 
-.talk-with-us-btn {
-  position: absolute;
-  bottom: -16px;
-  right: 20px;
-  background: #1a1a1a;
-  color: white;
-  border: none;
-  border-radius: 30px;
-  padding: 10px 20px;
+.error, .submit-error {
+  color: #ef4444;
   font-size: 13px;
-  font-weight: 500;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-  transition: all 0.3s ease;
+  margin-top: 6px;
+}
 
-  .chat-icon {
-    font-size: 16px;
-  }
-
-  &:hover {
-    background: #333;
-    transform: translateY(-2px);
-    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
-  }
+.submit-error {
+  text-align: center;
+  padding: 12px;
+  background: #fee2e2;
+  border-radius: 8px;
+  border: 1px solid #fecaca;
 }
 
 // Responsive
 @media (max-width: 480px) {
   .signup-card {
-    padding: 24px;
+    padding: 32px 24px;
+    border-radius: 20px;
   }
 
-  .name-fields {
-    flex-direction: column;
-  }
-
-  .user-type-selector {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 8px;
-  }
-
-  .toggle-buttons {
-    width: 100%;
+  .cancel-btn {
+    top: 12px;
+    left: 12px;
+    font-size: 13px;
+    padding: 6px 12px;
   }
 }
-
-.cancel-btn {
-  display: inline-flex;
-  align-items: center;
-  gap: .4rem;
-  border: 1px solid #e5e7eb;
-  background: #fff;
-  padding: .35rem .6rem;
-  border-radius: 8px;
-  cursor: pointer;
-}
-.cancel-btn:hover { background: #f9fafb; }
-.subtitle { margin: .5rem 1rem 1rem; color: #6b7280; }
-.error, .submit-error { color: #b91c1c; font-size: .85rem; margin-top: .25rem; }
-.eye-btn { background: none; border: none; cursor: pointer; }

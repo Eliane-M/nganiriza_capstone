@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 import { Search as SearchIcon, Users, Heart, Brain, Apple, Stethoscope, Building2 } from 'lucide-react';
-import { specialistService } from '../assets/components/specialistService';
 import { TextChatInterface } from '../assets/components/TextChatInterface.tsx';
 import { VideoCallInterface } from '../assets/components/VideoCallInterface.tsx';
 import '../assets/css/specialists/specialist_page.css';
+import BASE_URL from '../config.js';
 
 const CommunicationMode = {
   NONE: 'NONE',
@@ -36,33 +37,15 @@ export function SpecialistPage() {
   const loadSpecialists = async () => {
     try {
       setLoading(true);
-      setError(null);
-      const data = await specialistService.getAll();
-
-      // Defensive: ensure array and normalize minimal fields to avoid crashes
-      const safe = Array.isArray(data) ? data : [];
-      const normalized = safe.map((s) => ({
-        id: s.id ?? String(Math.random()),
-        name: s.name ?? 'Unknown',
-        specialty: s.specialty ?? 'General',
-        imageUrl: s.imageUrl ?? 'https://via.placeholder.com/80',
-        rating: typeof s.rating === 'number' ? s.rating : 0,
-        reviews: typeof s.reviews === 'number' ? s.reviews : 0,
-        experience: s.experience ?? '—',
-        location: s.location ?? '—',
-        availability: s.availability ?? '—',
-        languages: Array.isArray(s.languages) ? s.languages.join(', ') : (s.languages ?? '—'),
-        price: typeof s.price === 'number' ? s.price : 0,
-      }));
-
-      setSpecialists(normalized);
+      const res = await axios.get(`${BASE_URL}/api/specialists/`, {
+        params: {
+          specialty: selectedSpecialty !== 'All Specialists' ? selectedSpecialty.toLowerCase() : undefined,
+          search: searchTerm,
+        }
+      });
+      setSpecialists(res.data.results);
     } catch (err) {
-      const message =
-        err?.response?.data?.message ||
-        err?.message ||
-        'Failed to load specialists';
-      setError(message);
-      console.error('Error loading specialists:', err);
+      setError(err.message);
     } finally {
       setLoading(false);
     }
@@ -183,8 +166,8 @@ export function SpecialistPage() {
       </div>
 
       <div className="specialists-grid">
-        {filteredSpecialists.length > 0 ? (
-          filteredSpecialists.map((specialist) => (
+        {specialists.length > 0 ? (
+          specialists.map((specialist) => (
             <SpecialistCard
               key={specialist.id}
               specialist={specialist}
@@ -201,23 +184,33 @@ export function SpecialistPage() {
   );
 }
 
-
 function SpecialistCard({ specialist, onBookSession }) {
+  const getImageUrl = (url) => {
+    if (!url) return 'https://via.placeholder.com/150';
+    if (url.startsWith('http')) return url;
+    return `${BASE_URL}${url}`;
+  };
+
   return (
     <div className="specialist-card-v2">
       <div className="card-header">
         <img
-          src={specialist.imageUrl}
+          src={getImageUrl(specialist.imageUrl || specialist.image || specialist.profile_picture)}
           alt={specialist.name}
           className="specialist-avatar"
+          onError={(e) => {
+            e.target.src = 'https://via.placeholder.com/150?text=No+Image';
+          }}
         />
         <div className="specialist-info">
-          <h3>{specialist.name}</h3>
-          <p className="specialty-tag">{specialist.specialty}</p>
+          <h3>{specialist.name || 'Unknown Specialist'}</h3>
+          <p className="specialty-tag">{specialist.specialty || 'General Practice'}</p>
           <div className="rating-row">
             <span className="star">⭐</span>
-            <span className="rating-value">{specialist.rating}</span>
-            <span className="review-count">· {specialist.reviews} reviews</span>
+            <span className="rating-value">{specialist.rating || '4.5'}</span>
+            <span className="review-count">
+              · {specialist.reviews || specialist.review_count || 0} reviews
+            </span>
           </div>
         </div>
       </div>
@@ -225,24 +218,26 @@ function SpecialistCard({ specialist, onBookSession }) {
       <div className="card-details">
         <div className="detail-item">
           <span className="detail-icon">💼</span>
-          <span>{specialist.experience}</span>
+          <span>{specialist.experience || specialist.years_experience || 'N/A'}</span>
         </div>
         <div className="detail-item">
           <span className="detail-icon">📍</span>
-          <span>{specialist.location}</span>
+          <span>{specialist.location || specialist.city || 'N/A'}</span>
         </div>
         <div className="detail-item">
           <span className="detail-icon">🕐</span>
-          <span>{specialist.availability}</span>
+          <span>{specialist.availability || 'Contact for availability'}</span>
         </div>
         <div className="detail-item languages">
-          <span>{specialist.languages}</span>
+          <span>{specialist.languages || 'English'}</span>
         </div>
       </div>
 
       <div className="card-footer">
         <div className="price-tag">
-          <span className="price">${specialist.price}/session</span>
+          <span className="price">
+            ${specialist.price || specialist.consultation_fee || '150'}/session
+          </span>
         </div>
         <button className="book-button" onClick={onBookSession}>
           Book Session
@@ -250,6 +245,6 @@ function SpecialistCard({ specialist, onBookSession }) {
       </div>
     </div>
   );
-};
+}
 
-// export default SpecialistPage;
+export default SpecialistPage;

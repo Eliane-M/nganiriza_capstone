@@ -3,11 +3,11 @@ import { useNavigate, Link } from "react-router-dom";
 import axios from "axios";
 import '../assets/css/authPages/signup.css';
 import BASE_URL from '../config.js';
+import { Eye, EyeOff, UserPlus } from 'lucide-react';
 
 const SignupPage = () => {
   const navigate = useNavigate();
 
-  // single source of truth for the form:
   const [formData, setFormData] = useState({
     userType: 'user',
     firstName: '',
@@ -55,13 +55,11 @@ const SignupPage = () => {
 
     setLoading(true);
     try {
-      // build payload your API expects:
       const payload = {
-        // many backends expect a single full_name; adjust if yours differs
         full_name: `${formData.firstName} ${formData.lastName}`.trim(),
         email: formData.email,
         password: formData.password,
-        role: formData.userType, // if your API accepts a role/userType
+        role: formData.role,
       };
 
       await axios.post(`${BASE_URL}/api/auth/signup/`, payload, {
@@ -86,40 +84,41 @@ const SignupPage = () => {
 
   return (
     <div className="signup-container">
-      <div className="signup-card">
-        {/* Simple header with Cancel to home */}
-        <div className="signup-header">
-          <button
-            type="button"
-            className="cancel-btn"
-            onClick={() => navigate('/')}
-            aria-label="Cancel and go to homepage"
-          >
-            ✖ <span>Cancel</span>
-          </button>
-          <h2>Join Our Community</h2>
-          <div className="spacer" />
-        </div>
+      <div className="logo">
+        <div className="logo-icon"><UserPlus/></div>
+      </div>
 
-        <p className="subtitle">Start your journey to better health awareness</p>
+      <div className="signup-card">
+        <button
+          type="button"
+          className="cancel-btn"
+          onClick={() => navigate('/')}
+        >
+          Cancel
+        </button>
+
+        <div className="header">
+          <h2>Join Our Community</h2>
+          <p>Start your journey to better health awareness</p>
+        </div>
 
         <form onSubmit={handleSubmit} className="signup-form">
           <div className="user-type-selector">
-            <span>I am a:</span>
+            <span className="label">I am a:</span>
             <div className="toggle-buttons">
               <button
                 type="button"
                 className={`toggle-btn ${formData.userType === 'user' ? 'active' : ''}`}
-                onClick={() => setFormData((s) => ({ ...s, userType: 'user' }))}
+                onClick={() => setFormData(s => ({ ...s, userType: 'user' }))}
               >
-                <span className="icon">👤</span> User
+                User
               </button>
               <button
                 type="button"
                 className={`toggle-btn ${formData.userType === 'specialist' ? 'active' : ''}`}
-                onClick={() => setFormData((s) => ({ ...s, userType: 'specialist' }))}
+                onClick={() => setFormData(s => ({ ...s, userType: 'specialist' }))}
               >
-                <span className="icon">🩺</span> Specialist
+                Specialist
               </button>
             </div>
           </div>
@@ -174,10 +173,9 @@ const SignupPage = () => {
               <button
                 type="button"
                 className="eye-btn"
-                onClick={() => setShowPwd((s) => !s)}
-                aria-label={showPwd ? 'Hide password' : 'Show password'}
+                onClick={() => setShowPwd(!showPwd)}
               >
-                👁️
+                {showPwd ? <EyeOff size={18} /> : <Eye size={18} />}
               </button>
             </div>
             {errors.password && <small className="error">{errors.password}</small>}
@@ -196,10 +194,9 @@ const SignupPage = () => {
               <button
                 type="button"
                 className="eye-btn"
-                onClick={() => setShowPwd2((s) => !s)}
-                aria-label={showPwd2 ? 'Hide password' : 'Show password'}
+                onClick={() => setShowPwd2(!showPwd2)}
               >
-                👁️
+                {showPwd2 ? <EyeOff size={18} /> : <Eye size={18} />}
               </button>
             </div>
             {errors.confirmPassword && <small className="error">{errors.confirmPassword}</small>}
@@ -229,10 +226,6 @@ const SignupPage = () => {
             Already have an account? <Link to="/login">Sign in here</Link>
           </p>
         </form>
-
-        <button className="talk-with-us-btn" type="button">
-          <span className="chat-icon">💬</span> Talk with Us
-        </button>
       </div>
     </div>
   );
