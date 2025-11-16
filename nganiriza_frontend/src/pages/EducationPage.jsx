@@ -1,5 +1,5 @@
 import React, { useContext } from 'react';
-import { LanguageContext } from '../assets/components/context/LanguageContext';
+import { LanguageContext } from '../assets/components/context/LanguageContext.tsx';
 import { BookOpen as BookOpenIcon, Shield as ShieldIcon, Heart as HeartIcon, Users as UsersIcon } from 'lucide-react';
 import '../assets/css/educationPage/education_page.scss';
 

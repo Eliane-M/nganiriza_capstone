@@ -342,4 +342,105 @@
 }
 :global(.dark) .mobile-menu-btn svg {
   color: #fafafa;
+}
+
+/* Profile Icon Button */
+.profile-icon-btn {
+  display: flex;
+  align-items: center;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0.25rem;
+  border-radius: 50%;
+  transition: all 0.2s;
+}
+
+.profile-icon-btn:hover {
+  background: rgba(0, 0, 0, 0.05);
+}
+
+:global(.dark) .profile-icon-btn:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.user-avatar-small {
+  width: 2rem;
+  height: 2rem;
+  border-radius: 50%;
+  background: linear-gradient(to right, #a855f7, #ec4899);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: 0.75rem;
+  font-weight: 700;
+}
+
+/* Language Switcher in Dropdown */
+.language-switcher {
+  display: flex;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+}
+
+.lang-btn {
+  flex: 1;
+  padding: 0.5rem;
+  background: #f3f4f6;
+  border: 2px solid transparent;
+  border-radius: 0.5rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #374151;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.lang-btn:hover {
+  background: #e5e7eb;
+}
+
+.lang-btn.active {
+  background: linear-gradient(to right, #a855f7, #ec4899);
+  color: white;
+  border-color: transparent;
+}
+
+:global(.dark) .lang-btn {
+  background: #27272a;
+  color: #d4d4d8;
+}
+
+:global(.dark) .lang-btn:hover {
+  background: #3f3f46;
+}
+
+:global(.dark) .lang-btn.active {
+  background: linear-gradient(to right, #a855f7, #ec4899);
+  color: white;
+}
+
+/* Dark mode global styles */
+:global(.dark) {
+  background-color: #09090b;
+  color: #fafafa;
+}
+
+:global(.dark) body {
+  background: linear-gradient(to bottom, #09090b, #18181b);
+}
+
+/* Ensure dropdown visibility in dark mode */
+:global(.dark) .dropdown-menu {
+  background: #18181b;
+  border-color: #27272a;
+}
+
+:global(.dark) .dropdown-section {
+  border-bottom-color: #27272a;
+}
+
+:global(.dark) .section-label {
+  color: #a1a1aa;
 }/*# sourceMappingURL=navbar.css.map */

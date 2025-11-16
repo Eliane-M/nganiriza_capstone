@@ -59,19 +59,29 @@ const SignupPage = () => {
         full_name: `${formData.firstName} ${formData.lastName}`.trim(),
         email: formData.email,
         password: formData.password,
-        role: formData.role,
+        role: formData.userType, // 'user' or 'specialist'
       };
 
-      await axios.post(`${BASE_URL}/api/auth/signup/`, payload, {
+      const response = await axios.post(`${BASE_URL}/api/auth/signup/`, payload, {
         headers: { 'Content-Type': 'application/json' },
       });
 
-      navigate('/login');
+      // Check if user is specialist and needs onboarding
+      if (formData.userType === 'specialist') {
+        // Save email for auto-login after onboarding
+        sessionStorage.setItem('pending_specialist_email', formData.email);
+        sessionStorage.setItem('pending_specialist_password', formData.password);
+        navigate('/specialist/onboard');
+      } else {
+        // Regular user - go to login
+        navigate('/login');
+      }
     } catch (err) {
       if (err.response?.status === 409) {
         setErrors((s) => ({ ...s, email: 'Email already exists. Use a different one.' }));
       } else {
         setSubmitError(
+          err.response?.data?.error ||
           err.response?.data?.detail ||
           err.response?.data?.message ||
           'Signup failed. Please try again.'

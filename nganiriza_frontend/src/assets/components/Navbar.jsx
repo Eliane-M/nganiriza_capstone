@@ -1,37 +1,36 @@
 import React, { useEffect, useState, useContext } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import { Menu, Sun, Moon, LogIn, UserPlus, ChevronDown, LogOut, User } from 'lucide-react';
-import { LanguageContext } from '../components/context/LanguageContext.tsx';
-import { AuthContext } from '../components/context/AuthContext.tsx';
-import { LanguageSwitcher } from '../components/LanguageSwitcher.tsx';
-import '../css/navbar/navbar.css';
-import nganiriza from '../../images/nganiriza.png';
+import { Menu, Sun, Moon, LogIn, UserPlus, ChevronDown, LogOut, User, Globe } from 'lucide-react';
+import { ThemeContext, LanguageContext } from '../../contexts/AppContext';
+import '../../assets/css/navbar/navbar.css';
 
 export default function Navbar() {
   const navigate = useNavigate();
-  const { language = 'en' } = useContext(LanguageContext) || {};
-  const { isAuthenticated, user, logout } = useContext(AuthContext) || {};
-  const [theme, setTheme] = useState(() => localStorage.getItem('theme') || 'light');
+  const { theme, toggleTheme } = useContext(ThemeContext);
+  const { language, setLanguage } = useContext(LanguageContext);
   const [open, setOpen] = useState(false);
-  
-  const initials = (user?.name || 'U N')
-    .split(' ')
-    .map(s => s[0]?.toUpperCase())
-    .slice(0, 2)
-    .join('');
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [user, setUser] = useState(null);
 
   useEffect(() => {
-    const root = document.documentElement;
-    if (theme === 'dark') {
-      root.classList.add('dark');
-    } else {
-      root.classList.remove('dark');
+    const token = localStorage.getItem('access_token');
+    const userData = localStorage.getItem('user');
+    
+    if (token && userData) {
+      setIsAuthenticated(true);
+      setUser(JSON.parse(userData));
     }
-    localStorage.setItem('theme', theme);
-  }, [theme]);
+  }, []);
 
-  const toggleTheme = () => {
-    setTheme(prev => prev === 'dark' ? 'light' : 'dark');
+  const handleLogout = () => {
+    localStorage.removeItem('access_token');
+    localStorage.removeItem('refresh_token');
+    localStorage.removeItem('user');
+    localStorage.removeItem('user_role');
+    setIsAuthenticated(false);
+    setUser(null);
+    setOpen(false);
+    navigate('/');
   };
 
   const handleNavigation = (path) => {
@@ -39,11 +38,17 @@ export default function Navbar() {
     navigate(path);
   };
 
-  const handleLogout = () => {
-    logout?.();
-    setOpen(false);
-    navigate('/');
+  const getInitials = () => {
+    if (!user) return 'U';
+    const firstName = user.first_name || '';
+    const lastName = user.last_name || '';
+    return `${firstName[0] || ''}${lastName[0] || ''}`.toUpperCase() || 'U';
   };
+
+  const languages = [
+    { code: 'en', label: 'English' },
+    { code: 'rw', label: 'Kinyarwanda' }
+  ];
 
   return (
     <header className="navbar">
@@ -51,7 +56,6 @@ export default function Navbar() {
         {/* Brand + Navigation */}
         <div className="navbar-left">
           <button onClick={() => handleNavigation('/')} className="brand">
-            {/* <div className="brand-logo" /> */}
             <span className="brand-name">Nganiriza</span>
           </button>
           
@@ -65,6 +69,19 @@ export default function Navbar() {
 
         {/* Right Controls */}
         <div className="navbar-right">
+          {/* Profile Icon (when authenticated) */}
+          {isAuthenticated && (
+            <button
+              onClick={() => handleNavigation('/profile')}
+              className="profile-icon-btn"
+              title="View Profile"
+            >
+              <div className="user-avatar-small">
+                {getInitials()}
+              </div>
+            </button>
+          )}
+
           {/* Dropdown Menu */}
           <div className="dropdown">
             <button
@@ -78,7 +95,7 @@ export default function Navbar() {
                 </div>
               ) : (
                 <div className="user-avatar">
-                  {initials}
+                  {getInitials()}
                 </div>
               )}
               <ChevronDown size={16} className="chevron" />
@@ -89,14 +106,34 @@ export default function Navbar() {
                 className="dropdown-menu"
                 onMouseLeave={() => setOpen(false)}
               >
-                {/* Language + Theme Section */}
+                {/* Language Section */}
                 <div className="dropdown-section">
-                  <div className="section-label">Language</div>
-                  <LanguageSwitcher />
+                  <div className="section-label">
+                    <Globe size={14} style={{ marginRight: '0.25rem' }} />
+                    Language
+                  </div>
+                  <div className="language-switcher">
+                    {languages.map(lang => (
+                      <button
+                        key={lang.code}
+                        onClick={() => {
+                          setLanguage(lang.code);
+                          setOpen(false);
+                        }}
+                        className={`lang-btn ${language === lang.code ? 'active' : ''}`}
+                      >
+                        {lang.label}
+                      </button>
+                    ))}
+                  </div>
                 </div>
                 
+                {/* Theme Toggle */}
                 <button
-                  onClick={toggleTheme}
+                  onClick={() => {
+                    toggleTheme();
+                    setOpen(false);
+                  }}
                   className="dropdown-item"
                 >
                   {theme === 'dark' ? <Sun size={16}/> : <Moon size={16}/>}
@@ -127,10 +164,10 @@ export default function Navbar() {
                       onClick={() => handleNavigation('/profile')}
                       className="dropdown-item"
                     >
-                      Profile
+                      <User size={16}/> Profile
                     </button>
                     <button
-                      onClick={() => handleNavigation('/dashboard')}
+                      onClick={() => handleNavigation('/')}
                       className="dropdown-item"
                     >
                       Dashboard
