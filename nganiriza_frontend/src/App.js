@@ -17,7 +17,7 @@ import SpecialistDashboard from './pages/specialists/SpecialistDashboard';
 import SpecialistOnboarding from './pages/specialists/SpecialistOnboarding';
 import ProfilePage from './pages/UserProfilePage';
 import { AppProviders } from '././contexts/AppContext';
-import { AuthProvider } from './assets/components/context/AuthContext.tsx';
+import { AuthProvider } from './assets/components/context/AuthContext';
 import ProtectedRoute from './routes/ProtectedRoute';
 
 function App() {

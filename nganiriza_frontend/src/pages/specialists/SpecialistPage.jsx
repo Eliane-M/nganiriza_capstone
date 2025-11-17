@@ -104,6 +104,7 @@ export function SpecialistPage() {
       <SpecialistDetailView
         specialist={detailSpecialist}
         onBack={handleCloseDetail}
+        isAuthenticated={isAuthenticated}
       />
     );
   }
@@ -247,7 +248,7 @@ function SpecialistCard({ specialist, onSelect }) {
   );
 }
 
-function SpecialistDetailView({ specialist, onBack }) {
+function SpecialistDetailView({ specialist, onBack, isAuthenticated }) {
   const [appointmentForm, setAppointmentForm] = useState({
     appointment_date: '',
     appointment_time: '',

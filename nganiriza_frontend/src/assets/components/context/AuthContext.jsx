@@ -3,30 +3,12 @@ import React, {
   useCallback,
   useEffect,
   useMemo,
-  useState,
-  ReactNode
+  useState
 } from 'react';
 import apiClient, { setAuthHandlers } from '../../../utils/apiClient';
 import { tokenStorage } from '../../../utils/tokenStorage';
 
-export interface User {
-  id: number | string;
-  email?: string;
-  first_name?: string;
-  last_name?: string;
-  role?: string;
-}
-
-interface AuthContextType {
-  user: User | null;
-  isAuthenticated: boolean;
-  isLoading: boolean;
-  login: (email: string, password: string) => Promise<User>;
-  logout: () => void;
-  refreshTokens: () => Promise<void>;
-}
-
-export const AuthContext = createContext<AuthContextType>({
+export const AuthContext = createContext({
   user: null,
   isAuthenticated: false,
   isLoading: true,
@@ -37,15 +19,11 @@ export const AuthContext = createContext<AuthContextType>({
   refreshTokens: async () => {}
 });
 
-interface AuthProviderProps {
-  children: ReactNode;
-}
-
-export function AuthProvider({ children }: AuthProviderProps) {
-  const [user, setUser] = useState<User | null>(() => tokenStorage.getUser());
+export function AuthProvider({ children }) {
+  const [user, setUser] = useState(() => tokenStorage.getUser());
   const [isLoading, setIsLoading] = useState(true);
 
-  const persistUser = useCallback((nextUser: User | null) => {
+  const persistUser = useCallback((nextUser) => {
     setUser(nextUser);
     tokenStorage.setUser(nextUser);
   }, []);
@@ -90,7 +68,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
   }, [fetchProfile, handleLogout]);
 
   const login = useCallback(
-    async (email: string, password: string): Promise<User> => {
+    async (email, password) => {
       try {
         const response = await apiClient.post('/api/auth/login/', {
           username: email,
@@ -143,3 +121,4 @@ export function AuthProvider({ children }: AuthProviderProps) {
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 }
+
