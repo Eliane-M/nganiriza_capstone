@@ -1,12 +1,13 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { User, Mail, Phone, MapPin, Calendar, Edit2, Save, X } from 'lucide-react';
 import Navbar from '../assets/components/Navbar';
-import axios from 'axios';
-import BASE_URL from '../config';
+import apiClient from '../utils/apiClient';
+import { AuthContext } from '../assets/components/context/AuthContext';
 
 const ProfilePage = () => {
   const navigate = useNavigate();
+  const { user: authUser } = useContext(AuthContext);
   const [loading, setLoading] = useState(true);
   const [editing, setEditing] = useState(false);
   const [saving, setSaving] = useState(false);
@@ -18,16 +19,8 @@ const ProfilePage = () => {
   }, []);
 
   const fetchProfile = async () => {
-    const token = localStorage.getItem('access_token');
-    if (!token) {
-      navigate('/login');
-      return;
-    }
-
     try {
-      const response = await axios.get(`${BASE_URL}/api/dashboard/profile/`, {
-        headers: { Authorization: `Bearer ${token}` }
-      });
+      const response = await apiClient.get('/api/dashboard/profile/');
       
       setProfile(response.data.profile);
       setFormData(response.data.profile);
@@ -48,13 +41,10 @@ const ProfilePage = () => {
 
   const handleSave = async () => {
     setSaving(true);
-    const token = localStorage.getItem('access_token');
-
     try {
-      await axios.put(
-        `${BASE_URL}/api/dashboard/profile/update/`,
-        formData,
-        { headers: { Authorization: `Bearer ${token}` } }
+      await apiClient.put(
+        '/api/dashboard/profile/update/',
+        formData
       );
       
       setProfile(formData);
@@ -104,9 +94,9 @@ const ProfilePage = () => {
               </div>
               <div>
                 <h1 style={styles.name}>
-                  {profile.user?.first_name} {profile.user?.last_name}
+                  {profile.user?.first_name || authUser?.first_name} {profile.user?.last_name || authUser?.last_name}
                 </h1>
-                <p style={styles.email}>{profile.user?.email}</p>
+                <p style={styles.email}>{profile.user?.email || authUser?.email}</p>
               </div>
             </div>
 

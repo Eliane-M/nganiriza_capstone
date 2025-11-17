@@ -20,4 +20,9 @@ urlpatterns = [
     # Reviews
     path('reviews/create/',  create_review, name='create_review'),
     path('<int:specialist_id>/reviews/',  list_specialist_reviews, name='list_specialist_reviews'),
+    
+    # Messages
+    path('messages/create/', create_specialist_message, name='create_specialist_message'),
+    path('messages/user/', list_user_messages, name='list_user_messages'),
+    path('messages/inbox/', list_specialist_messages, name='list_specialist_messages'),
 ]

@@ -1,8 +1,7 @@
 import React, {useState, useEffect} from 'react';
 import '../../assets/css/specialists/specialistdashboard.scss';
 import { Calendar, MessageCircle, Users, BarChart3, Plus, Phone, Video, MessageSquare } from 'lucide-react';
-import BASE_URL from '../../config';
-import axios from 'axios';
+import apiClient from '../../utils/apiClient';
 
 const SpecialistDashboard = () => {
   const [stats, setStats] = useState({
@@ -12,6 +11,7 @@ const SpecialistDashboard = () => {
     week_appointments: 0
   });
   const [appointments, setAppointments] = useState([]);
+  const [messages, setMessages] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [specialistName, setSpecialistName] = useState('Doctor');
@@ -21,25 +21,23 @@ const SpecialistDashboard = () => {
   }, []);
 
   const fetchDashboardData = async () => {
-    const token = localStorage.getItem('access_token');
-    
     try {
       setLoading(true);
-      const [statsRes, appointmentsRes, profileRes] = await Promise.all([
-        axios.get(`${BASE_URL}/api/specialists/dashboard/stats/`, {
-          headers: { Authorization: `Bearer ${token}` }
-        }),
-        axios.get(`${BASE_URL}/api/specialists/appointments/specialist/`, {
-          headers: { Authorization: `Bearer ${token}` }
-        }),
-        // Fetch specialist profile if you have this endpoint
-        axios.get(`${BASE_URL}/api/specialists/profile/`, {
-          headers: { Authorization: `Bearer ${token}` }
-        }).catch(() => ({ data: { name: 'Doctor' } })) // Fallback if endpoint doesn't exist
+      const [statsRes, appointmentsRes, profileRes, messagesRes] = await Promise.all([
+        apiClient.get('/api/specialists/dashboard/stats/'),
+        apiClient.get('/api/specialists/appointments/specialist/'),
+        apiClient.get('/api/specialists/profile/').catch(() => ({ data: { name: 'Doctor' } })),
+        apiClient.get('/api/specialists/messages/inbox/').catch(() => ({ data: { results: [] } }))
       ]);
       
-      setStats(statsRes.data);
+      const messagesData = messagesRes.data?.results || messagesRes.data || [];
+      const unreadMessages = messagesData.filter((msg) => !msg.is_read).length;
+      setStats({
+        ...statsRes.data,
+        unread_messages: unreadMessages
+      });
       setAppointments(appointmentsRes.data.results || appointmentsRes.data);
+      setMessages(messagesData);
       setSpecialistName(profileRes.data.name || profileRes.data.user?.first_name || 'Doctor');
       setError(null);
     } catch (err) {
@@ -89,13 +87,22 @@ const SpecialistDashboard = () => {
     });
   };
 
+  const formatDateTime = (dateString) => {
+    if (!dateString) return '';
+    const date = new Date(dateString);
+    return date.toLocaleString('en-US', {
+      month: 'short',
+      day: 'numeric',
+      hour: 'numeric',
+      minute: '2-digit'
+    });
+  };
+
   const handleAccept = async (appointmentId) => {
-    const token = localStorage.getItem('access_token');
     try {
-      await axios.patch(
-        `${BASE_URL}/api/specialists/appointments/${appointmentId}/`,
-        { status: 'confirmed' },
-        { headers: { Authorization: `Bearer ${token}` } }
+      await apiClient.patch(
+        `/api/specialists/appointments/${appointmentId}/`,
+        { status: 'confirmed' }
       );
       fetchDashboardData(); // Refresh data
     } catch (err) {
@@ -262,6 +269,40 @@ const SpecialistDashboard = () => {
                 </div>
               </div>
             ))
+          )}
+        </div>
+      </div>
+
+      {/* Messages Overview */}
+      <div className="messages-section">
+        <div className="section-header">
+          <h2>Patient Messages</h2>
+          <span className="messages-pill">
+            {stats.unread_messages || 0} unread
+          </span>
+        </div>
+        <div className="messages-list">
+          {messages.length === 0 ? (
+            <div style={{ textAlign: 'center', padding: '2rem', color: '#6b7280' }}>
+              No messages yet
+            </div>
+          ) : (
+            messages.map((msg) => {
+              const preview = msg.message?.length > 160 ? `${msg.message.slice(0, 157)}...` : msg.message;
+              return (
+                <div key={msg.id || msg.created_at} className={`message-card ${msg.is_read ? '' : 'unread'}`}>
+                  <div className="message-top">
+                    <p className="message-subject">{msg.subject || 'No subject'}</p>
+                    <span className="message-date">{formatDateTime(msg.created_at)}</span>
+                  </div>
+                  <p className="message-body">{preview || 'No additional details provided.'}</p>
+                  <div className="message-meta">
+                    <span>{msg.user_info?.name || 'Anonymous patient'}</span>
+                    {msg.user_info?.email && <span>{msg.user_info.email}</span>}
+                  </div>
+                </div>
+              );
+            })
           )}
         </div>
       </div>

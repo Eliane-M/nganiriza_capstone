@@ -1,4 +1,5 @@
 from django.contrib.auth.models import User, Group
+from django.utils.text import slugify
 from authentication.services.emails.emails import new_account_email
 from rest_framework.response import Response
 from rest_framework import status
@@ -10,6 +11,7 @@ from rest_framework.permissions import AllowAny
 from models.models import Account, AccountEmail, Sector, USER_ROLES, SpecialistProfile
 from models.serializers import UserSerializer, SignupRequestSerializer
 from drf_spectacular.utils import extend_schema
+from django.db import transaction
 
 
 @extend_schema(
@@ -110,15 +112,18 @@ def new_user(request):
                 {"error": "User with same credentials exist"}, 
                 status=status.HTTP_409_CONFLICT
             )
+
+        # Use transaction to ensure all-or-nothing creation
+        with transaction.atomic():
+            # Create user
+            user = User.objects.create(
+                email=email,
+                username=email,
+                first_name=first_name,
+                last_name=last_name,
+                password=make_password(password)
+            )
         
-        # Create user
-        user = User.objects.create(
-            email=email,
-            username=email,
-            first_name=first_name,
-            last_name=last_name,
-            password=make_password(password)
-        )
 
         if role == 'specialist':
             user.is_staff = True
@@ -127,12 +132,12 @@ def new_user(request):
             # Add to specialist group (create if doesn't exist)
             specialist_group, _ = Group.objects.get_or_create(name='Specialist')
             user.groups.add(specialist_group)
-        # elif role == 'specialist':
+        # elif role == 'admin':
         #     user.is_staff = True
         #     user.is_superuser = True
         #     user.save()
             
-        #     admin_group, _ = Group.objects.get_or_create(name='Specialist')
+        #     admin_group, _ = Group.objects.get_or_create(name='Admin')
         #     user.groups.add(admin_group)
         else:
             # Regular user
@@ -141,6 +146,7 @@ def new_user(request):
 
 
         # Create account with location
+        print("Creating account with location")
         sector = None
         if place_of_origin:
             try:
@@ -166,16 +172,21 @@ def new_user(request):
             created_by=user,
             updated_by=user
         )
+        print("Account created")
 
          # If specialist, create specialist profile
+        print("Creating specialist profile")
         if role == 'specialist':
             SpecialistProfile.objects.create(
                 specialist_account=account,
-                specialty='general',  # Default, will be updated in onboarding
+                specialty='general',
+                profile_completed=False,
+                slug=slugify("specialist"+user.username),
                 created_by=user,
                 updated_by=user
             )
-        
+            print("Specialist profile created")
+        print("Creating account email")
         try:
             AccountEmail.objects.create(email=user.email)
             new_account_email(user.email, user.first_name)
@@ -195,24 +206,27 @@ def new_user(request):
             "is_specialist": role == 'specialist',
             "profile_completed": False,
         }
-        
+        print("Building account location info")
         if account.village:
-            account_data = {
+            account_data.update({
                 "province": account.village.cell.sector.district.province.name,
                 "district": account.village.cell.sector.district.name,
                 "sector": account.village.cell.sector.name,
                 "cell": account.village.cell.name,
                 "village": account.village.name,
-            }
+            })
         elif account.sector:
-            account_data["sector"] = account.sector.name
-            account_data["district"] = account.sector.district.name
-            account_data["province"] = account.sector.district.province.name
+            account_data.update({
+                "sector": account.sector.name,
+                "district": account.sector.district.name,
+                "province": account.sector.district.province.name,
+            })
         
         return Response({
+            "message": "User created successfully",
             "user": user_info, 
             "account": account_data
-        }, status=status.HTTP_201_CREATED)        
+        }, status=status.HTTP_201_CREATED)         
     
     except ValidationError:
         return Response(

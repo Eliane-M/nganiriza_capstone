@@ -1,7 +1,8 @@
-import React, { useEffect, useState, useContext } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
+import React, { useState, useContext } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Menu, Sun, Moon, LogIn, UserPlus, ChevronDown, LogOut, User, Globe } from 'lucide-react';
 import { ThemeContext, LanguageContext } from '../../contexts/AppContext';
+import { AuthContext } from './context/AuthContext';
 import '../../assets/css/navbar/navbar.css';
 
 export default function Navbar() {
@@ -9,26 +10,10 @@ export default function Navbar() {
   const { theme, toggleTheme } = useContext(ThemeContext);
   const { language, setLanguage } = useContext(LanguageContext);
   const [open, setOpen] = useState(false);
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [user, setUser] = useState(null);
-
-  useEffect(() => {
-    const token = localStorage.getItem('access_token');
-    const userData = localStorage.getItem('user');
-    
-    if (token && userData) {
-      setIsAuthenticated(true);
-      setUser(JSON.parse(userData));
-    }
-  }, []);
+  const { user, isAuthenticated, logout } = useContext(AuthContext);
 
   const handleLogout = () => {
-    localStorage.removeItem('access_token');
-    localStorage.removeItem('refresh_token');
-    localStorage.removeItem('user');
-    localStorage.removeItem('user_role');
-    setIsAuthenticated(false);
-    setUser(null);
+    logout();
     setOpen(false);
     navigate('/');
   };

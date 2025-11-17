@@ -153,14 +153,15 @@ class SpecialistProfileSerializer(serializers.ModelSerializer):
         read_only_fields = ['is_verified', 'average_rating', 'total_reviews', 'profile_completed']
     
     def get_user(self, obj):
+        user = obj.specialist_account.user
         return {
-            'id': obj.account.user.id,
-            'name': obj.account.user.get_full_name(),
-            'email': obj.account.user.email,
+            'id': user.id,
+            'name': user.get_full_name(),
+            'email': user.email,
         }
     
     def get_location(self, obj):
-        account = obj.account
+        account = obj.specialist_account
         if account.sector:
             return {
                 'province': account.sector.district.province.name if account.sector.district.province else None,
@@ -210,7 +211,7 @@ class SpecialistProfileUpdateSerializer(serializers.ModelSerializer):
 
 class SpecialistPublicSerializer(serializers.ModelSerializer):
     """Public-facing serializer for listing specialists (less detail)"""
-    name = serializers.CharField(source='account.user.get_full_name', read_only=True)
+    name = serializers.CharField(source='specialist_account.user.get_full_name', read_only=True)
     specialty_display = serializers.CharField(source='get_specialty_display', read_only=True)
     location = serializers.SerializerMethodField()
     
@@ -224,7 +225,7 @@ class SpecialistPublicSerializer(serializers.ModelSerializer):
         ]
     
     def get_location(self, obj):
-        account = obj.account
+        account = obj.specialist_account
         if account.sector:
             return {
                 'province': account.sector.district.province.name if account.sector.district.province else None,
@@ -254,8 +255,10 @@ class AppointmentSerializer(serializers.ModelSerializer):
         read_only_fields = ['user', 'created_at']
     
     def get_specialist_info(self, obj):
+        specialist_account = obj.specialist.specialist_account
+        user = specialist_account.user
         return {
-            'name': obj.specialist.account.user.get_full_name(),
+            'name': user.get_full_name(),
             'specialty': obj.specialist.get_specialty_display(),
             'image': obj.specialist.profile_image.url if obj.specialist.profile_image else None,
         }
@@ -321,3 +324,50 @@ class SpecialistReviewSerializer(serializers.ModelSerializer):
         specialist.save()
         
         return review
+
+
+class SpecialistMessageSerializer(serializers.ModelSerializer):
+    specialist_info = serializers.SerializerMethodField()
+    user_info = serializers.SerializerMethodField()
+
+    class Meta:
+        model = SpecialistMessage
+        fields = [
+            'id', 'user', 'specialist', 'subject', 'message',
+            'is_read', 'status', 'created_at', 'specialist_info', 'user_info'
+        ]
+        read_only_fields = ['user', 'is_read', 'status', 'created_at']
+
+    def get_specialist_info(self, obj):
+        specialist_user = obj.specialist.specialist_account.user
+        return {
+            'id': obj.specialist.id,
+            'name': specialist_user.get_full_name(),
+            'email': specialist_user.email,
+            'specialty': obj.specialist.get_specialty_display(),
+        }
+
+    def get_user_info(self, obj):
+        return {
+            'id': obj.user.id,
+            'name': obj.user.get_full_name(),
+            'email': obj.user.email,
+        }
+
+
+class SpecialistMessageCreateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = SpecialistMessage
+        fields = ['specialist', 'subject', 'message']
+
+    def validate_specialist(self, specialist):
+        if not specialist.profile_completed:
+            raise serializers.ValidationError("This specialist profile is not yet completed.")
+        return specialist
+
+    def create(self, validated_data):
+        request = self.context['request']
+        return SpecialistMessage.objects.create(
+            user=request.user,
+            **validated_data
+        )

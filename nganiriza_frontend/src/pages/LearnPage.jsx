@@ -3,8 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { LanguageContext } from '../contexts/AppContext';
 import { Search, BookOpen, Clock, ChevronRight } from 'lucide-react';
 import Navbar from '../assets/components/Navbar';
-import axios from 'axios';
-import BASE_URL from '../config';
+import apiClient from '../utils/apiClient';
 
 const LearnPage = () => {
   const navigate = useNavigate();
@@ -40,13 +39,9 @@ const LearnPage = () => {
   const fetchArticles = async () => {
     setLoading(true);
     try {
-      const token = localStorage.getItem('access_token');
-      const config = token ? { headers: { Authorization: `Bearer ${token}` } } : {};
-      
-      const response = await axios.get(
-        `${BASE_URL}/api/dashboard/articles/`,
+      const response = await apiClient.get(
+        '/api/dashboard/articles/',
         {
-          ...config,
           params: { locale: language === 'en' ? 'eng' : 'rw' }
         }
       );

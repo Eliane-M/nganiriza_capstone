@@ -140,7 +140,11 @@ class Profile(models.Model):
 # For Specialists
 
 class SpecialistProfile(BaseModel):
-    specialist_account = models.OneToOneField(Account, on_delete=models.CASCADE, related_name='specialist_profile')
+    specialist_account = models.OneToOneField(
+        Account,
+        on_delete=models.CASCADE,
+        related_name='specialist_profile'
+    )
     specialty = models.CharField(max_length=50, choices=SPECIALTY_CHOICES)
     license_number = models.CharField(max_length=100, unique=True, blank=True, null=True)
     years_of_experience = models.IntegerField(default=0)
@@ -167,13 +171,13 @@ class SpecialistProfile(BaseModel):
     clinic_address = models.TextField(blank=True)
     
     def __str__(self):
-        return f"{self.account.user.get_full_name()} - {self.get_specialty_display()}"
+        user = self.specialist_account.user
+        return f"{user.get_full_name()} - {self.get_specialty_display()}"
     
     def calculate_profile_completeness(self):
         """Calculate if profile is complete"""
         required_fields = [
             self.specialty,
-            self.bio,
             self.education,
             self.years_of_experience > 0,
             self.consultation_fee > 0,
@@ -243,6 +247,35 @@ class SpecialistReview(models.Model):
     
     def __str__(self):
         return f"{self.user.username} - {self.rating} stars"
+
+
+class SpecialistMessage(BaseModel):
+    """Messaging between users and specialists"""
+    STATUS_CHOICES = [
+        ('open', 'Open'),
+        ('closed', 'Closed'),
+    ]
+
+    user = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+        related_name='specialist_messages'
+    )
+    specialist = models.ForeignKey(
+        SpecialistProfile,
+        on_delete=models.CASCADE,
+        related_name='messages'
+    )
+    subject = models.CharField(max_length=255)
+    message = models.TextField()
+    is_read = models.BooleanField(default=False)
+    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='open')
+
+    class Meta:
+        ordering = ['is_read', '-created_at']
+
+    def __str__(self):
+        return f"{self.user.get_full_name()} -> {self.specialist} ({self.subject})"
 
 
 class Conversations(BaseModel):

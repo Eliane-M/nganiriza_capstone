@@ -1,8 +1,7 @@
 import React, { useState } from 'react';
-import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { ChevronRight, ChevronLeft, Check } from 'lucide-react';
-import BASE_URL from '../../config';
+import apiClient from '../../utils/apiClient';
 
 const SpecialistOnboarding = () => {
   const navigate = useNavigate();
@@ -52,29 +51,6 @@ const SpecialistOnboarding = () => {
     setError('');
 
     try {
-      // Auto-login first
-      const email = sessionStorage.getItem('pending_specialist_email');
-      const password = sessionStorage.getItem('pending_specialist_password');
-
-      if (!email || !password) {
-        throw new Error('Session expired. Please login again.');
-      }
-
-      // Login
-      const loginRes = await axios.post(`${BASE_URL}/api/auth/login/`, {
-        username: email,
-        password: password,
-      });
-
-      const { access, refresh } = loginRes.data;
-      localStorage.setItem('access_token', access);
-      localStorage.setItem('refresh_token', refresh);
-
-      // Clear session storage
-      sessionStorage.removeItem('pending_specialist_email');
-      sessionStorage.removeItem('pending_specialist_password');
-
-      // Submit profile data
       const profileData = {
         ...formData,
         years_of_experience: parseInt(formData.years_of_experience) || 0,
@@ -83,13 +59,11 @@ const SpecialistOnboarding = () => {
         languages_spoken: formData.languages_spoken.split(',').map(l => l.trim()),
       };
 
-      await axios.put(
-        `${BASE_URL}/api/specialists/profile/update/`,
-        profileData,
-        { headers: { Authorization: `Bearer ${access}` } }
+      await apiClient.put(
+        '/api/specialists/profile/update/',
+        profileData
       );
 
-      // Navigate to dashboard
       navigate('/specialist/dashboard');
     } catch (err) {
       setError(err.response?.data?.error || err.message || 'Failed to complete onboarding');
@@ -159,13 +133,12 @@ const SpecialistOnboarding = () => {
               </div>
 
               <div style={styles.inputGroup}>
-                <label style={styles.label}>Professional Bio *</label>
+                <label style={styles.label}>Professional Bio</label>
                 <textarea
                   name="bio"
                   value={formData.bio}
                   onChange={handleChange}
                   placeholder="Tell us about your experience and approach to patient care..."
-                  required
                   rows="4"
                   style={styles.textarea}
                 />

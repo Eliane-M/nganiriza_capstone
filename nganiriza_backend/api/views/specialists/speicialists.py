@@ -7,6 +7,7 @@ from models.models import (
     SpecialistProfile, 
     Appointment, 
     SpecialistReview,
+    SpecialistMessage,
     Account
 )
 from models.serializers import (
@@ -15,7 +16,9 @@ from models.serializers import (
     SpecialistPublicSerializer,
     AppointmentSerializer,
     AppointmentCreateSerializer,
-    SpecialistReviewSerializer
+    SpecialistReviewSerializer,
+    SpecialistMessageSerializer,
+    SpecialistMessageCreateSerializer
 )
 from drf_spectacular.utils import extend_schema, OpenApiParameter
 from drf_spectacular.types import OpenApiTypes
@@ -23,36 +26,65 @@ from drf_spectacular.types import OpenApiTypes
 
 @extend_schema(
     tags=["Specialists"],
-    responses={200: SpecialistProfileSerializer}
+    responses={200: SpecialistProfileSerializer, 404: dict}
 )
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def get_specialist_profile(request):
     """Get the current specialist's profile"""
     try:
+        # Get account first
         account = Account.objects.get(user=request.user, role='specialist')
-        specialist = SpecialistProfile.objects.get(account=account)
+        
+        # Get or create specialist profile
+        specialist, created = SpecialistProfile.objects.get_or_create(
+            specialist_account=account,
+            defaults={
+                'specialty': 'general',
+                'profile_completed': False,
+                'created_by': request.user,
+                'updated_by': request.user
+            }
+        )
+        
         serializer = SpecialistProfileSerializer(specialist)
         return Response(serializer.data)
-    except (Account.DoesNotExist, SpecialistProfile.DoesNotExist):
+        
+    except Account.DoesNotExist:
         return Response(
-            {"error": "Specialist profile not found"}, 
+            {"error": "Specialist account not found. Please ensure your account has specialist role."}, 
             status=status.HTTP_404_NOT_FOUND
+        )
+    except Exception as e:
+        return Response(
+            {"error": f"Failed to retrieve profile: {str(e)}"}, 
+            status=status.HTTP_500_INTERNAL_SERVER_ERROR
         )
 
 
 @extend_schema(
     tags=["Specialists"],
     request=SpecialistProfileUpdateSerializer,
-    responses={200: SpecialistProfileSerializer}
+    responses={200: SpecialistProfileSerializer, 400: dict, 404: dict}
 )
 @api_view(['PUT', 'PATCH'])
 @permission_classes([IsAuthenticated])
 def update_specialist_profile(request):
     """Update specialist profile (onboarding and profile editing)"""
     try:
+        # Get account first
         account = Account.objects.get(user=request.user, role='specialist')
-        specialist = SpecialistProfile.objects.get(account=account)
+        
+        # Get or create specialist profile
+        specialist, created = SpecialistProfile.objects.get_or_create(
+            specialist_account=account,
+            defaults={
+                'specialty': 'general',
+                'profile_completed': False,
+                'created_by': request.user,
+                'updated_by': request.user
+            }
+        )
         
         partial = request.method == 'PATCH'
         serializer = SpecialistProfileUpdateSerializer(
@@ -62,17 +94,33 @@ def update_specialist_profile(request):
         )
         
         if serializer.is_valid():
-            serializer.save(updated_by=request.user)
+            # Mark profile as completed if all required fields are filled
+            updated_specialist = serializer.save(updated_by=request.user)
+            
+            # Check if profile is complete
+            required_fields = ['specialty', 'license_number', 'years_of_experience']
+            is_complete = all(getattr(updated_specialist, field) for field in required_fields)
+            
+            if is_complete and not updated_specialist.profile_completed:
+                updated_specialist.profile_completed = True
+                updated_specialist.save()
+            
             return Response(
-                SpecialistProfileSerializer(specialist).data,
+                SpecialistProfileSerializer(updated_specialist).data,
                 status=status.HTTP_200_OK
             )
+        
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         
-    except (Account.DoesNotExist, SpecialistProfile.DoesNotExist):
+    except Account.DoesNotExist:
         return Response(
-            {"error": "Specialist profile not found"}, 
+            {"error": "Specialist account not found. Please ensure your account has specialist role."}, 
             status=status.HTTP_404_NOT_FOUND
+        )
+    except Exception as e:
+        return Response(
+            {"error": f"Failed to update profile: {str(e)}"}, 
+            status=status.HTTP_500_INTERNAL_SERVER_ERROR
         )
 
 
@@ -91,9 +139,12 @@ def update_specialist_profile(request):
 def list_specialists(request):
     """List all verified specialists (public endpoint)"""
     queryset = SpecialistProfile.objects.filter(
-        is_verified=True,
         profile_completed=True
-    )
+    ).select_related('specialist_account__user')  # Optimize query
+    
+    verified_only = request.GET.get('verified_only')
+    if verified_only and verified_only.lower() in ['1', 'true', 'yes']:
+        queryset = queryset.filter(is_verified=True)
     
     # Filter by specialty
     specialty = request.GET.get('specialty')
@@ -104,8 +155,8 @@ def list_specialists(request):
     search = request.GET.get('search')
     if search:
         queryset = queryset.filter(
-            Q(account__user__first_name__icontains=search) |
-            Q(account__user__last_name__icontains=search) |
+            Q(specialist_account__user__first_name__icontains=search) |
+            Q(specialist_account__user__last_name__icontains=search) |
             Q(clinic_name__icontains=search) |
             Q(specialty__icontains=search)
         )
@@ -130,14 +181,14 @@ def list_specialists(request):
 
 @extend_schema(
     tags=["Specialists"],
-    responses={200: SpecialistPublicSerializer}
+    responses={200: SpecialistPublicSerializer, 404: dict}
 )
 @api_view(['GET'])
 @permission_classes([AllowAny])
 def get_specialist_detail(request, pk):
     """Get details of a specific specialist (public)"""
     try:
-        specialist = SpecialistProfile.objects.get(
+        specialist = SpecialistProfile.objects.select_related('specialist_account__user').get(
             id=pk,
             is_verified=True,
             profile_completed=True
@@ -155,7 +206,7 @@ def get_specialist_detail(request, pk):
 @extend_schema(
     tags=["Appointments"],
     request=AppointmentCreateSerializer,
-    responses={201: AppointmentSerializer}
+    responses={201: AppointmentSerializer, 400: dict}
 )
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
@@ -174,6 +225,11 @@ def create_appointment(request):
 
 @extend_schema(
     tags=["Appointments"],
+    parameters=[
+        OpenApiParameter('status', OpenApiTypes.STR, description='Filter by status'),
+        OpenApiParameter('page', OpenApiTypes.INT),
+        OpenApiParameter('page_size', OpenApiTypes.INT),
+    ],
     responses={200: AppointmentSerializer(many=True)}
 )
 @api_view(['GET'])
@@ -205,7 +261,12 @@ def list_user_appointments(request):
 
 @extend_schema(
     tags=["Appointments"],
-    responses={200: AppointmentSerializer(many=True)}
+    parameters=[
+        OpenApiParameter('status', OpenApiTypes.STR, description='Filter by status'),
+        OpenApiParameter('page', OpenApiTypes.INT),
+        OpenApiParameter('page_size', OpenApiTypes.INT),
+    ],
+    responses={200: AppointmentSerializer(many=True), 404: dict}
 )
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
@@ -213,7 +274,7 @@ def list_specialist_appointments(request):
     """List appointments for the current specialist"""
     try:
         account = Account.objects.get(user=request.user, role='specialist')
-        specialist = SpecialistProfile.objects.get(account=account)
+        specialist = SpecialistProfile.objects.get(specialist_account=account)
         
         appointments = Appointment.objects.filter(specialist=specialist).order_by('-appointment_date')
         
@@ -237,7 +298,12 @@ def list_specialist_appointments(request):
             'results': serializer.data
         })
         
-    except (Account.DoesNotExist, SpecialistProfile.DoesNotExist):
+    except Account.DoesNotExist:
+        return Response(
+            {"error": "Specialist account not found"}, 
+            status=status.HTTP_404_NOT_FOUND
+        )
+    except SpecialistProfile.DoesNotExist:
         return Response(
             {"error": "Specialist profile not found"}, 
             status=status.HTTP_404_NOT_FOUND
@@ -247,7 +313,7 @@ def list_specialist_appointments(request):
 @extend_schema(
     tags=["Appointments"],
     request={'status': str, 'cancellation_reason': str},
-    responses={200: AppointmentSerializer}
+    responses={200: AppointmentSerializer, 400: dict, 403: dict, 404: dict}
 )
 @api_view(['PATCH'])
 @permission_classes([IsAuthenticated])
@@ -258,9 +324,13 @@ def update_appointment_status(request, pk):
         
         # Check permissions
         is_owner = appointment.user == request.user
-        is_specialist = hasattr(request.user, 'account') and \
-                       request.user.account.role == 'specialist' and \
-                       appointment.specialist.account.user == request.user
+        is_specialist = False
+        try:
+            account = Account.objects.get(user=request.user, role='specialist')
+            specialist = SpecialistProfile.objects.get(specialist_account=account)
+            is_specialist = appointment.specialist == specialist
+        except (Account.DoesNotExist, SpecialistProfile.DoesNotExist):
+            pass
         
         if not (is_owner or is_specialist):
             return Response(
@@ -298,7 +368,7 @@ def update_appointment_status(request, pk):
 @extend_schema(
     tags=["Reviews"],
     request=SpecialistReviewSerializer,
-    responses={201: SpecialistReviewSerializer}
+    responses={201: SpecialistReviewSerializer, 400: dict}
 )
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
@@ -332,6 +402,10 @@ def create_review(request):
 
 @extend_schema(
     tags=["Reviews"],
+    parameters=[
+        OpenApiParameter('page', OpenApiTypes.INT),
+        OpenApiParameter('page_size', OpenApiTypes.INT),
+    ],
     responses={200: SpecialistReviewSerializer(many=True)}
 )
 @api_view(['GET'])
@@ -357,8 +431,105 @@ def list_specialist_reviews(request, specialist_id):
 
 
 @extend_schema(
+    tags=["Messages"],
+    request=SpecialistMessageCreateSerializer,
+    responses={201: SpecialistMessageSerializer, 400: dict}
+)
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def create_specialist_message(request):
+    """Create a message to a specialist"""
+    serializer = SpecialistMessageCreateSerializer(
+        data=request.data,
+        context={'request': request}
+    )
+    if serializer.is_valid():
+        message = serializer.save()
+        return Response(
+            SpecialistMessageSerializer(message).data,
+            status=status.HTTP_201_CREATED
+        )
+    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+@extend_schema(
+    tags=["Messages"],
+    responses={200: SpecialistMessageSerializer(many=True)}
+)
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def list_user_messages(request):
+    """List messages sent by the current user"""
+    messages = SpecialistMessage.objects.filter(user=request.user).order_by('-created_at')
+    
+    # Pagination
+    page = max(int(request.GET.get('page', 1)), 1)
+    page_size = min(max(int(request.GET.get('page_size', 20)), 1), 100)
+    start, end = (page - 1) * page_size, page * page_size
+    
+    total = messages.count()
+    serializer = SpecialistMessageSerializer(messages[start:end], many=True)
+    
+    return Response({
+        'count': total,
+        'next': page + 1 if end < total else None,
+        'previous': page - 1 if start > 0 else None,
+        'results': serializer.data
+    })
+
+
+@extend_schema(
+    tags=["Messages"],
+    responses={200: SpecialistMessageSerializer(many=True), 404: dict}
+)
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def list_specialist_messages(request):
+    """List messages received by the current specialist"""
+    try:
+        account = Account.objects.get(user=request.user, role='specialist')
+        specialist = SpecialistProfile.objects.get(specialist_account=account)
+    except Account.DoesNotExist:
+        return Response(
+            {"error": "Specialist account not found"},
+            status=status.HTTP_404_NOT_FOUND
+        )
+    except SpecialistProfile.DoesNotExist:
+        return Response(
+            {"error": "Specialist profile not found"},
+            status=status.HTTP_404_NOT_FOUND
+        )
+    
+    messages = SpecialistMessage.objects.filter(specialist=specialist).order_by('is_read', '-created_at')
+    
+    status_filter = request.GET.get('status')
+    if status_filter:
+        messages = messages.filter(status=status_filter)
+    
+    read_filter = request.GET.get('is_read')
+    if read_filter in ['true', 'false', '1', '0']:
+        is_read = read_filter in ['true', '1']
+        messages = messages.filter(is_read=is_read)
+    
+    # Pagination
+    page = max(int(request.GET.get('page', 1)), 1)
+    page_size = min(max(int(request.GET.get('page_size', 20)), 1), 100)
+    start, end = (page - 1) * page_size, page * page_size
+    
+    total = messages.count()
+    serializer = SpecialistMessageSerializer(messages[start:end], many=True)
+    
+    return Response({
+        'count': total,
+        'next': page + 1 if end < total else None,
+        'previous': page - 1 if start > 0 else None,
+        'results': serializer.data
+    })
+
+
+@extend_schema(
     tags=["Specialists"],
-    responses={200: dict}
+    responses={200: dict, 404: dict}
 )
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
@@ -366,10 +537,20 @@ def get_dashboard_stats(request):
     """Get dashboard statistics for specialist"""
     try:
         account = Account.objects.get(user=request.user, role='specialist')
-        specialist = SpecialistProfile.objects.get(account=account)
+        specialist = SpecialistProfile.objects.get(specialist_account=account)
         
         # Get appointment counts
+        from django.utils import timezone
+        from datetime import timedelta
+        
+        today = timezone.now().date()
+        week_start = today - timedelta(days=today.weekday())
+        
         total_appointments = Appointment.objects.filter(specialist=specialist).count()
+        today_appointments = Appointment.objects.filter(
+            specialist=specialist,
+            appointment_date=today
+        ).count()
         pending_appointments = Appointment.objects.filter(
             specialist=specialist, 
             status='pending'
@@ -382,12 +563,22 @@ def get_dashboard_stats(request):
             specialist=specialist, 
             status='completed'
         ).count()
+        week_appointments = Appointment.objects.filter(
+            specialist=specialist,
+            appointment_date__gte=week_start
+        ).count()
         
         return Response({
             'profile_completed': specialist.profile_completed,
             'is_verified': specialist.is_verified,
             'total_reviews': specialist.total_reviews,
             'average_rating': float(specialist.average_rating),
+            'today_appointments': today_appointments,
+            'week_appointments': week_appointments,
+            'unread_messages': 0,  # Implement when messages are ready
+            'active_patients': Appointment.objects.filter(
+                specialist=specialist
+            ).values('user').distinct().count(),
             'appointments': {
                 'total': total_appointments,
                 'pending': pending_appointments,
@@ -396,7 +587,12 @@ def get_dashboard_stats(request):
             }
         })
         
-    except (Account.DoesNotExist, SpecialistProfile.DoesNotExist):
+    except Account.DoesNotExist:
+        return Response(
+            {"error": "Specialist account not found"}, 
+            status=status.HTTP_404_NOT_FOUND
+        )
+    except SpecialistProfile.DoesNotExist:
         return Response(
             {"error": "Specialist profile not found"}, 
             status=status.HTTP_404_NOT_FOUND

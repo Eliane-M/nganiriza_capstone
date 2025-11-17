@@ -1,8 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from "react-router-dom";
-import axios from "axios";
+import apiClient from "../../utils/apiClient";
 import '../../assets/css/authPages/signup.css';
-import BASE_URL from '../../config.js';
 import { Eye, EyeOff, UserPlus } from 'lucide-react';
 
 const SignupPage = () => {
@@ -15,6 +14,8 @@ const SignupPage = () => {
     email: '',
     password: '',
     confirmPassword: '',
+    phone_number: '',
+    date_of_birth: '',
     agree: false,
   });
 
@@ -43,11 +44,18 @@ const SignupPage = () => {
     if (formData.password !== formData.confirmPassword)
       v.confirmPassword = "Passwords don't match";
     if (!formData.agree) v.agree = 'You must agree to continue';
+    
+    if (formData.phone_number && !/^\+?[0-9]{10,15}$/.test(formData.phone_number)) {
+      v.phone_number = 'Invalid phone number format';
+    }
+    
     return v;
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (loading) return;
+
     setSubmitError('');
     const v = clientValidate();
     setErrors(v);
@@ -60,28 +68,44 @@ const SignupPage = () => {
         email: formData.email,
         password: formData.password,
         role: formData.userType, // 'user' or 'specialist'
-        phone_number: formData.phone_number,
-        date_of_birth: formData.date_of_birth,
-        sector: formData.sector,
+        phone_number: formData.phone_number || null,
+        date_of_birth: formData.date_of_birth || null,
+        place_of_origin: formData.place_of_origin || null,
         };
 
-      const response = await axios.post(`${BASE_URL}/api/auth/signup/`, payload, {
+        console.log('Sending signup payload:', payload);
+
+      const response = await apiClient.post(`/api/auth/signup/`, payload, {
         headers: { 'Content-Type': 'application/json' },
       });
+
+      console.log('Signup response:', response.data);
 
       // Check if user is specialist and needs onboarding
       if (formData.userType === 'specialist') {
         // Save email for auto-login after onboarding
-        sessionStorage.setItem('pending_specialist_email', formData.email);
-        sessionStorage.setItem('pending_specialist_password', formData.password);
-        navigate('/specialist/onboard');
+        localStorage.setItem('pending_specialist_email', formData.email);
+        localStorage.setItem('pending_specialist_password', formData.password);
+        console.log('Navigating to specialist onboarding');
+        navigate('/specialists/onboarding');
+        window.location.href = '/specialists/onboarding';
       } else {
         // Regular user - go to login
         navigate('/login');
       }
     } catch (err) {
+      console.error('Signup error:', err.response?.data || err.message);
+
       if (err.response?.status === 409) {
         setErrors((s) => ({ ...s, email: 'Email already exists. Use a different one.' }));
+      } else if (err.response?.status === 400) {
+        // Handle validation errors from backend
+        const backendErrors = err.response.data;
+        if (typeof backendErrors === 'object' && !backendErrors.error) {
+          setErrors(backendErrors);
+        } else {
+          setSubmitError(backendErrors.error || 'Invalid data. Please check your inputs.');
+        }
       } else {
         setSubmitError(
           err.response?.data?.error ||
@@ -171,6 +195,31 @@ const SignupPage = () => {
               onChange={handleInputChange}
             />
             {errors.email && <small className="error">{errors.email}</small>}
+          </div>
+
+          {/* Optional fields */}
+          <div className="input-group full-width">
+            <label>Phone Number (optional)</label>
+            <input
+              type="tel"
+              name="phone_number"
+              placeholder="+250 XXX XXX XXX"
+              value={formData.phone_number}
+              onChange={handleInputChange}
+            />
+            {errors.phone_number && <small className="error">{errors.phone_number}</small>}
+          </div>
+
+          <div className="input-group full-width">
+            <label>Date of Birth (optional)</label>
+            <input
+              type="date"
+              name="date_of_birth"
+              value={formData.date_of_birth}
+              onChange={handleInputChange}
+              max={new Date().toISOString().split('T')[0]}
+            />
+            {errors.date_of_birth && <small className="error">{errors.date_of_birth}</small>}
           </div>
 
           <div className="input-group full-width">

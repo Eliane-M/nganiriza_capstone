@@ -1,15 +1,15 @@
-import React, { useState } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
-import axios from 'axios';
+import React, { useState, useContext } from 'react';
+import { useNavigate, Link, useLocation } from 'react-router-dom';
 import '../../assets/css/authPages/login.css';
-import BASE_URL from '../../config.js';
+import { AuthContext } from '../../assets/components/context/AuthContext';
 
 const LoginForm = () => {
   const navigate = useNavigate();
+  const location = useLocation();
+  const { login } = useContext(AuthContext);
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [remember, setRemember] = useState(false);
   const [showPwd, setShowPwd] = useState(false);
   const [loading, setLoading] = useState(false);
   const [errMsg, setErrMsg] = useState('');
@@ -20,48 +20,15 @@ const LoginForm = () => {
     setLoading(true);
 
     try {
-      const res = await axios.post(
-        `${BASE_URL}/api/auth/login/`, 
-        { 
-          username: email, 
-          password
-        },
-        { 
-          headers: { 'Content-Type': 'application/json' },
-          withCredentials: false
-        }
-      );
-
-      // Correctly destructure your backend response
-      const { 
-        message, 
-        access, 
-        refresh, 
-        role, 
-        user 
-      } = res.data;
-
-      // Choose storage based on "Remember me"
-      const storage = remember ? localStorage : sessionStorage;
-
-      // Save tokens
-      storage.setItem('access_token', access);
-      storage.setItem('refresh_token', refresh);
-      storage.setItem('user_role', role);        // "admin" or "user"
-      storage.setItem('user', JSON.stringify(user));
-
-      // Optional: Save login state
-      storage.setItem('isLoggedIn', 'true');
-
-      // Success message (optional)
-      console.log(message);
-
-      // Redirect based on role
-      if (role === 'specialist') {
-        navigate('/specialist/dashboard');
-      } else {
-        navigate('/'); 
-      }
+      const authenticatedUser = await login(email, password);
+      const searchParams = new URLSearchParams(location.search);
+      const redirectPath = searchParams.get('redirect');
+      const defaultPath =
+        authenticatedUser?.role === 'specialist' ? '/specialist/dashboard' : '/';
+      const nextLocation = redirectPath
+        ? decodeURIComponent(redirectPath)
+        : defaultPath;
+      navigate(nextLocation, { replace: true });
 
     } catch (err) {
       let errorMessage = 'Sign-in failed. Please try again.';
@@ -142,15 +109,7 @@ const LoginForm = () => {
           </div>
 
           <div className="options">
-            <label className="checkbox-label">
-              <input
-                type="checkbox"
-                checked={remember}
-                onChange={(e) => setRemember(e.target.checked)}
-              />
-              <span className="checkmark"></span>
-              Remember me
-            </label>
+            <span />
             <Link to="/reset-password" className="forgot-link">
               Forgot password?
             </Link>

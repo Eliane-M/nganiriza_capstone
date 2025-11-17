@@ -6,7 +6,7 @@ from django.utils.text import slugify
 class BaseModel(models.Model):
     
     name = models.CharField(max_length=255)
-    slug = models.SlugField(unique=True, blank=True, max_length=50)
+    slug = models.SlugField(blank=True, max_length=50)
     created_by = models.ForeignKey(
         User, on_delete=models.SET_NULL, null=True, related_name="created_by"
     )

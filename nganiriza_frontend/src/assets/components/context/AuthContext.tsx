@@ -1,109 +1,145 @@
-import React, { useEffect, useState, createContext } from 'react';
-interface User {
-  id: string;
-  name: string;
-  email: string;
-  age?: number;
+import React, {
+  createContext,
+  useCallback,
+  useEffect,
+  useMemo,
+  useState,
+  ReactNode
+} from 'react';
+import apiClient, { setAuthHandlers } from '../../../utils/apiClient';
+import { tokenStorage } from '../../../utils/tokenStorage';
+
+export interface User {
+  id: number | string;
+  email?: string;
+  first_name?: string;
+  last_name?: string;
+  role?: string;
 }
+
 interface AuthContextType {
   user: User | null;
   isAuthenticated: boolean;
   isLoading: boolean;
-  login: (email: string, password: string) => Promise<boolean>;
-  signup: (name: string, email: string, password: string, age?: number) => Promise<boolean>;
+  login: (email: string, password: string) => Promise<User>;
   logout: () => void;
+  refreshTokens: () => Promise<void>;
 }
+
 export const AuthContext = createContext<AuthContextType>({
   user: null,
   isAuthenticated: false,
   isLoading: true,
-  login: async () => false,
-  signup: async () => false,
-  logout: () => {}
+  login: async () => {
+    throw new Error('AuthProvider not initialized');
+  },
+  logout: () => {},
+  refreshTokens: async () => {}
 });
+
 interface AuthProviderProps {
   children: ReactNode;
 }
-export function AuthProvider({
-  children
-}: AuthProviderProps) {
-  const [user, setUser] = useState<User | null>(null);
+
+export function AuthProvider({ children }: AuthProviderProps) {
+  const [user, setUser] = useState<User | null>(() => tokenStorage.getUser());
   const [isLoading, setIsLoading] = useState(true);
-  useEffect(() => {
-    // Check if user is logged in from localStorage
-    const storedUser = localStorage.getItem('nganiriza_user');
-    if (storedUser) {
-      setUser(JSON.parse(storedUser));
-    }
-    setIsLoading(false);
+
+  const persistUser = useCallback((nextUser: User | null) => {
+    setUser(nextUser);
+    tokenStorage.setUser(nextUser);
   }, []);
-  const login = async (email: string, password: string): Promise<boolean> => {
-    // Simulate API call with timeout
-    return new Promise(resolve => {
-      setTimeout(() => {
-        // In a real app, this would validate against a backend
-        const users = JSON.parse(localStorage.getItem('nganiriza_users') || '[]');
-        const foundUser = users.find((u: any) => u.email === email && u.password === password);
-        if (foundUser) {
-          const userToStore = {
-            id: foundUser.id,
-            name: foundUser.name,
-            email: foundUser.email,
-            age: foundUser.age
-          };
-          setUser(userToStore);
-          localStorage.setItem('nganiriza_user', JSON.stringify(userToStore));
-          resolve(true);
-        } else {
-          resolve(false);
-        }
-      }, 1000);
-    });
-  };
-  const signup = async (name: string, email: string, password: string, age?: number): Promise<boolean> => {
-    // Simulate API call with timeout
-    return new Promise(resolve => {
-      setTimeout(() => {
-        // In a real app, this would create a user in the backend
-        const users = JSON.parse(localStorage.getItem('nganiriza_users') || '[]');
-        // Check if email already exists
-        if (users.some((u: any) => u.email === email)) {
-          resolve(false);
-          return;
-        }
-        const newUser = {
-          id: `user-${Date.now()}`,
-          name,
-          email,
-          password,
-          age
-        };
-        users.push(newUser);
-        localStorage.setItem('nganiriza_users', JSON.stringify(users));
-        const userToStore = {
-          id: newUser.id,
-          name: newUser.name,
-          email: newUser.email,
-          age: newUser.age
-        };
-        setUser(userToStore);
-        localStorage.setItem('nganiriza_user', JSON.stringify(userToStore));
-        resolve(true);
-      }, 1000);
-    });
-  };
-  const logout = () => {
+
+  const handleLogout = useCallback(() => {
+    tokenStorage.clearAll();
     setUser(null);
-    localStorage.removeItem('nganiriza_user');
-  };
-  return <AuthContext.Provider value={{
-    user,
-    isAuthenticated: !!user,
-    isLoading,
-    login,
-    signup,
-    logout
-  }}>
-      {children}
-    </AuthContext.Provider>;
+  }, []);
+
+  const fetchProfile = useCallback(async () => {
+    const response = await apiClient.get('/api/auth/me/');
+    persistUser(response.data);
+  }, [persistUser]);
+
+  const bootstrapAuth = useCallback(async () => {
+    const access = tokenStorage.getAccessToken();
+    const refresh = tokenStorage.getRefreshToken();
+    if (!access || !refresh) {
+      handleLogout();
+      setIsLoading(false);
+      return;
+    }
+    try {
+      await fetchProfile();
+    } catch (error) {
+      console.error('Failed to bootstrap auth', error);
+      handleLogout();
+    } finally {
+      setIsLoading(false);
+    }
+  }, [fetchProfile, handleLogout]);
+
+  useEffect(() => {
+    bootstrapAuth();
+  }, [bootstrapAuth]);
+
+  useEffect(() => {
+    setAuthHandlers({
+      onLogout: handleLogout,
+      onTokenRefresh: fetchProfile
+    });
+  }, [fetchProfile, handleLogout]);
+
+  const login = useCallback(
+    async (email: string, password: string): Promise<User> => {
+      try {
+        const response = await apiClient.post('/api/auth/login/', {
+          username: email,
+          password
+        });
+        const { access, refresh, user: userInfo, role } = response.data;
+        tokenStorage.setTokens({ access, refresh });
+        const normalizedUser = {
+          ...userInfo,
+          email: userInfo?.email || email,
+          role
+        };
+        persistUser(normalizedUser);
+        return normalizedUser;
+      } catch (error) {
+        console.error('Login failed', error);
+        handleLogout();
+        throw error;
+      }
+    },
+    [handleLogout, persistUser]
+  );
+
+  const refreshTokens = useCallback(async () => {
+    try {
+      const refreshToken = tokenStorage.getRefreshToken();
+      if (!refreshToken) {
+        throw new Error('Missing refresh token');
+      }
+      await apiClient.post('/api/auth/token/refresh/', { refresh: refreshToken });
+      await fetchProfile();
+    } catch (error) {
+      console.error('Refresh token failed', error);
+      handleLogout();
+      throw error;
+    }
+  }, [fetchProfile, handleLogout]);
+
+  const value = useMemo(
+    () => ({
+      user,
+      isAuthenticated: Boolean(user),
+      isLoading,
+      login,
+      logout: handleLogout,
+      refreshTokens
+    }),
+    [user, isLoading, login, handleLogout, refreshTokens]
+  );
+
+  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 }
