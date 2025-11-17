@@ -27,7 +27,7 @@ def login_api(request):
                 if user.is_active:
                     refresh = RefreshToken.for_user(user)
 
-                    role = "admin" if user.is_staff else "user"
+                    role = "specialist" if user.is_staff else "user"
 
                     user_info = {
                         "first_name": user.first_name,

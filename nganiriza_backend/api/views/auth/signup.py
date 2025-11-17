@@ -127,13 +127,13 @@ def new_user(request):
             # Add to specialist group (create if doesn't exist)
             specialist_group, _ = Group.objects.get_or_create(name='Specialist')
             user.groups.add(specialist_group)
-        elif role == 'admin':
-            user.is_staff = True
-            user.is_superuser = True
-            user.save()
+        # elif role == 'specialist':
+        #     user.is_staff = True
+        #     user.is_superuser = True
+        #     user.save()
             
-            admin_group, _ = Group.objects.get_or_create(name='Admin')
-            user.groups.add(admin_group)
+        #     admin_group, _ = Group.objects.get_or_create(name='Specialist')
+        #     user.groups.add(admin_group)
         else:
             # Regular user
             user_group, _ = Group.objects.get_or_create(name='User')

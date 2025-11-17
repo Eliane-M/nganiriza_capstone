@@ -6,8 +6,8 @@ import * as z from "zod";
 import { Lock, CheckCircle } from "lucide-react";
 import { useLocation, useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
-import BASE_URL from "../config";
-import "../assets/css/authPages/verifycode.scss";
+import BASE_URL from "../../config";
+import "../../assets/css/authPages/verifycode.scss";
 
 const schema = z.object({
   code: z.string().length(6, "Enter 6 characters").regex(/^[A-Z0-9]+$/i, "Only letters & numbers"),

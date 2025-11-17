@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import axios from 'axios';
-import '../assets/css/authPages/login.css';
-import BASE_URL from '../config.js';
+import '../../assets/css/authPages/login.css';
+import BASE_URL from '../../config.js';
 
 const LoginForm = () => {
   const navigate = useNavigate();
@@ -21,14 +21,14 @@ const LoginForm = () => {
 
     try {
       const res = await axios.post(
-        `${BASE_URL}/api/auth/login/`,  // Make sure this matches your URL
+        `${BASE_URL}/api/auth/login/`, 
         { 
-          username: email,  // Backend expects "username", you're using email as username
+          username: email, 
           password
         },
         { 
           headers: { 'Content-Type': 'application/json' },
-          withCredentials: false  // SimpleJWT doesn't need cookies by default
+          withCredentials: false
         }
       );
 

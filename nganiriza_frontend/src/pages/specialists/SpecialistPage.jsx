@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Search as SearchIcon, Users, Heart, Brain, Apple, Stethoscope, Building2 } from 'lucide-react';
-import { TextChatInterface } from '../assets/components/TextChatInterface.tsx';
-import { VideoCallInterface } from '../assets/components/VideoCallInterface.tsx';
-import '../assets/css/specialists/specialist_page.css';
-import BASE_URL from '../config.js';
+import { TextChatInterface } from '../../assets/components/TextChatInterface.tsx';
+import { VideoCallInterface } from '../../assets/components/VideoCallInterface.tsx';
+import '../../assets/css/specialists/specialist_page.css';
+import BASE_URL from '../../config.js';
 
 const CommunicationMode = {
   NONE: 'NONE',

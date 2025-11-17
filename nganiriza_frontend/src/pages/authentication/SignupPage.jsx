@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from "react-router-dom";
 import axios from "axios";
-import '../assets/css/authPages/signup.css';
-import BASE_URL from '../config.js';
+import '../../assets/css/authPages/signup.css';
+import BASE_URL from '../../config.js';
 import { Eye, EyeOff, UserPlus } from 'lucide-react';
 
 const SignupPage = () => {
@@ -60,7 +60,10 @@ const SignupPage = () => {
         email: formData.email,
         password: formData.password,
         role: formData.userType, // 'user' or 'specialist'
-      };
+        phone_number: formData.phone_number,
+        date_of_birth: formData.date_of_birth,
+        sector: formData.sector,
+        };
 
       const response = await axios.post(`${BASE_URL}/api/auth/signup/`, payload, {
         headers: { 'Content-Type': 'application/json' },

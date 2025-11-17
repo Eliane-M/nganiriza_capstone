@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { ChevronRight, ChevronLeft, Check } from 'lucide-react';
-import BASE_URL from '../config';
+import BASE_URL from '../../config';
 
 const SpecialistOnboarding = () => {
   const navigate = useNavigate();

@@ -5,8 +5,8 @@ import * as z from "zod";
 import { Lock, CheckCircle } from "lucide-react";
 import { useLocation, useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
-import BASE_URL from "../config";
-import "../assets/css/authPages/setnewpassword.css"; // We'll make this
+import BASE_URL from "../../config";
+import "../../assets/css/authPages/setnewpassword.css"; // We'll make this
 
 const schema = z.object({
   code: z.string().length(6, "Enter your 6-character code"),

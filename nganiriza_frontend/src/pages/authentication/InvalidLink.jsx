@@ -1,7 +1,7 @@
 // src/pages/InvalidLink.jsx
 import { AlertCircle } from "lucide-react";
 import { Link } from "react-router-dom";
-import "../assets/css/authPages/invalidlink.css";
+import "../../assets/css/authPages/invalidlink.css";
 
 export default function InvalidLink() {
   return (

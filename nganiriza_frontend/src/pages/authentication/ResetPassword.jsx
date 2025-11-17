@@ -6,8 +6,8 @@ import * as z from "zod";
 import { Lock } from "lucide-react";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
-import "../assets/css/authPages/resetPass.css";
-import BASE_URL from "../config";
+import "../../assets/css/authPages/resetPass.css";
+import BASE_URL from "../../config";
 
 const schema = z.object({
   email: z.string().email("Please enter a valid email address"),
