@@ -217,6 +217,10 @@ def create_appointment(request):
     
     if serializer.is_valid():
         appointment = serializer.save(user=request.user, created_by=request.user)
+        # Ensure name field is set for BaseModel
+        if hasattr(appointment, 'name') and (not appointment.name or appointment.name.strip() == ''):
+            appointment.name = f"Appointment - {appointment.user.username} - {appointment.appointment_date}"
+            appointment.save()
         return Response(
             AppointmentSerializer(appointment).data,
             status=status.HTTP_201_CREATED
@@ -313,10 +317,19 @@ def list_specialist_appointments(request):
 
 @extend_schema(
     tags=["Appointments"],
-    request={'status': str, 'cancellation_reason': str},
+    request={
+        'application/json': {
+            'type': 'object',
+            'properties': {
+                'status': {'type': 'string'},
+                'cancellation_reason': {'type': 'string'}
+            },
+            'required': ['status']
+        }
+    },
     responses={200: AppointmentSerializer, 400: dict, 403: dict, 404: dict}
 )
-@api_view(['PATCH'])
+@api_view(['PATCH', 'PUT'])
 @permission_classes([IsAuthenticated])
 def update_appointment_status(request, pk):
     """Update appointment status (for both users and specialists)"""
@@ -340,21 +353,142 @@ def update_appointment_status(request, pk):
             )
         
         new_status = request.data.get('status')
-        if new_status:
-            valid_statuses = ['pending', 'confirmed', 'cancelled', 'completed']
-            if new_status not in valid_statuses:
-                return Response(
-                    {"error": f"Invalid status. Must be one of: {', '.join(valid_statuses)}"},
-                    status=status.HTTP_400_BAD_REQUEST
-                )
-            appointment.status = new_status
+        if not new_status:
+            return Response(
+                {"error": "Status is required"},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+        
+        valid_statuses = ['pending', 'confirmed', 'cancelled', 'completed']
+        if new_status not in valid_statuses:
+            return Response(
+                {"error": f"Invalid status. Must be one of: {', '.join(valid_statuses)}"},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+        
+        appointment.status = new_status
         
         if new_status == 'cancelled':
             cancellation_reason = request.data.get('cancellation_reason', '')
             appointment.cancellation_reason = cancellation_reason
         
+        # Update updated_by if the field exists (BaseModel field)
+        if hasattr(appointment, 'updated_by'):
+            appointment.updated_by = request.user
+        
+        # Ensure name field exists for BaseModel (required field)
+        if hasattr(appointment, 'name'):
+            if not appointment.name or appointment.name.strip() == '':
+                appointment.name = f"Appointment {appointment.id} - {appointment.user.username}"
+        
+        appointment.save()
+        
+        serializer = AppointmentSerializer(appointment)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+        
+    except Appointment.DoesNotExist:
+        return Response(
+            {"error": "Appointment not found"}, 
+            status=status.HTTP_404_NOT_FOUND
+        )
+    except Exception as e:
+        import logging
+        logger = logging.getLogger(__name__)
+        logger.error(f"Error updating appointment status: {str(e)}")
+        return Response(
+            {"error": f"An error occurred: {str(e)}"},
+            status=status.HTTP_500_INTERNAL_SERVER_ERROR
+        )
+
+
+@extend_schema(
+    tags=["Appointments"],
+    request={
+        'application/json': {
+            'type': 'object',
+            'properties': {
+                'appointment_date': {'type': 'string', 'format': 'date'},
+                'appointment_time': {'type': 'string', 'format': 'time'},
+                'notes': {'type': 'string'}
+            },
+            'required': ['appointment_date', 'appointment_time']
+        }
+    },
+    responses={200: AppointmentSerializer, 400: dict, 403: dict, 404: dict}
+)
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def reschedule_appointment(request, pk):
+    """Reschedule an appointment (specialist only) and notify patient"""
+    try:
+        appointment = Appointment.objects.get(id=pk)
+        
+        # Check if user is the specialist
+        try:
+            account = Account.objects.get(user=request.user, role='specialist')
+            specialist = SpecialistProfile.objects.get(specialist_account=account)
+            is_specialist = appointment.specialist == specialist
+        except (Account.DoesNotExist, SpecialistProfile.DoesNotExist):
+            is_specialist = False
+        
+        if not is_specialist:
+            return Response(
+                {"error": "Only the specialist can reschedule this appointment"},
+                status=status.HTTP_403_FORBIDDEN
+            )
+        
+        new_date = request.data.get('appointment_date')
+        new_time = request.data.get('appointment_time')
+        notes = request.data.get('notes', '')
+        
+        if not new_date or not new_time:
+            return Response(
+                {"error": "appointment_date and appointment_time are required"},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+        
+        # Update appointment
+        appointment.appointment_date = new_date
+        appointment.appointment_time = new_time
+        if notes:
+            appointment.notes = f"{appointment.notes}\n[Rescheduled] {notes}".strip() if appointment.notes else f"[Rescheduled] {notes}"
+        appointment.status = 'confirmed'  # Rescheduled appointments are confirmed
         appointment.updated_by = request.user
         appointment.save()
+        
+        # Send notification email to patient
+        try:
+            from django.core.mail import send_mail
+            from django.conf import settings
+            patient_email = appointment.user.email
+            if patient_email:
+                subject = f"Appointment Rescheduled - {appointment.specialist}"
+                message = f"""
+Hello {appointment.user.get_full_name() or appointment.user.username},
+
+Your appointment with {appointment.specialist} has been rescheduled.
+
+New Date: {appointment.appointment_date}
+New Time: {appointment.appointment_time}
+{f'Notes: {notes}' if notes else ''}
+
+Please confirm your availability for this new time.
+
+Thank you,
+Nganiriza Team
+"""
+                send_mail(
+                    subject=subject,
+                    message=message,
+                    from_email=settings.DEFAULT_FROM_EMAIL,
+                    recipient_list=[patient_email],
+                    fail_silently=True
+                )
+        except Exception as e:
+            # Log error but don't fail the request
+            import logging
+            logger = logging.getLogger(__name__)
+            logger.error(f"Failed to send reschedule notification email: {str(e)}")
         
         return Response(AppointmentSerializer(appointment).data)
         
@@ -439,18 +573,64 @@ def list_specialist_reviews(request, specialist_id):
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def create_specialist_message(request):
-    """Create a message to a specialist"""
-    serializer = SpecialistMessageCreateSerializer(
-        data=request.data,
-        context={'request': request}
-    )
-    if serializer.is_valid():
-        message = serializer.save()
+    """Create a message to a specialist (from user) or reply to a user (from specialist)"""
+    # Check if user is a specialist replying to a patient
+    is_specialist_reply = False
+    try:
+        account = Account.objects.get(user=request.user, role='specialist')
+        specialist = SpecialistProfile.objects.get(specialist_account=account)
+        is_specialist_reply = True
+    except (Account.DoesNotExist, SpecialistProfile.DoesNotExist):
+        pass
+    
+    if is_specialist_reply:
+        # Specialist replying to a patient
+        user_id = request.data.get('user')
+        subject = request.data.get('subject', 'Re: Follow-up')
+        message_text = request.data.get('message')
+        
+        if not user_id or not message_text:
+            return Response(
+                {"error": "user and message are required for specialist replies"},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+        
+        try:
+            from django.contrib.auth.models import User
+            user = User.objects.get(id=user_id)
+        except User.DoesNotExist:
+            return Response(
+                {"error": "User not found"},
+                status=status.HTTP_404_NOT_FOUND
+            )
+        
+        # Create message with specialist as sender and user as recipient
+        message = SpecialistMessage.objects.create(
+            user=user,  # Patient receiving the message
+            specialist=specialist,  # Specialist sending the message
+            subject=subject,
+            message=message_text,
+            is_read=False,
+            status='open'
+        )
+        
         return Response(
             SpecialistMessageSerializer(message).data,
             status=status.HTTP_201_CREATED
         )
-    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    else:
+        # Regular user sending message to specialist
+        serializer = SpecialistMessageCreateSerializer(
+            data=request.data,
+            context={'request': request}
+        )
+        if serializer.is_valid():
+            message = serializer.save()
+            return Response(
+                SpecialistMessageSerializer(message).data,
+                status=status.HTTP_201_CREATED
+            )
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 @extend_schema(
@@ -738,6 +918,121 @@ def get_specialist_messages(request, pk):
     
     serializer = SpecialistMessageSerializer(messages, many=True)
     return Response(serializer.data)
+
+
+@extend_schema(
+    tags=["Specialists"],
+    responses={200: dict},
+    summary="List patients for specialist dashboard, ordered by last action"
+)
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def list_specialist_patients(request):
+    """List all patients who have interacted with the specialist, ordered by last action"""
+    try:
+        account = Account.objects.get(user=request.user, role='specialist')
+        specialist = SpecialistProfile.objects.get(specialist_account=account)
+    except Account.DoesNotExist:
+        return Response(
+            {"error": "Specialist account not found"},
+            status=status.HTTP_404_NOT_FOUND
+        )
+    except SpecialistProfile.DoesNotExist:
+        return Response(
+            {"error": "Specialist profile not found"},
+            status=status.HTTP_404_NOT_FOUND
+        )
+    
+    # Get all unique users who have appointments or messages with this specialist
+    from django.contrib.auth.models import User
+    from django.db.models import Max, Q
+    
+    # Get users from appointments
+    appointment_users = Appointment.objects.filter(specialist=specialist).values_list('user', flat=True).distinct()
+    
+    # Get users from messages (messages sent to specialist)
+    message_users = SpecialistMessage.objects.filter(
+        specialist=specialist
+    ).values_list('user', flat=True).distinct()
+    
+    # Combine and get unique users
+    all_user_ids = set(list(appointment_users) + list(message_users))
+    users = User.objects.filter(id__in=all_user_ids)
+    
+    # Build patient list with last action info
+    patients = []
+    for user in users:
+        # Get last appointment
+        last_appointment = Appointment.objects.filter(
+            specialist=specialist,
+            user=user
+        ).order_by('-appointment_date', '-appointment_time').first()
+        
+        # Get last message (from patient to specialist)
+        last_message_from_patient = SpecialistMessage.objects.filter(
+            specialist=specialist,
+            user=user
+        ).order_by('-created_at').first()
+        
+        # Get last message (from specialist to patient - these are replies)
+        last_message_to_patient = SpecialistMessage.objects.filter(
+            specialist=specialist,
+            user=user
+        ).order_by('-created_at').first()
+        
+        # Determine last action
+        last_action_date = None
+        last_action_type = None
+        
+        if last_appointment:
+            apt_datetime = f"{last_appointment.appointment_date} {last_appointment.appointment_time}"
+            if not last_action_date or apt_datetime > last_action_date:
+                last_action_date = apt_datetime
+                last_action_type = 'appointment'
+        
+        if last_message_from_patient:
+            msg_date = last_message_from_patient.created_at.isoformat()
+            if not last_action_date or msg_date > last_action_date:
+                last_action_date = msg_date
+                last_action_type = 'message'
+        
+        if last_message_to_patient:
+            msg_date = last_message_to_patient.created_at.isoformat()
+            if not last_action_date or msg_date > last_action_date:
+                last_action_date = msg_date
+                last_action_type = 'message'
+        
+        # Count unread messages and pending appointments
+        unread_count = SpecialistMessage.objects.filter(
+            specialist=specialist,
+            user=user,
+            is_read=False
+        ).count()
+        
+        pending_appointments = Appointment.objects.filter(
+            specialist=specialist,
+            user=user,
+            status='pending'
+        ).count()
+        
+        patients.append({
+            'user_id': user.id,
+            'user_name': user.get_full_name() or user.username,
+            'user_email': user.email,
+            'last_action_date': last_action_date,
+            'last_action_type': last_action_type,
+            'unread_messages': unread_count,
+            'pending_appointments': pending_appointments,
+            'has_active_conversation': unread_count > 0 or pending_appointments > 0
+        })
+    
+    # Sort by last_action_date (most recent first)
+    patients.sort(key=lambda x: x['last_action_date'] or '', reverse=True)
+    
+    return Response({
+        'count': len(patients),
+        'results': patients
+    })
 
 
 @extend_schema(

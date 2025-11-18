@@ -16,6 +16,7 @@ urlpatterns = [
     path('appointments/my/',  list_user_appointments, name='list_user_appointments'),
     path('appointments/specialist/',  list_specialist_appointments, name='list_specialist_appointments'),
     path('appointments/<int:pk>/status/',  update_appointment_status, name='update_appointment_status'),
+    path('appointments/<int:pk>/reschedule/',  reschedule_appointment, name='reschedule_appointment'),
     
     # Reviews
     path('reviews/create/',  create_review, name='create_review'),
@@ -30,4 +31,7 @@ urlpatterns = [
     path('contacts/', list_contacted_specialists, name='list_contacted_specialists'),
     path('<int:pk>/messages/', get_specialist_messages, name='get_specialist_messages'),
     path('<int:pk>/appointments/', get_specialist_appointments, name='get_specialist_appointments'),
+    
+    # Specialist dashboard
+    path('patients/', list_specialist_patients, name='list_specialist_patients'),
 ]
