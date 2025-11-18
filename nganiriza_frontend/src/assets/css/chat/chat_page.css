@@ -116,6 +116,12 @@
     height: 100vh;
     overflow: hidden;
   }
+
+  /* Hide Navbar on Mobile */
+  .chat_page > header.navbar,
+  .chat_page > .navbar {
+    display: none !important;
+  }
   
   .chat-layout {
     display: flex;

@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { Search as SearchIcon, Users, Heart, Brain, Apple, Stethoscope, Building2, ChevronLeft, Send, CalendarDays, Star, Briefcase, MapPin, Clock, Menu, Plus, MessageSquare, Calendar } from 'lucide-react';
+import { Search as SearchIcon, Users, Heart, Brain, Apple, Stethoscope, Building2, ChevronLeft, Send, CalendarDays, Star, Briefcase, MapPin, Clock, Menu, Plus, MessageSquare, Calendar, Home, MessageCircle } from 'lucide-react';
+import { useNavigate, useLocation } from 'react-router-dom';
 import '../../assets/css/specialists/specialist_page.css';
 import BASE_URL from '../../config.js';
 import apiClient from '../../utils/apiClient';
@@ -12,6 +13,8 @@ import Tabs from '../../assets/components/Tabs';
 
 export function SpecialistPage() {
   const { isAuthenticated } = useContext(AuthContext);
+  const navigate = useNavigate();
+  const location = useLocation();
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedSpecialty, setSelectedSpecialty] = useState('All Specialists');
   const [specialists, setSpecialists] = useState([]);
@@ -24,6 +27,13 @@ export function SpecialistPage() {
   const [selectedSpecialistId, setSelectedSpecialistId] = useState(null);
   const [selectedSpecialistData, setSelectedSpecialistData] = useState(null);
   const [activeTab, setActiveTab] = useState('messages');
+
+  const navItems = [
+    { icon: Home, label: "Home", path: "/" },
+    { icon: MessageCircle, label: "Chat", path: "/chat" },
+    { icon: Users, label: "Specialists", path: "/specialists", active: true },
+    { icon: MapPin, label: "Map", path: "/map" }
+  ];
 
   const specialties = [
     { id: 'all', name: 'All Specialists', icon: <Users size={16} /> },
@@ -285,6 +295,20 @@ export function SpecialistPage() {
             />
           </div>
         </div>
+
+        {/* Bottom Navigation Bar - Mobile Only */}
+        <div className="bottom-nav">
+          {navItems.map((item, i) => (
+            <button
+              key={i}
+              onClick={() => navigate(item.path)}
+              className={`nav-item ${item.active ? 'active' : ''}`}
+            >
+              <item.icon size={24} />
+              <span>{item.label}</span>
+            </button>
+          ))}
+        </div>
       </div>
     );
   }
@@ -407,6 +431,20 @@ export function SpecialistPage() {
               isAuthenticated={isAuthenticated}
             />
           </div>
+        </div>
+
+        {/* Bottom Navigation Bar - Mobile Only */}
+        <div className="bottom-nav">
+          {navItems.map((item, i) => (
+            <button
+              key={i}
+              onClick={() => navigate(item.path)}
+              className={`nav-item ${item.active ? 'active' : ''}`}
+            >
+              <item.icon size={24} />
+              <span>{item.label}</span>
+            </button>
+          ))}
         </div>
       </div>
     );
@@ -577,6 +615,20 @@ export function SpecialistPage() {
           </div>
         </div>
         </div>
+      </div>
+
+      {/* Bottom Navigation Bar - Mobile Only */}
+      <div className="bottom-nav">
+        {navItems.map((item, i) => (
+          <button
+            key={i}
+            onClick={() => navigate(item.path)}
+            className={`nav-item ${item.active ? 'active' : ''}`}
+          >
+            <item.icon size={24} />
+            <span>{item.label}</span>
+          </button>
+        ))}
       </div>
     </div>
   );

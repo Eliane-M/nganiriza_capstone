@@ -546,4 +546,25 @@
 
 :global(.dark) .section-label {
   color: #a1a1aa;
+}
+
+/* Hide navbar on mobile for pages with bottom navigation */
+@media (max-width: 1023px) {
+  /* Hide navbar on chat page */
+  .chat_page .navbar,
+  .chat_page > header.navbar {
+    display: none !important;
+  }
+
+  /* Hide navbar on specialist page */
+  .specialist-page-v2 .navbar,
+  .specialist-page-v2 > header.navbar {
+    display: none !important;
+  }
+
+  /* Hide navbar on map page */
+  .map-page .navbar,
+  .map-page > header.navbar {
+    display: none !important;
+  }
 }/*# sourceMappingURL=navbar.css.map */

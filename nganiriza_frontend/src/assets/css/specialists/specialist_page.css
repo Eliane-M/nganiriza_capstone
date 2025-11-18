@@ -1018,4 +1018,72 @@
 
 .tab-content {
   margin-top: 1.5rem;
+}
+
+/* ============================================
+   MOBILE LAYOUT (<1024px)
+   ============================================ */
+@media (max-width: 1023px) {
+  .specialist-page-v2 {
+    padding-bottom: 4rem;
+  }
+
+  /* Hide Navbar on Mobile */
+  .specialist-page-v2 > header.navbar,
+  .specialist-page-v2 > .navbar {
+    display: none !important;
+  }
+
+  /* Bottom Navigation Bar */
+  .bottom-nav {
+    display: flex;
+    background: white;
+    border-top: 1px solid #eee;
+    padding: 0.5rem 0;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 1000;
+    box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.05);
+  }
+
+  .nav-item {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    background: none;
+    border: none;
+    color: #888;
+    font-size: 0.7rem;
+    padding: 0.5rem;
+    transition: 0.2s;
+    cursor: pointer;
+  }
+
+  .nav-item.active {
+    color: #ec4899;
+  }
+
+  .nav-item svg {
+    stroke-width: 2.2;
+  }
+
+  .nav-item:hover {
+    color: #ec4899;
+  }
+
+  /* Add padding to content to account for bottom nav */
+  .specialist-content-wrapper {
+    padding-bottom: 4rem;
+  }
+}
+
+/* Desktop - Hide bottom nav */
+@media (min-width: 1024px) {
+  .bottom-nav {
+    display: none;
+  }
 }/*# sourceMappingURL=specialist_page.css.map */

@@ -1,14 +1,23 @@
 import React, { useEffect, useState } from 'react';
 import { MapView } from '../assets/components/MapView.tsx';
-import { Search as SearchIcon, MapPin as MapPinIcon } from 'lucide-react';
+import { Search as SearchIcon, MapPin as MapPinIcon, Home, MessageCircle, Users } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 import Navbar from '../assets/components/Navbar';
 import '../assets/css/map/map_page.css';
 
 export function MapPage() {
+  const navigate = useNavigate();
   const [searchTerm, setSearchTerm] = useState('');
   const [userLocation, setUserLocation] = useState(undefined);
   const [isLoadingLocation, setIsLoadingLocation] = useState(false);
   const [selectedFilter, setSelectedFilter] = useState(null);
+
+  const navItems = [
+    { icon: Home, label: "Home", path: "/" },
+    { icon: MessageCircle, label: "Chat", path: "/chat" },
+    { icon: Users, label: "Specialists", path: "/specialists" },
+    { icon: MapPinIcon, label: "Map", path: "/map", active: true }
+  ];
 
   const healthFacilities = [
     { id: 1, name: 'Youth Health Center', type: 'Youth Clinic', address: 'KG 123 St, Kigali', phone: '+250 78 123 4567', website: 'https://example.com', position: [-1.9437, 30.0594], services: ['Reproductive health counseling', 'STI testing and treatment', 'Contraceptive services', 'Youth-friendly services'] },
@@ -102,6 +111,20 @@ export function MapPage() {
 
       <div className="map-wrap">
         <MapView facilities={filteredFacilities} userLocation={userLocation} />
+      </div>
+
+      {/* Bottom Navigation Bar - Mobile Only */}
+      <div className="bottom-nav">
+        {navItems.map((item, i) => (
+          <button
+            key={i}
+            onClick={() => navigate(item.path)}
+            className={`nav-item ${item.active ? 'active' : ''}`}
+          >
+            <item.icon size={24} />
+            <span>{item.label}</span>
+          </button>
+        ))}
       </div>
     </div>
   );

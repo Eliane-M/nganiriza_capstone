@@ -206,7 +206,7 @@ export function ChatPage() {
   const navItems = [
     { icon: Home, label: "Home", path: "/" },
     { icon: MessageCircle, label: "Chat", path: "/chat", active: true },
-    { icon: Users, label: "Community", path: "/community" },
+    { icon: Users, label: "Specialists", path: "/specialists" },
     { icon: MapPin, label: "Map", path: "/map" }
   ];
 
