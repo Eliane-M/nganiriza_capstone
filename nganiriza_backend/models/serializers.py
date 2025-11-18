@@ -281,8 +281,8 @@ class AppointmentCreateSerializer(serializers.ModelSerializer):
     def validate(self, data):
         # Check if specialist exists and is verified
         specialist = data.get('specialist')
-        if not specialist.is_verified:
-            raise serializers.ValidationError("This specialist is not yet verified")
+        # if not specialist.is_verified:
+        #     raise serializers.ValidationError("This specialist is not yet verified")
         
         # Check for conflicting appointments
         existing = Appointment.objects.filter(

@@ -2,6 +2,7 @@ import React, { useEffect, useState, useRef, useContext } from 'react';
 import { Send as SendIcon, Home, MessageCircle, Users, MapPin, ArrowLeft } from 'lucide-react';
 import { LanguageContext } from '../assets/components/context/LanguageContext.tsx';
 import { useNavigate } from 'react-router-dom';
+import Navbar from '../assets/components/Navbar';
 import '../assets/css/chat/chat_page.css';
 
 export function ChatPage() {
@@ -86,6 +87,7 @@ export function ChatPage() {
 
   return (
     <div className="chat_page mobile-app">
+      <Navbar />
       {/* Mobile Header */}
       <div className="mobile-header">
         <button onClick={() => navigate(-1)} className="back-btn">

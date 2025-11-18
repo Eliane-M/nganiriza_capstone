@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { MapView } from '../assets/components/MapView.tsx';
 import { Search as SearchIcon, MapPin as MapPinIcon } from 'lucide-react';
+import Navbar from '../assets/components/Navbar';
 import '../assets/css/map/map_page.css';
 
 export function MapPage() {
@@ -56,6 +57,7 @@ export function MapPage() {
 
   return (
     <div className="map-page">
+      <Navbar />
       <div className="page-header"><h1>Find Health Services</h1></div>
 
       <div className="controls">

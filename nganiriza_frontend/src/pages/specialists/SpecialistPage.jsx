@@ -1,9 +1,10 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { Search as SearchIcon, Users, Heart, Brain, Apple, Stethoscope, Building2, ChevronLeft, Send, CalendarDays } from 'lucide-react';
+import { Search as SearchIcon, Users, Heart, Brain, Apple, Stethoscope, Building2, ChevronLeft, Send, CalendarDays, Star, Briefcase, MapPin, Clock } from 'lucide-react';
 import '../../assets/css/specialists/specialist_page.css';
 import BASE_URL from '../../config.js';
 import apiClient from '../../utils/apiClient';
 import { AuthContext } from '../../assets/components/context/AuthContext';
+import Navbar from '../../assets/components/Navbar';
 
 export function SpecialistPage() {
   const { isAuthenticated } = useContext(AuthContext);
@@ -111,6 +112,7 @@ export function SpecialistPage() {
 
   return (
     <div className="specialist-page-v2">
+      <Navbar />
       <div className="hero-section">
         <h1>
           Connect with trusted <span className="highlight">health specialists</span>
@@ -205,7 +207,7 @@ function SpecialistCard({ specialist, onSelect }) {
           <h3>{name}</h3>
           <p className="specialty-tag">{specialtyLabel}</p>
           <div className="rating-row">
-            <span className="star">⭐</span>
+            <Star size={16} className="star-icon" fill="currentColor" />
             <span className="rating-value">{Number(specialist.average_rating || specialist.rating || 4.5).toFixed(1)}</span>
             <span className="review-count">· {reviews} reviews</span>
           </div>
@@ -214,15 +216,15 @@ function SpecialistCard({ specialist, onSelect }) {
 
       <div className="card-details">
         <div className="detail-item">
-          <span className="detail-icon">💼</span>
+          <Briefcase size={16} className="detail-icon" />
           <span>{experience ? `${experience}+ yrs experience` : 'Experience shared after booking'}</span>
         </div>
         <div className="detail-item">
-          <span className="detail-icon">📍</span>
+          <MapPin size={16} className="detail-icon" />
           <span>{location}</span>
         </div>
         <div className="detail-item">
-          <span className="detail-icon">🕐</span>
+          <Clock size={16} className="detail-icon" />
           <span>{availability}</span>
         </div>
         <div className="detail-item languages">
@@ -352,6 +354,7 @@ function SpecialistDetailView({ specialist, onBack, isAuthenticated }) {
 
   return (
     <div className="specialist-page-v2">
+      <Navbar />
       <div className="specialist-detail-view">
         <button className="detail-back-button" onClick={onBack}>
           <ChevronLeft size={18} />

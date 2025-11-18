@@ -2,6 +2,7 @@ import React, { useContext, useState } from 'react';
 import { ResourceCard } from '../assets/components/ResourceCard.tsx';
 import { MapPin as MapPinIcon, Search as SearchIcon } from 'lucide-react';
 import { LanguageContext } from '../assets/components/context/LanguageContext.tsx';
+import Navbar from '../assets/components/Navbar';
 import '../assets/css/resources/resources_page.scss';
 
 export function ResourcesPage() {
@@ -25,6 +26,7 @@ export function ResourcesPage() {
 
   return (
     <div className="resources-page">
+      <Navbar />
       <div className="page-header"><h1>{translations.title[language]}</h1></div>
 
       <div className="body">
