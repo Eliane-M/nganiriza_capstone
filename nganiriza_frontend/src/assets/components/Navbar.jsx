@@ -1,6 +1,6 @@
 import React, { useState, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Menu, Sun, Moon, LogIn, UserPlus, ChevronDown, LogOut, User, Globe } from 'lucide-react';
+import { Menu, Sun, Moon, LogIn, ChevronDown, LogOut, User, Globe, MessageCircle, Users, MapPin, BookOpen } from 'lucide-react';
 import { ThemeContext, LanguageContext } from '../../contexts/AppContext';
 import { AuthContext } from './context/AuthContext';
 import '../../assets/css/navbar/navbar.css';
@@ -54,120 +54,140 @@ export default function Navbar() {
 
         {/* Right Controls */}
         <div className="navbar-right">
-          {/* Profile Icon (when authenticated) */}
-          {isAuthenticated && (
+          {/* Login Button (when not authenticated) */}
+          {!isAuthenticated && (
             <button
-              onClick={() => handleNavigation('/profile')}
-              className="profile-icon-btn"
-              title="View Profile"
+              onClick={() => handleNavigation('/login')}
+              className="login-btn"
+              title="Log In"
             >
-              <div className="user-avatar-small">
-                {getInitials()}
-              </div>
+              <LogIn size={18} />
+              <span className="login-btn-text">Log In</span>
             </button>
           )}
 
-          {/* Dropdown Menu */}
-          <div className="dropdown">
-            <button
-              onClick={() => setOpen(v => !v)}
-              className="dropdown-trigger"
-            >
-              {!isAuthenticated ? (
-                <div className="user-menu-guest">
-                  <User className="user-icon" />
-                  <span className="menu-text">Menu</span>
-                </div>
-              ) : (
+          {/* Dropdown Menu (only shown when authenticated) */}
+          {isAuthenticated && (
+            <div className="dropdown">
+              <button
+                onClick={() => setOpen(v => !v)}
+                className="dropdown-trigger"
+              >
                 <div className="user-avatar">
                   {getInitials()}
                 </div>
-              )}
-              <ChevronDown size={16} className="chevron" />
-            </button>
+                <ChevronDown size={16} className="chevron" />
+              </button>
 
-            {open && (
-              <div
-                className="dropdown-menu"
-                onMouseLeave={() => setOpen(false)}
-              >
-                {/* Language Section */}
-                <div className="dropdown-section">
-                  <div className="section-label">
-                    <Globe size={14} style={{ marginRight: '0.25rem' }} />
-                    Language
-                  </div>
-                  <div className="language-switcher">
-                    {languages.map(lang => (
-                      <button
-                        key={lang.code}
-                        onClick={() => {
-                          setLanguage(lang.code);
-                          setOpen(false);
-                        }}
-                        className={`lang-btn ${language === lang.code ? 'active' : ''}`}
-                      >
-                        {lang.label}
-                      </button>
-                    ))}
-                  </div>
-                </div>
-                
-                {/* Theme Toggle */}
-                <button
-                  onClick={() => {
-                    toggleTheme();
-                    setOpen(false);
-                  }}
-                  className="dropdown-item"
+              {open && (
+                <div
+                  className="dropdown-menu"
+                  onMouseLeave={() => setOpen(false)}
                 >
-                  {theme === 'dark' ? <Sun size={16}/> : <Moon size={16}/>}
-                  <span>Switch to {theme === 'dark' ? 'Light' : 'Dark'} Mode</span>
-                </button>
-
-                {/* Auth Section */}
-                <div className="dropdown-divider" />
-                
-                {!isAuthenticated ? (
-                  <div className="dropdown-auth">
-                    <button
-                      onClick={() => handleNavigation('/login')}
-                      className="dropdown-item"
-                    >
-                      <LogIn size={16}/> Log In
-                    </button>
-                    <button
-                      onClick={() => handleNavigation('/signup')}
-                      className="dropdown-item"
-                    >
-                      <UserPlus size={16}/> Sign Up
-                    </button>
+                  {/* User Info Section */}
+                  <div className="dropdown-section">
+                    <div className="user-info-header">
+                      <div className="user-avatar-large">
+                        {getInitials()}
+                      </div>
+                      <div className="user-info-text">
+                        <div className="user-name">
+                          {user?.first_name || user?.last_name 
+                            ? `${user?.first_name || ''} ${user?.last_name || ''}`.trim()
+                            : user?.email || 'User'}
+                        </div>
+                        <div className="user-email">
+                          {user?.email || 'No email'}
+                        </div>
+                      </div>
+                    </div>
                   </div>
-                ) : (
-                  <div className="dropdown-auth">
+
+                  <div className="dropdown-divider" />
+
+                  {/* Navigation Items */}
+                  <div className="dropdown-section">
+                    <div className="section-label">Navigation</div>
+                    <button
+                      onClick={() => handleNavigation('/chat')}
+                      className="dropdown-item"
+                    >
+                      <MessageCircle size={16} /> Chat with AI
+                    </button>
+                    <button
+                      onClick={() => handleNavigation('/specialists')}
+                      className="dropdown-item"
+                    >
+                      <Users size={16} /> Find Specialists
+                    </button>
+                    <button
+                      onClick={() => handleNavigation('/map')}
+                      className="dropdown-item"
+                    >
+                      <MapPin size={16} /> Health Map
+                    </button>
+                    <button
+                      onClick={() => handleNavigation('/learn')}
+                      className="dropdown-item"
+                    >
+                      <BookOpen size={16} /> Learn
+                    </button>
                     <button
                       onClick={() => handleNavigation('/profile')}
                       className="dropdown-item"
                     >
-                      <User size={16}/> Profile
-                    </button>
-                    <button
-                      onClick={() => handleNavigation('/')}
-                      className="dropdown-item"
-                    >
-                      Dashboard
-                    </button>
-                    <button
-                      onClick={handleLogout}
-                      className="dropdown-item"
-                    >
-                      <LogOut size={16}/> Log Out
+                      <User size={16} /> Profile
                     </button>
                   </div>
-                )}
-              </div>
-            )}
-          </div>
+
+                  <div className="dropdown-divider" />
+
+                  {/* Language Section */}
+                  <div className="dropdown-section">
+                    <div className="section-label">
+                      <Globe size={14} style={{ marginRight: '0.25rem' }} />
+                      Language
+                    </div>
+                    <div className="language-switcher">
+                      {languages.map(lang => (
+                        <button
+                          key={lang.code}
+                          onClick={() => {
+                            setLanguage(lang.code);
+                            setOpen(false);
+                          }}
+                          className={`lang-btn ${language === lang.code ? 'active' : ''}`}
+                        >
+                          {lang.label}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                  
+                  {/* Theme Toggle */}
+                  <button
+                    onClick={() => {
+                      toggleTheme();
+                      setOpen(false);
+                    }}
+                    className="dropdown-item"
+                  >
+                    {theme === 'dark' ? <Sun size={16}/> : <Moon size={16}/>}
+                    <span>Switch to {theme === 'dark' ? 'Light' : 'Dark'} Mode</span>
+                  </button>
+
+                  {/* Logout Section */}
+                  <div className="dropdown-divider" />
+                  <button
+                    onClick={handleLogout}
+                    className="dropdown-item logout-item"
+                  >
+                    <LogOut size={16}/> Log Out
+                  </button>
+                </div>
+              )}
+            </div>
+          )}
 
           {/* Mobile Menu Button */}
           <button className="mobile-menu-btn">

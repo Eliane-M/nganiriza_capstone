@@ -4,7 +4,7 @@ import { HomePage } from './pages/HomePage';
 import { ChatPage } from './pages/ChatPage';
 import { SpecialistPage } from './pages/specialists/SpecialistPage';
 import { MapPage } from './pages/MapPage';
-import EducationPage from './pages/EducationPage';
+import { EducationPage } from './pages/EducationPage';
 import LearnPage from './pages/LearnPage';
 import { ResourcesPage } from './pages/ResourcesPage';
 import SignupPage from './pages/authentication/SignupPage';
@@ -36,9 +36,30 @@ function App() {
                   </ProtectedRoute>
                 }
               />
-              <Route path="/specialists" element={<SpecialistPage />} />
-              <Route path="/map" element={<MapPage />} />
-              <Route path="/education" element={<ResourcesPage />} />
+              <Route
+                path="/specialists"
+                element={
+                  <ProtectedRoute>
+                    <SpecialistPage />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/map"
+                element={
+                  <ProtectedRoute>
+                    <MapPage />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/education"
+                element={
+                  <ProtectedRoute>
+                    <ResourcesPage />
+                  </ProtectedRoute>
+                }
+              />
               <Route path="/signup" element={<SignupPage />} />
               <Route path="/login" element={<LoginForm />} />
               <Route path="/reset-password" element={<ResetPassword />} />

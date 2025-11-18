@@ -15,11 +15,17 @@ export const LanguageContext = createContext({
 // Combined Provider Component
 export function AppProviders({ children }) {
   const [theme, setTheme] = useState(() => {
-    return localStorage.getItem('theme') || 'light';
+    if (typeof window !== 'undefined' && window.localStorage) {
+      return localStorage.getItem('theme') || 'light';
+    }
+    return 'light';
   });
 
   const [language, setLanguage] = useState(() => {
-    return localStorage.getItem('language') || 'en';
+    if (typeof window !== 'undefined' && window.localStorage) {
+      return localStorage.getItem('language') || 'en';
+    }
+    return 'en';
   });
 
   // Theme Effects
@@ -30,12 +36,16 @@ export function AppProviders({ children }) {
     } else {
       root.classList.remove('dark');
     }
-    localStorage.setItem('theme', theme);
+    if (typeof window !== 'undefined' && window.localStorage) {
+      localStorage.setItem('theme', theme);
+    }
   }, [theme]);
 
   // Language Effects
   useEffect(() => {
-    localStorage.setItem('language', language);
+    if (typeof window !== 'undefined' && window.localStorage) {
+      localStorage.setItem('language', language);
+    }
   }, [language]);
 
   const toggleTheme = () => {

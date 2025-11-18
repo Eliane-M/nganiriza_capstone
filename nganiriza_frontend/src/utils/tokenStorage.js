@@ -14,11 +14,17 @@ const safeParse = (value) => {
   }
 };
 
+const isLocalStorageAvailable = () => {
+  return typeof window !== 'undefined' && window.localStorage;
+};
+
 const write = (key, value) => {
   if (value === undefined || value === null) {
     return;
   }
-  localStorage.setItem(key, value);
+  if (isLocalStorageAvailable()) {
+    localStorage.setItem(key, value);
+  }
 };
 
 export const tokenStorage = {
@@ -30,24 +36,29 @@ export const tokenStorage = {
       write(REFRESH_KEY, refresh);
     }
   },
-  getAccessToken: () => localStorage.getItem(ACCESS_KEY),
-  getRefreshToken: () => localStorage.getItem(REFRESH_KEY),
+  getAccessToken: () => isLocalStorageAvailable() ? localStorage.getItem(ACCESS_KEY) : null,
+  getRefreshToken: () => isLocalStorageAvailable() ? localStorage.getItem(REFRESH_KEY) : null,
   clearTokens: () => {
-    localStorage.removeItem(ACCESS_KEY);
-    localStorage.removeItem(REFRESH_KEY);
+    if (isLocalStorageAvailable()) {
+      localStorage.removeItem(ACCESS_KEY);
+      localStorage.removeItem(REFRESH_KEY);
+    }
   },
   setUser: (user) => {
+    if (!isLocalStorageAvailable()) return;
     if (!user) {
       localStorage.removeItem(USER_KEY);
       return;
     }
     localStorage.setItem(USER_KEY, JSON.stringify(user));
   },
-  getUser: () => safeParse(localStorage.getItem(USER_KEY)),
+  getUser: () => isLocalStorageAvailable() ? safeParse(localStorage.getItem(USER_KEY)) : null,
   clearAll: () => {
-    localStorage.removeItem(ACCESS_KEY);
-    localStorage.removeItem(REFRESH_KEY);
-    localStorage.removeItem(USER_KEY);
+    if (isLocalStorageAvailable()) {
+      localStorage.removeItem(ACCESS_KEY);
+      localStorage.removeItem(REFRESH_KEY);
+      localStorage.removeItem(USER_KEY);
+    }
   }
 };
 

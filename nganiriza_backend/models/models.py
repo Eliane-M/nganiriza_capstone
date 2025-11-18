@@ -1,6 +1,5 @@
 from email.policy import default
 from random import choice
-from tkinter import CASCADE
 from django.db import models
 from django.contrib.auth.models import User
 from base.models import BaseModel

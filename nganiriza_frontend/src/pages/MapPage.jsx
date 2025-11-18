@@ -19,7 +19,7 @@ export function MapPage() {
   const filters = ['All', 'Youth Clinic', 'Specialized Clinic', 'Public Health Center', 'Hospital'];
 
   useEffect(() => {
-    if (navigator.geolocation) {
+    if (navigator.geolocation && typeof window !== 'undefined' && window.localStorage) {
       const storedPermission = localStorage.getItem('nganiriza_location_permission');
       if (storedPermission === 'granted') getUserLocation();
     }
@@ -31,7 +31,9 @@ export function MapPage() {
     navigator.geolocation.getCurrentPosition(
       (position) => {
         setUserLocation([position.coords.latitude, position.coords.longitude]);
-        localStorage.setItem('nganiriza_location_permission', 'granted');
+        if (typeof window !== 'undefined' && window.localStorage) {
+          localStorage.setItem('nganiriza_location_permission', 'granted');
+        }
         setIsLoadingLocation(false);
       },
       (error) => {

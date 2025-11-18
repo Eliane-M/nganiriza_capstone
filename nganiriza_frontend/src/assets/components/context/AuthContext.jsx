@@ -20,7 +20,7 @@ export const AuthContext = createContext({
 });
 
 export function AuthProvider({ children }) {
-  const [user, setUser] = useState(() => tokenStorage.getUser());
+  const [user, setUser] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
 
   const persistUser = useCallback((nextUser) => {
@@ -39,6 +39,12 @@ export function AuthProvider({ children }) {
   }, [persistUser]);
 
   const bootstrapAuth = useCallback(async () => {
+    // Initialize user from storage first
+    const storedUser = tokenStorage.getUser();
+    if (storedUser) {
+      setUser(storedUser);
+    }
+    
     const access = tokenStorage.getAccessToken();
     const refresh = tokenStorage.getRefreshToken();
     if (!access || !refresh) {
@@ -98,7 +104,11 @@ export function AuthProvider({ children }) {
       if (!refreshToken) {
         throw new Error('Missing refresh token');
       }
-      await apiClient.post('/api/auth/token/refresh/', { refresh: refreshToken });
+      const response = await apiClient.post('/api/auth/token/refresh/', { refresh: refreshToken });
+      const { access } = response.data;
+      if (access) {
+        tokenStorage.setTokens({ access, refresh: refreshToken });
+      }
       await fetchProfile();
     } catch (error) {
       console.error('Refresh token failed', error);

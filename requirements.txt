@@ -111,7 +111,7 @@ postmarker==1.0
 prompt_toolkit==3.0.50
 propcache==0.4.1
 proto-plus==1.24.0
-protobuf==6.32.1
+protobuf==4.25.5
 psutil==7.0.0
 psycopg2-binary==2.9.9
 pure_eval==0.2.3
@@ -130,7 +130,6 @@ python-dotenv==1.1.0
 python-multipart==0.0.20
 python-postmark==0.6.0
 pytz==2025.1
-pywin32==308
 PyYAML==6.0.3
 pyzmq==26.2.1
 referencing==0.36.2
@@ -154,7 +153,7 @@ sympy==1.14.0
 tensorboard==2.19.0
 tensorboard-data-server==0.7.2
 tensorflow==2.19.0
-tensorflow-io-gcs-filesystem==0.31.0
+tensorflow-io-gcs-filesystem==0.37.1
 termcolor==2.5.0
 threadpoolctl==3.5.0
 tokenizers==0.22.1

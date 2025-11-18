@@ -6,17 +6,17 @@ export default defineConfig({
   plugins: [
     react(),
     VitePWA({
-      registerType: 'autoUpdate',  // keeps SW fresh
-      includeAssets: ['favicon.ico', 'robots.txt'],
+      registerType: 'autoUpdate',
+      includeAssets: ['favicon.ico', 'robots.txt', 'nganiriza.png'],
       manifest: {
-        name: 'My React PWA',
-        short_name: 'ReactPWA',
+        name: 'NGANIRIZA - Mental Health Support',
+        short_name: 'Nganiriza',
         start_url: '/',
         scope: '/',
         display: 'standalone',
         background_color: '#ffffff',
-        theme_color: '#0f172a',
-        description: 'A progressive web app built with React',
+        theme_color: '#4F46E5',
+        description: 'Mental health support platform for Rwanda',
         icons: [
           {
             src: 'icons/icon-192.png',
@@ -55,5 +55,13 @@ export default defineConfig({
         ]
       }
     })
-  ]
+  ],
+  server: {
+    port: 3000,
+    open: true
+  },
+  build: {
+    outDir: 'build',
+    sourcemap: true
+  }
 })

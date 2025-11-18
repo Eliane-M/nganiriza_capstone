@@ -1,4 +1,4 @@
-@import '../../components/Variables/variables.scss';
+@use '../../components/Variables/variables.scss' as *;
 
 .map-page {
   @extend .container-page;

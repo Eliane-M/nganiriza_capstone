@@ -176,6 +176,47 @@
   gap: 0.5rem;
 }
 
+/* Login Button */
+.login-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  border-radius: 0.75rem;
+  border: none;
+  background: linear-gradient(to right, #ff6bce, #8b5cf6, #ec4899);
+  color: white;
+  font-size: 0.875rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.login-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+  filter: brightness(1.05);
+}
+
+.login-btn:active {
+  transform: translateY(0);
+}
+
+.login-btn .login-btn-text {
+  display: none;
+}
+
+@media (min-width: 640px) {
+  .login-btn .login-btn-text {
+    display: inline;
+  }
+}
+
+.login-btn svg {
+  flex-shrink: 0;
+}
+
 .dropdown {
   position: relative;
 }
@@ -268,10 +309,58 @@
 }
 .dropdown-menu .dropdown-section .section-label {
   font-size: 0.75rem;
-  margin-bottom: 0.25rem;
+  margin-bottom: 0.5rem;
   color: #bbb;
+  display: flex;
+  align-items: center;
+  font-weight: 600;
 }
 :global(.dark) .dropdown-menu .dropdown-section .section-label {
+  color: #a1a1aa;
+}
+.dropdown-menu .user-info-header {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.25rem 0;
+}
+.dropdown-menu .user-info-header .user-avatar-large {
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 50%;
+  background: linear-gradient(to right, #ff6bce, #8b5cf6, #ec4899);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: 0.875rem;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+.dropdown-menu .user-info-header .user-info-text {
+  flex: 1;
+  min-width: 0;
+}
+.dropdown-menu .user-info-header .user-info-text .user-name {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #18181b;
+  margin-bottom: 0.125rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+:global(.dark) .dropdown-menu .user-info-header .user-info-text .user-name {
+  color: #fafafa;
+}
+.dropdown-menu .user-info-header .user-info-text .user-email {
+  font-size: 0.75rem;
+  color: #bbb;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+:global(.dark) .dropdown-menu .user-info-header .user-info-text .user-email {
   color: #a1a1aa;
 }
 .dropdown-menu .dropdown-item {
@@ -312,6 +401,20 @@
 .dropdown-menu .dropdown-auth {
   display: grid;
   gap: 0.25rem;
+}
+.dropdown-menu .logout-item {
+  color: #ef4444;
+}
+.dropdown-menu .logout-item:hover {
+  background: rgba(239, 68, 68, 0.1);
+  color: #dc2626;
+}
+:global(.dark) .dropdown-menu .logout-item {
+  color: #f87171;
+}
+:global(.dark) .dropdown-menu .logout-item:hover {
+  background: rgba(239, 68, 68, 0.2);
+  color: #fca5a5;
 }
 
 .mobile-menu-btn {
