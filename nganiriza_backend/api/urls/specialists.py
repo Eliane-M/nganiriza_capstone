@@ -25,4 +25,9 @@ urlpatterns = [
     path('messages/create/', create_specialist_message, name='create_specialist_message'),
     path('messages/user/', list_user_messages, name='list_user_messages'),
     path('messages/inbox/', list_specialist_messages, name='list_specialist_messages'),
+    
+    # Contacted specialists and details
+    path('contacts/', list_contacted_specialists, name='list_contacted_specialists'),
+    path('<int:pk>/messages/', get_specialist_messages, name='get_specialist_messages'),
+    path('<int:pk>/appointments/', get_specialist_appointments, name='get_specialist_appointments'),
 ]

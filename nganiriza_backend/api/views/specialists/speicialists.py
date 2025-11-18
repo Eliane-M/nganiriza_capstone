@@ -18,7 +18,8 @@ from models.serializers import (
     AppointmentCreateSerializer,
     SpecialistReviewSerializer,
     SpecialistMessageSerializer,
-    SpecialistMessageCreateSerializer
+    SpecialistMessageCreateSerializer,
+    ContactedSpecialistSerializer
 )
 from drf_spectacular.utils import extend_schema, OpenApiParameter
 from drf_spectacular.types import OpenApiTypes
@@ -597,3 +598,169 @@ def get_dashboard_stats(request):
             {"error": "Specialist profile not found"}, 
             status=status.HTTP_404_NOT_FOUND
         )
+
+
+@extend_schema(
+    tags=["Specialists"],
+    responses={200: dict},
+    summary="List contacted specialists grouped by active/past"
+)
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def list_contacted_specialists(request):
+    """List specialists the user has contacted, grouped by active/past"""
+    user = request.user
+    
+    # Get all specialists the user has messaged or made appointments with
+    messaged_specialists = SpecialistProfile.objects.filter(
+        messages__user=user
+    ).distinct()
+    
+    appointment_specialists = SpecialistProfile.objects.filter(
+        appointments__user=user
+    ).distinct()
+    
+    all_specialists = (messaged_specialists | appointment_specialists).distinct()
+    
+    active_specialists = []
+    past_specialists = []
+    
+    for specialist in all_specialists:
+        # Get last message
+        last_message = SpecialistMessage.objects.filter(
+            user=user,
+            specialist=specialist
+        ).order_by('-created_at').first()
+        
+        # Get last appointment
+        last_appointment = Appointment.objects.filter(
+            user=user,
+            specialist=specialist
+        ).order_by('-appointment_date', '-appointment_time').first()
+        
+        # Determine last contact
+        last_contact_date = None
+        last_contact_type = None
+        
+        if last_message and last_appointment:
+            if last_message.created_at > last_appointment.created_at:
+                last_contact_date = last_message.created_at
+                last_contact_type = 'message'
+            else:
+                last_contact_date = last_appointment.created_at
+                last_contact_type = 'appointment'
+        elif last_message:
+            last_contact_date = last_message.created_at
+            last_contact_type = 'message'
+        elif last_appointment:
+            last_contact_date = last_appointment.created_at
+            last_contact_type = 'appointment'
+        
+        if not last_contact_date:
+            continue
+        
+        # Check for active conversation (open messages)
+        has_active_conversation = SpecialistMessage.objects.filter(
+            user=user,
+            specialist=specialist,
+            status='open'
+        ).exists()
+        
+        # Check for pending appointments
+        has_pending_appointment = Appointment.objects.filter(
+            user=user,
+            specialist=specialist,
+            status__in=['pending', 'confirmed']
+        ).exists()
+        
+        # Unread count
+        unread_count = SpecialistMessage.objects.filter(
+            user=user,
+            specialist=specialist,
+            is_read=False
+        ).count()
+        
+        specialist_user = specialist.specialist_account.user
+        profile_image = None
+        if specialist.profile_image:
+            profile_image = request.build_absolute_uri(specialist.profile_image.url)
+        
+        specialist_data = {
+            'specialist_id': specialist.id,
+            'specialist_name': specialist_user.get_full_name() or specialist_user.username,
+            'specialty': specialist.specialty,
+            'specialty_display': specialist.get_specialty_display(),
+            'profile_image': profile_image,
+            'last_contact_date': last_contact_date,
+            'last_contact_type': last_contact_type,
+            'unread_count': unread_count,
+            'has_active_conversation': has_active_conversation,
+            'has_pending_appointment': has_pending_appointment
+        }
+        
+        # Group by active/past
+        if has_active_conversation or has_pending_appointment:
+            active_specialists.append(specialist_data)
+        else:
+            past_specialists.append(specialist_data)
+    
+    # Sort by last contact date
+    active_specialists.sort(key=lambda x: x['last_contact_date'], reverse=True)
+    past_specialists.sort(key=lambda x: x['last_contact_date'], reverse=True)
+    
+    return Response({
+        'active': active_specialists,
+        'past': past_specialists
+    })
+
+
+@extend_schema(
+    tags=["Specialists"],
+    responses={200: SpecialistMessageSerializer(many=True)},
+    summary="Get messages between user and specific specialist"
+)
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def get_specialist_messages(request, pk):
+    """Get all messages between current user and specific specialist"""
+    try:
+        specialist = SpecialistProfile.objects.get(pk=pk)
+    except SpecialistProfile.DoesNotExist:
+        return Response(
+            {"error": "Specialist not found"},
+            status=status.HTTP_404_NOT_FOUND
+        )
+    
+    messages = SpecialistMessage.objects.filter(
+        user=request.user,
+        specialist=specialist
+    ).order_by('created_at')
+    
+    serializer = SpecialistMessageSerializer(messages, many=True)
+    return Response(serializer.data)
+
+
+@extend_schema(
+    tags=["Specialists"],
+    responses={200: AppointmentSerializer(many=True)},
+    summary="Get appointments between user and specific specialist"
+)
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def get_specialist_appointments(request, pk):
+    """Get all appointments between current user and specific specialist"""
+    try:
+        specialist = SpecialistProfile.objects.get(pk=pk)
+    except SpecialistProfile.DoesNotExist:
+        return Response(
+            {"error": "Specialist not found"},
+            status=status.HTTP_404_NOT_FOUND
+        )
+    
+    appointments = Appointment.objects.filter(
+        user=request.user,
+        specialist=specialist
+    ).order_by('-appointment_date', '-appointment_time')
+    
+    serializer = AppointmentSerializer(appointments, many=True)
+    return Response(serializer.data)

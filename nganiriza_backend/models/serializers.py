@@ -62,6 +62,8 @@ class SignupRequestSerializer(serializers.Serializer):
 
 
 class ConversationsSerializer(serializers.ModelSerializer):
+    first_message_preview = serializers.SerializerMethodField()
+    
     class Meta:
         model = Conversations
         fields = '__all__'
@@ -69,6 +71,13 @@ class ConversationsSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         user = self.context['request'].user
         return Conversations.objects.create(user=user, **validated_data)
+
+    def get_first_message_preview(self, obj):
+        """Get the first user message as preview"""
+        first_user_message = obj.messages.filter(role='user').order_by('created_at').first()
+        if first_user_message:
+            return first_user_message.content[:100]  # First 100 characters
+        return None
 
     def get_last_message(self, obj):
         m = obj.messages.order_by("-id").first()
@@ -371,3 +380,17 @@ class SpecialistMessageCreateSerializer(serializers.ModelSerializer):
             user=request.user,
             **validated_data
         )
+
+
+class ContactedSpecialistSerializer(serializers.Serializer):
+    """Serializer for contacted specialists in sidebar"""
+    specialist_id = serializers.IntegerField()
+    specialist_name = serializers.CharField()
+    specialty = serializers.CharField()
+    specialty_display = serializers.CharField()
+    profile_image = serializers.URLField(allow_null=True)
+    last_contact_date = serializers.DateTimeField()
+    last_contact_type = serializers.CharField()  # 'message' or 'appointment'
+    unread_count = serializers.IntegerField()
+    has_active_conversation = serializers.BooleanField()
+    has_pending_appointment = serializers.BooleanField()

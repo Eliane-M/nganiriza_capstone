@@ -1,10 +1,14 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { Search as SearchIcon, Users, Heart, Brain, Apple, Stethoscope, Building2, ChevronLeft, Send, CalendarDays, Star, Briefcase, MapPin, Clock } from 'lucide-react';
+import { Search as SearchIcon, Users, Heart, Brain, Apple, Stethoscope, Building2, ChevronLeft, Send, CalendarDays, Star, Briefcase, MapPin, Clock, Menu, Plus, MessageSquare, Calendar } from 'lucide-react';
 import '../../assets/css/specialists/specialist_page.css';
 import BASE_URL from '../../config.js';
 import apiClient from '../../utils/apiClient';
 import { AuthContext } from '../../assets/components/context/AuthContext';
 import Navbar from '../../assets/components/Navbar';
+import Sidebar from '../../assets/components/Sidebar';
+import MessageThread from '../../assets/components/MessageThread';
+import AppointmentsTable from '../../assets/components/AppointmentsTable';
+import Tabs from '../../assets/components/Tabs';
 
 export function SpecialistPage() {
   const { isAuthenticated } = useContext(AuthContext);
@@ -14,6 +18,12 @@ export function SpecialistPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [detailSpecialist, setDetailSpecialist] = useState(null);
+  const [sidebarOpen, setSidebarOpen] = useState(true); // Default to open on desktop
+  const [contactedSpecialists, setContactedSpecialists] = useState({ active: [], past: [] });
+  const [loadingContacts, setLoadingContacts] = useState(false);
+  const [selectedSpecialistId, setSelectedSpecialistId] = useState(null);
+  const [selectedSpecialistData, setSelectedSpecialistData] = useState(null);
+  const [activeTab, setActiveTab] = useState('messages');
 
   const specialties = [
     { id: 'all', name: 'All Specialists', icon: <Users size={16} /> },
@@ -26,7 +36,10 @@ export function SpecialistPage() {
 
   useEffect(() => {
     loadSpecialists();
-  }, []);
+    if (isAuthenticated) {
+      loadContactedSpecialists();
+    }
+  }, [isAuthenticated]);
 
   const loadSpecialists = async () => {
     try {
@@ -54,6 +67,58 @@ export function SpecialistPage() {
 
   const handleCloseDetail = () => {
     setDetailSpecialist(null);
+    setSelectedSpecialistId(null);
+    setSelectedSpecialistData(null);
+    setActiveTab('messages');
+  };
+
+  const loadContactedSpecialists = async () => {
+    if (!isAuthenticated) return;
+    try {
+      setLoadingContacts(true);
+      const response = await apiClient.get('/api/specialists/contacts/');
+      setContactedSpecialists({
+        active: response.data.active || [],
+        past: response.data.past || []
+      });
+    } catch (error) {
+      console.error('Failed to load contacted specialists', error);
+    } finally {
+      setLoadingContacts(false);
+    }
+  };
+
+  const handleSelectContactedSpecialist = async (specialistId) => {
+    setSelectedSpecialistId(specialistId);
+    setSidebarOpen(false);
+    
+    // Find specialist in contacted list
+    const allContacted = [...contactedSpecialists.active, ...contactedSpecialists.past];
+    const specialist = allContacted.find(s => s.specialist_id === specialistId);
+    
+    if (specialist) {
+      setSelectedSpecialistData(specialist);
+    } else {
+      // Fetch specialist details if not in list
+      try {
+        const response = await apiClient.get(`/api/specialists/${specialistId}/`);
+        setSelectedSpecialistData({
+          specialist_id: response.data.id,
+          specialist_name: response.data.name || response.data.user?.name,
+          specialty_display: response.data.specialty_display || response.data.specialty
+        });
+      } catch (error) {
+        console.error('Failed to load specialist details', error);
+      }
+    }
+  };
+
+  const handleContactNewSpecialist = () => {
+    setSelectedSpecialistId(null);
+    setSelectedSpecialistData(null);
+    setDetailSpecialist(null);
+    setSidebarOpen(false);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   const filteredSpecialists = specialists.filter((specialist) => {
@@ -100,70 +165,418 @@ export function SpecialistPage() {
     );
   }
 
+  // Show detail view for selected specialist from sidebar
+  if (selectedSpecialistId && selectedSpecialistData) {
+    return (
+      <div className="specialist-page-v2">
+        <Navbar />
+        
+        {/* Main Layout Container */}
+        <div className={`specialist-layout ${!sidebarOpen ? 'sidebar-closed' : ''}`}>
+          {/* Sidebar */}
+          <Sidebar
+          isOpen={sidebarOpen}
+          onClose={() => setSidebarOpen(false)}
+          onToggle={() => setSidebarOpen(!sidebarOpen)}
+          title="My Specialists"
+        >
+          <div className="specialist-sidebar-content">
+            <button onClick={handleContactNewSpecialist} className="contact-new-btn">
+              <Plus size={18} />
+              <span>Contact New Specialist</span>
+            </button>
+            
+            <div className="contacted-specialists">
+              {loadingContacts ? (
+                <div className="loading-text">Loading...</div>
+              ) : (
+                <>
+                  {contactedSpecialists.active.length > 0 && (
+                    <div className="specialist-group">
+                      <div className="group-label">Active</div>
+                      {contactedSpecialists.active.map((specialist) => (
+                        <button
+                          key={specialist.specialist_id}
+                          onClick={() => handleSelectContactedSpecialist(specialist.specialist_id)}
+                          className={`specialist-contact-item ${selectedSpecialistId === specialist.specialist_id ? 'active' : ''}`}
+                        >
+                          <div className="contact-avatar">
+                            {specialist.profile_image ? (
+                              <img src={specialist.profile_image} alt={specialist.specialist_name} />
+                            ) : (
+                              <span>{specialist.specialist_name.charAt(0)}</span>
+                            )}
+                          </div>
+                          <div className="contact-info">
+                            <div className="contact-name">{specialist.specialist_name}</div>
+                            <div className="contact-specialty">{specialist.specialty_display}</div>
+                            {specialist.unread_count > 0 && (
+                              <div className="unread-badge">{specialist.unread_count}</div>
+                            )}
+                          </div>
+                        </button>
+                      ))}
+                    </div>
+                  )}
+                  
+                  {contactedSpecialists.past.length > 0 && (
+                    <div className="specialist-group">
+                      <div className="group-label">Past</div>
+                      {contactedSpecialists.past.map((specialist) => (
+                        <button
+                          key={specialist.specialist_id}
+                          onClick={() => handleSelectContactedSpecialist(specialist.specialist_id)}
+                          className={`specialist-contact-item ${selectedSpecialistId === specialist.specialist_id ? 'active' : ''}`}
+                        >
+                          <div className="contact-avatar">
+                            {specialist.profile_image ? (
+                              <img src={specialist.profile_image} alt={specialist.specialist_name} />
+                            ) : (
+                              <span>{specialist.specialist_name.charAt(0)}</span>
+                            )}
+                          </div>
+                          <div className="contact-info">
+                            <div className="contact-name">{specialist.specialist_name}</div>
+                            <div className="contact-specialty">{specialist.specialty_display}</div>
+                          </div>
+                        </button>
+                      ))}
+                    </div>
+                  )}
+                  
+                  {contactedSpecialists.active.length === 0 && contactedSpecialists.past.length === 0 && (
+                    <div className="empty-contacts">No contacted specialists yet</div>
+                  )}
+                </>
+              )}
+            </div>
+          </div>
+          </Sidebar>
+
+          {/* Mobile Toggle Button */}
+          {isAuthenticated && (
+            <button 
+              onClick={() => setSidebarOpen(true)} 
+              className="sidebar-toggle-btn"
+              aria-label="Open sidebar"
+            >
+              <Menu size={20} />
+            </button>
+          )}
+
+          {/* Menu button when sidebar is closed on desktop */}
+          {isAuthenticated && !sidebarOpen && (
+            <button 
+              onClick={() => setSidebarOpen(true)} 
+              className="sidebar-reopen-btn"
+              aria-label="Open sidebar"
+            >
+              <Menu size={20} />
+            </button>
+          )}
+
+          <div className="specialist-content-wrapper">
+            <SpecialistContactDetailView
+              specialistId={selectedSpecialistId}
+              specialistData={selectedSpecialistData}
+              onBack={handleCloseDetail}
+              activeTab={activeTab}
+              setActiveTab={setActiveTab}
+            />
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   if (detailSpecialist) {
     return (
-      <SpecialistDetailView
-        specialist={detailSpecialist}
-        onBack={handleCloseDetail}
-        isAuthenticated={isAuthenticated}
-      />
+      <div className="specialist-page-v2">
+        <Navbar />
+        
+        {/* Main Layout Container */}
+        <div className={`specialist-layout ${!sidebarOpen ? 'sidebar-closed' : ''}`}>
+          {/* Sidebar */}
+          {isAuthenticated && (
+            <Sidebar
+            isOpen={sidebarOpen}
+            onClose={() => setSidebarOpen(false)}
+            onToggle={() => setSidebarOpen(!sidebarOpen)}
+            title="My Specialists"
+          >
+            <div className="specialist-sidebar-content">
+              <button onClick={handleContactNewSpecialist} className="contact-new-btn">
+                <Plus size={18} />
+                <span>Contact New Specialist</span>
+              </button>
+              
+              <div className="contacted-specialists">
+                {loadingContacts ? (
+                  <div className="loading-text">Loading...</div>
+                ) : (
+                  <>
+                    {contactedSpecialists.active.length > 0 && (
+                      <div className="specialist-group">
+                        <div className="group-label">Active</div>
+                        {contactedSpecialists.active.map((specialist) => (
+                          <button
+                            key={specialist.specialist_id}
+                            onClick={() => handleSelectContactedSpecialist(specialist.specialist_id)}
+                            className={`specialist-contact-item ${selectedSpecialistId === specialist.specialist_id ? 'active' : ''}`}
+                          >
+                            <div className="contact-avatar">
+                              {specialist.profile_image ? (
+                                <img src={specialist.profile_image} alt={specialist.specialist_name} />
+                              ) : (
+                                <span>{specialist.specialist_name.charAt(0)}</span>
+                              )}
+                            </div>
+                            <div className="contact-info">
+                              <div className="contact-name">{specialist.specialist_name}</div>
+                              <div className="contact-specialty">{specialist.specialty_display}</div>
+                              {specialist.unread_count > 0 && (
+                                <div className="unread-badge">{specialist.unread_count}</div>
+                              )}
+                            </div>
+                          </button>
+                        ))}
+                      </div>
+                    )}
+                    
+                    {contactedSpecialists.past.length > 0 && (
+                      <div className="specialist-group">
+                        <div className="group-label">Past</div>
+                        {contactedSpecialists.past.map((specialist) => (
+                          <button
+                            key={specialist.specialist_id}
+                            onClick={() => handleSelectContactedSpecialist(specialist.specialist_id)}
+                            className={`specialist-contact-item ${selectedSpecialistId === specialist.specialist_id ? 'active' : ''}`}
+                          >
+                            <div className="contact-avatar">
+                              {specialist.profile_image ? (
+                                <img src={specialist.profile_image} alt={specialist.specialist_name} />
+                              ) : (
+                                <span>{specialist.specialist_name.charAt(0)}</span>
+                              )}
+                            </div>
+                            <div className="contact-info">
+                              <div className="contact-name">{specialist.specialist_name}</div>
+                              <div className="contact-specialty">{specialist.specialty_display}</div>
+                            </div>
+                          </button>
+                        ))}
+                      </div>
+                    )}
+                    
+                    {contactedSpecialists.active.length === 0 && contactedSpecialists.past.length === 0 && (
+                      <div className="empty-contacts">No contacted specialists yet</div>
+                    )}
+                  </>
+                )}
+              </div>
+            </div>
+            </Sidebar>
+          )}
+
+          {/* Mobile Toggle Button */}
+          {isAuthenticated && (
+            <button 
+              onClick={() => setSidebarOpen(true)} 
+              className="sidebar-toggle-btn"
+              aria-label="Open sidebar"
+            >
+              <Menu size={20} />
+            </button>
+          )}
+
+          {/* Menu button when sidebar is closed on desktop */}
+          {isAuthenticated && !sidebarOpen && (
+            <button 
+              onClick={() => setSidebarOpen(true)} 
+              className="sidebar-reopen-btn"
+              aria-label="Open sidebar"
+            >
+              <Menu size={20} />
+            </button>
+          )}
+
+          <div className="specialist-content-wrapper">
+            <SpecialistDetailView
+              specialist={detailSpecialist}
+              onBack={handleCloseDetail}
+              isAuthenticated={isAuthenticated}
+            />
+          </div>
+        </div>
+      </div>
     );
   }
 
   return (
     <div className="specialist-page-v2">
       <Navbar />
-      <div className="hero-section">
-        <h1>
-          Connect with trusted <span className="highlight">health specialists</span>
-        </h1>
-        <p className="subtitle">
-          Book consultations with certified healthcare professionals who specialize in
-          women's and adolescent health.
-        </p>
-      </div>
-
-      <div className="search-filter-section">
-        <div className="search-box">
-          <SearchIcon size={20} className="search-icon" />
-          <input
-            type="text"
-            placeholder="Search by name or specialty"
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-          />
-        </div>
-
-        <div className="specialty-filters">
-          {specialties.map((specialty) => (
-            <button
-              key={specialty.id}
-              onClick={() => setSelectedSpecialty(specialty.name)}
-              className={`specialty-pill ${
-                selectedSpecialty === specialty.name ? 'active' : ''
-              }`}
-            >
-              <span className="icon">{specialty.icon}</span>
-              {specialty.name}
-            </button>
-          ))}
-        </div>
-      </div>
-
-      <div className="specialists-grid">
-        {filteredSpecialists.length > 0 ? (
-          filteredSpecialists.map((specialist) => (
-            <SpecialistCard
-              key={specialist.id}
-              specialist={specialist}
-              onSelect={() => handleSelectSpecialist(specialist)}
-            />
-          ))
-        ) : (
-          <div className="empty-state">
-            <p>No specialists match your search criteria.</p>
+      
+      {/* Main Layout Container */}
+      <div className={`specialist-layout ${!sidebarOpen ? 'sidebar-closed' : ''}`}>
+        {/* Sidebar */}
+        <Sidebar
+          isOpen={sidebarOpen}
+          onClose={() => setSidebarOpen(false)}
+          onToggle={() => setSidebarOpen(!sidebarOpen)}
+          title="My Specialists"
+        >
+        <div className="specialist-sidebar-content">
+          <button onClick={handleContactNewSpecialist} className="contact-new-btn">
+            <Plus size={18} />
+            <span>Contact New Specialist</span>
+          </button>
+          
+          <div className="contacted-specialists">
+            {loadingContacts ? (
+              <div className="loading-text">Loading...</div>
+            ) : (
+              <>
+                {contactedSpecialists.active.length > 0 && (
+                  <div className="specialist-group">
+                    <div className="group-label">Active</div>
+                    {contactedSpecialists.active.map((specialist) => (
+                      <button
+                        key={specialist.specialist_id}
+                        onClick={() => handleSelectContactedSpecialist(specialist.specialist_id)}
+                        className={`specialist-contact-item ${selectedSpecialistId === specialist.specialist_id ? 'active' : ''}`}
+                      >
+                        <div className="contact-avatar">
+                          {specialist.profile_image ? (
+                            <img src={specialist.profile_image} alt={specialist.specialist_name} />
+                          ) : (
+                            <span>{specialist.specialist_name.charAt(0)}</span>
+                          )}
+                        </div>
+                        <div className="contact-info">
+                          <div className="contact-name">{specialist.specialist_name}</div>
+                          <div className="contact-specialty">{specialist.specialty_display}</div>
+                          {specialist.unread_count > 0 && (
+                            <div className="unread-badge">{specialist.unread_count}</div>
+                          )}
+                        </div>
+                      </button>
+                    ))}
+                  </div>
+                )}
+                
+                {contactedSpecialists.past.length > 0 && (
+                  <div className="specialist-group">
+                    <div className="group-label">Past</div>
+                    {contactedSpecialists.past.map((specialist) => (
+                      <button
+                        key={specialist.specialist_id}
+                        onClick={() => handleSelectContactedSpecialist(specialist.specialist_id)}
+                        className={`specialist-contact-item ${selectedSpecialistId === specialist.specialist_id ? 'active' : ''}`}
+                      >
+                        <div className="contact-avatar">
+                          {specialist.profile_image ? (
+                            <img src={specialist.profile_image} alt={specialist.specialist_name} />
+                          ) : (
+                            <span>{specialist.specialist_name.charAt(0)}</span>
+                          )}
+                        </div>
+                        <div className="contact-info">
+                          <div className="contact-name">{specialist.specialist_name}</div>
+                          <div className="contact-specialty">{specialist.specialty_display}</div>
+                        </div>
+                      </button>
+                    ))}
+                  </div>
+                )}
+                
+                {contactedSpecialists.active.length === 0 && contactedSpecialists.past.length === 0 && (
+                  <div className="empty-contacts">No contacted specialists yet</div>
+                )}
+              </>
+            )}
           </div>
+        </div>
+        </Sidebar>
+
+        {/* Mobile Toggle Button */}
+        {isAuthenticated && (
+          <button 
+            onClick={() => setSidebarOpen(true)} 
+            className="sidebar-toggle-btn"
+            aria-label="Open sidebar"
+          >
+            <Menu size={20} />
+          </button>
         )}
+
+        {/* Menu button when sidebar is closed on desktop */}
+        {isAuthenticated && !sidebarOpen && (
+          <button 
+            onClick={() => setSidebarOpen(true)} 
+            className="sidebar-reopen-btn"
+            aria-label="Open sidebar"
+          >
+            <Menu size={20} />
+          </button>
+        )}
+
+        {/* Content Wrapper */}
+        <div className="specialist-content-wrapper">
+        <div className="hero-section">
+          <h1>
+            Connect with trusted <span className="highlight">health specialists</span>
+          </h1>
+          <p className="subtitle">
+            Book consultations with certified healthcare professionals who specialize in
+            women's and adolescent health.
+          </p>
+        </div>
+
+        <div className="search-filter-section">
+          <div className="search-box">
+            <SearchIcon size={20} className="search-icon" />
+            <input
+              type="text"
+              placeholder="Search by name or specialty"
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+            />
+          </div>
+
+          <div className="specialty-filters">
+            {specialties.map((specialty) => (
+              <button
+                key={specialty.id}
+                onClick={() => setSelectedSpecialty(specialty.name)}
+                className={`specialty-pill ${
+                  selectedSpecialty === specialty.name ? 'active' : ''
+                }`}
+              >
+                <span className="icon">{specialty.icon}</span>
+                {specialty.name}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        <div className="specialists-grid-container">
+          <div className="specialists-grid">
+            {filteredSpecialists.length > 0 ? (
+              filteredSpecialists.map((specialist) => (
+                <SpecialistCard
+                  key={specialist.id}
+                  specialist={specialist}
+                  onSelect={() => handleSelectSpecialist(specialist)}
+                />
+              ))
+            ) : (
+              <div className="empty-state">
+                <p>No specialists match your search criteria.</p>
+              </div>
+            )}
+          </div>
+        </div>
+        </div>
       </div>
     </div>
   );
@@ -353,9 +766,7 @@ function SpecialistDetailView({ specialist, onBack, isAuthenticated }) {
   const languages = formatLanguages(specialist.languages_spoken || specialist.languages);
 
   return (
-    <div className="specialist-page-v2">
-      <Navbar />
-      <div className="specialist-detail-view">
+    <div className="specialist-detail-view">
         <button className="detail-back-button" onClick={onBack}>
           <ChevronLeft size={18} />
           Back to specialists
@@ -460,7 +871,6 @@ function SpecialistDetailView({ specialist, onBack, isAuthenticated }) {
             </button>
           </form>
         </div>
-      </div>
     </div>
   );
 }
@@ -484,5 +894,94 @@ const formatLanguages = (value) => {
   }
   return value;
 };
+
+function SpecialistContactDetailView({ specialistId, specialistData, onBack, activeTab, setActiveTab }) {
+  const [messages, setMessages] = useState([]);
+  const [appointments, setAppointments] = useState([]);
+  const [loadingMessages, setLoadingMessages] = useState(false);
+  const [loadingAppointments, setLoadingAppointments] = useState(false);
+
+  useEffect(() => {
+    loadMessages();
+    loadAppointments();
+  }, [specialistId]);
+
+  const loadMessages = async () => {
+    try {
+      setLoadingMessages(true);
+      const response = await apiClient.get(`/api/specialists/${specialistId}/messages/`);
+      setMessages(response.data || []);
+    } catch (error) {
+      console.error('Failed to load messages', error);
+    } finally {
+      setLoadingMessages(false);
+    }
+  };
+
+  const loadAppointments = async () => {
+    try {
+      setLoadingAppointments(true);
+      const response = await apiClient.get(`/api/specialists/${specialistId}/appointments/`);
+      setAppointments(response.data || []);
+    } catch (error) {
+      console.error('Failed to load appointments', error);
+    } finally {
+      setLoadingAppointments(false);
+    }
+  };
+
+  const tabs = [
+    { id: 'messages', label: 'Messages', icon: MessageSquare },
+    { id: 'appointments', label: 'Appointments', icon: Calendar }
+  ];
+
+  return (
+    <div className="specialist-contact-detail-view">
+      <div className="detail-header-section">
+        <button onClick={onBack} className="detail-back-button">
+          <ChevronLeft size={18} />
+          Back to Specialists
+        </button>
+        <div className="specialist-header-info">
+          <div className="specialist-header-avatar">
+            {specialistData.profile_image ? (
+              <img src={specialistData.profile_image} alt={specialistData.specialist_name} />
+            ) : (
+              <span>{specialistData.specialist_name?.charAt(0) || 'S'}</span>
+            )}
+          </div>
+          <div>
+            <h2>{specialistData.specialist_name}</h2>
+            <p className="specialist-header-specialty">{specialistData.specialty_display}</p>
+          </div>
+        </div>
+      </div>
+
+      <div className="detail-content-section">
+        <Tabs tabs={tabs} activeTab={activeTab} onTabChange={setActiveTab} />
+        
+        <div className="tab-content">
+          {activeTab === 'messages' && (
+            <MessageThread
+              messages={messages}
+              loading={loadingMessages}
+              specialistName={specialistData.specialist_name}
+              specialistId={specialistId}
+              onMessageSent={loadMessages}
+            />
+          )}
+          
+          {activeTab === 'appointments' && (
+            <AppointmentsTable
+              appointments={appointments}
+              loading={loadingAppointments}
+              specialistName={specialistData.specialist_name}
+            />
+          )}
+        </div>
+      </div>
+    </div>
+  );
+}
 
 export default SpecialistPage;

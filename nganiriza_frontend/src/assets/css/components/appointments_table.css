@@ -1,0 +1,253 @@
+.appointments-table-container {
+  overflow-x: auto;
+  border-radius: 0.75rem;
+  border: 1px solid #e9d5ff;
+  background: #ffffff;
+}
+
+:global(.dark) .appointments-table-container {
+  background: #18181b;
+  border-color: #3f3f46;
+}
+
+.appointments-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.875rem;
+}
+
+.appointments-table thead {
+  background: #faf5ff;
+  border-bottom: 2px solid #e9d5ff;
+}
+
+:global(.dark) .appointments-table thead {
+  background: #27272a;
+  border-bottom-color: #3f3f46;
+}
+
+.appointments-table th {
+  padding: 0.75rem 1rem;
+  text-align: left;
+  font-weight: 600;
+  font-size: 0.8125rem;
+  color: #52525b;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+:global(.dark) .appointments-table th {
+  color: #a1a1aa;
+}
+
+.appointments-table tbody tr {
+  border-bottom: 1px solid #e9d5ff;
+  transition: background 0.2s;
+}
+
+:global(.dark) .appointments-table tbody tr {
+  border-bottom-color: #3f3f46;
+}
+
+.appointments-table tbody tr:hover {
+  background: #faf5ff;
+}
+
+:global(.dark) .appointments-table tbody tr:hover {
+  background: #27272a;
+}
+
+.appointments-table tbody tr:last-child {
+  border-bottom: none;
+}
+
+.appointments-table td {
+  padding: 1rem;
+  color: #18181b;
+  vertical-align: middle;
+}
+
+:global(.dark) .appointments-table td {
+  color: #fafafa;
+}
+
+.table-cell-content {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.cell-icon {
+  color: #a855f7;
+  flex-shrink: 0;
+  opacity: 0.7;
+}
+
+.notes-cell {
+  max-width: 200px;
+}
+
+.notes-text {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.status-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.375rem;
+  padding: 0.375rem 0.75rem;
+  border-radius: 9999px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.status-pending {
+  background: #fef3c7;
+  color: #92400e;
+}
+
+:global(.dark) .status-pending {
+  background: #78350f;
+  color: #fbbf24;
+}
+
+.status-confirmed {
+  background: #d1fae5;
+  color: #065f46;
+}
+
+:global(.dark) .status-confirmed {
+  background: #064e3b;
+  color: #34d399;
+}
+
+.status-cancelled {
+  background: #fee2e2;
+  color: #991b1b;
+}
+
+:global(.dark) .status-cancelled {
+  background: #7f1d1d;
+  color: #f87171;
+}
+
+.status-completed {
+  background: #dbeafe;
+  color: #1e40af;
+}
+
+:global(.dark) .status-completed {
+  background: #1e3a8a;
+  color: #60a5fa;
+}
+
+.status-icon {
+  flex-shrink: 0;
+}
+
+.table-actions {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.action-btn {
+  padding: 0.375rem 0.75rem;
+  border-radius: 0.5rem;
+  border: none;
+  font-size: 0.75rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.cancel-btn {
+  background: #fee2e2;
+  color: #991b1b;
+}
+
+.cancel-btn:hover {
+  background: #fecaca;
+}
+
+:global(.dark) .cancel-btn {
+  background: #7f1d1d;
+  color: #f87171;
+}
+
+:global(.dark) .cancel-btn:hover {
+  background: #991b1b;
+}
+
+.view-btn {
+  background: #dbeafe;
+  color: #1e40af;
+}
+
+.view-btn:hover {
+  background: #bfdbfe;
+}
+
+:global(.dark) .view-btn {
+  background: #1e3a8a;
+  color: #60a5fa;
+}
+
+:global(.dark) .view-btn:hover {
+  background: #1e40af;
+}
+
+.appointments-table-loading,
+.appointments-table-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 3rem 1rem;
+  text-align: center;
+}
+
+.appointments-table-empty .empty-icon {
+  color: #a855f7;
+  opacity: 0.5;
+  margin-bottom: 1rem;
+}
+
+.appointments-table-empty p {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #18181b;
+  margin-bottom: 0.5rem;
+}
+
+:global(.dark) .appointments-table-empty p {
+  color: #fafafa;
+}
+
+.appointments-table-empty span {
+  font-size: 0.875rem;
+  color: #71717a;
+}
+
+:global(.dark) .appointments-table-empty span {
+  color: #a1a1aa;
+}
+
+/* Responsive table */
+@media (max-width: 768px) {
+  .appointments-table {
+    font-size: 0.75rem;
+  }
+  
+  .appointments-table th,
+  .appointments-table td {
+    padding: 0.5rem;
+  }
+  
+  .notes-cell {
+    max-width: 150px;
+  }
+}
+

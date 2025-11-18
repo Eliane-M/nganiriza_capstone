@@ -49,12 +49,12 @@ def list_conversations(request):
         page_size = int(request.GET.get("page_size", 20))
         start, end = (page-1)*page_size, page*page_size
         total = qs.count()
-        data = ConversationsSerializer(qs[start:end], many=True).data
+        serializer = ConversationsSerializer(qs[start:end], many=True, context={'request': request})
         return Response({
             "count": total,
             "next": page+1 if end < total else None,
             "previous": page-1 if start > 0 else None,
-            "results": data
+            "results": serializer.data
         }, status=200)
     except Conversations.DoesNotExist:
         return Response({"error": "No conversations found"}, status=status.HTTP_404_NOT_FOUND)
