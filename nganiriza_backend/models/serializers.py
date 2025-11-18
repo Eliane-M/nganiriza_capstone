@@ -118,6 +118,7 @@ class ArticleSerializer(serializers.ModelSerializer):
         indexes = [models.Index(fields=["locale","is_published","updated_at"])]
         ordering = ["-updated_at"]
         fields = '__all__'
+        read_only_fields = ['basemodel_ptr', 'id_number', 'slug', 'created_at', 'updated_at']
 
 class MessageFeedbackSerializer(serializers.ModelSerializer):
     class Meta:
@@ -125,9 +126,18 @@ class MessageFeedbackSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 class ServiceProviderSerializer(serializers.ModelSerializer):
+    position = serializers.SerializerMethodField()
+    
     class Meta:
         model = ServiceProvider
         fields = '__all__'
+        read_only_fields = ['basemodel_ptr', 'slug', 'created_at', 'updated_at']
+    
+    def get_position(self, obj):
+        """Return [latitude, longitude] for map display"""
+        if obj.latitude and obj.longitude:
+            return [float(obj.latitude), float(obj.longitude)]
+        return None
 
 class QuerySerializer(serializers.Serializer):
     query = serializers.CharField(required=True, max_length=2000)

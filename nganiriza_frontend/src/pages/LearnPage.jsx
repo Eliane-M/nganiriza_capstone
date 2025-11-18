@@ -53,7 +53,7 @@ const LearnPage = () => {
       const response = await apiClient.get(
         '/api/dashboard/articles/',
         {
-          params: { locale: language === 'en' ? 'eng' : 'rw' }
+          params: { locale: language === 'en' ? 'eng' : language === 'rw' ? 'kny' : 'fr' }
         }
       );
       
@@ -132,9 +132,9 @@ const LearnPage = () => {
           <div style={styles.grid}>
             {filteredArticles.map(article => (
               <article
-                key={article.id}
+                key={article.id_number || article.id}
                 style={styles.card}
-                onClick={() => navigate(`/learn/${article.id}`)}
+                onClick={() => navigate(`/learn/${article.id_number || article.id}`)}
               >
                 <div style={styles.cardHeader}>
                   <BookOpen size={24} style={{ color: '#a855f7' }} />
@@ -145,7 +145,11 @@ const LearnPage = () => {
                 </div>
 
                 <h3 style={styles.cardTitle}>{article.title}</h3>
-                <p style={styles.cardExcerpt}>{article.excerpt}</p>
+                <p style={styles.cardExcerpt}>
+                  {article.body_md 
+                    ? article.body_md.replace(/<[^>]*>/g, '').substring(0, 150) + '...'
+                    : article.excerpt || 'No description available'}
+                </p>
 
                 {article.tags && article.tags.length > 0 && (
                   <div style={styles.cardTags}>

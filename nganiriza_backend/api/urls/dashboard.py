@@ -1,7 +1,10 @@
 from django.urls import path
 from api.views.profile.profile import get_profile, update_profile, patch_profile_language, delete_profile
 from api.views.learning.conversations import delete_conversation, list_conversations, get_conversation, create_conversation, delete_conversation, conversation_messages
-from api.views.learning.articles import *
+from api.views.learning.articles import (
+    list_articles, get_article, create_article, 
+    update_article, delete_article, list_all_articles
+)
 from api.views.ai.query import ai_health, ai_query
 
 
@@ -27,4 +30,5 @@ urlpatterns = [
     path("articles/create/", create_article, name='create_article'),
     path("articles/<uuid:pk>/update/", update_article, name='update_article'),
     path("articles/<uuid:pk>/delete/", delete_article, name='delete_article'),
+    path("articles/admin/all/", list_all_articles, name='list_all_articles'),
 ]

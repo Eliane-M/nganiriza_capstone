@@ -7,7 +7,12 @@ from rest_framework.response import Response
 @permission_classes([IsAuthenticated])
 def me(request):
     user = request.user
-    role = "specialist" if getattr(user, "is_staff", False) else "user"
+    if getattr(user, "is_superuser", False):
+        role = "admin"
+    elif getattr(user, "is_staff", False):
+        role = "specialist"
+    else:
+        role = "user"
     return Response(
         {
             "id": user.id,

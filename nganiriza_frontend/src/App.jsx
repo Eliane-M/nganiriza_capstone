@@ -6,6 +6,7 @@ import { SpecialistPage } from './pages/specialists/SpecialistPage';
 import { MapPage } from './pages/MapPage';
 import { EducationPage } from './pages/EducationPage';
 import LearnPage from './pages/LearnPage';
+import ArticleDetailPage from './pages/ArticleDetailPage';
 import { ResourcesPage } from './pages/ResourcesPage';
 import SignupPage from './pages/authentication/SignupPage';
 import LoginForm from './pages/authentication/LoginPage';
@@ -19,6 +20,13 @@ import ProfilePage from './pages/UserProfilePage';
 import { AppProviders } from '././contexts/AppContext';
 import { AuthProvider } from './assets/components/context/AuthContext';
 import ProtectedRoute from './routes/ProtectedRoute';
+import AdminRoute from './routes/AdminRoute';
+import AdminDashboard from './pages/admin/AdminDashboard';
+import AdminHome from './pages/admin/AdminHome';
+import MapManagement from './pages/admin/MapManagement';
+import LearningResourceManagement from './pages/admin/LearningResourceManagement';
+import SpecialistApproval from './pages/admin/SpecialistApproval';
+import UserManagement from './pages/admin/UserManagement';
 
 function App() {
   return (
@@ -91,6 +99,14 @@ function App() {
                 }
               />
               <Route
+                path="/learn/:id"
+                element={
+                  <ProtectedRoute>
+                    <ArticleDetailPage />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
                 path="/profile"
                 element={
                   <ProtectedRoute>
@@ -98,6 +114,21 @@ function App() {
                   </ProtectedRoute>
                 }
               />
+              {/* Admin Routes */}
+              <Route
+                path="/admin"
+                element={
+                  <AdminRoute>
+                    <AdminDashboard />
+                  </AdminRoute>
+                }
+              >
+                <Route index element={<AdminHome />} />
+                <Route path="map" element={<MapManagement />} />
+                <Route path="learning" element={<LearningResourceManagement />} />
+                <Route path="specialists" element={<SpecialistApproval />} />
+                <Route path="users" element={<UserManagement />} />
+              </Route>
             </Routes>
           </Router>
         </AuthProvider>

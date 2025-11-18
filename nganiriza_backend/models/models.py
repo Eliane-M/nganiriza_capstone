@@ -370,6 +370,8 @@ class ServiceProvider(BaseModel):
     sector = models.ForeignKey(Sector, on_delete=models.SET_NULL, null=True, blank=True)
     open_hours = models.CharField(max_length=128, blank=True)
     verified = models.BooleanField(default=False)
+    latitude = models.DecimalField(max_digits=9, decimal_places=6, null=True, blank=True, help_text="GPS Latitude")
+    longitude = models.DecimalField(max_digits=9, decimal_places=6, null=True, blank=True, help_text="GPS Longitude")
 
     def __str__(self) -> str:
         return self.name + " - " + self.type

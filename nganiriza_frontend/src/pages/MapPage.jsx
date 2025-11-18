@@ -1,16 +1,25 @@
-import React, { useEffect, useState } from 'react';
-import { MapView } from '../assets/components/MapView.tsx';
-import { Search as SearchIcon, MapPin as MapPinIcon, Home, MessageCircle, Users, User, BookOpen } from 'lucide-react';
+import React, { useEffect, useState, useContext, useRef } from 'react';
+import PublicMapView from '../assets/components/PublicMapView';
+import { Search as SearchIcon, MapPin as MapPinIcon, Home, MessageCircle, Users, User, BookOpen, Phone, Clock, Navigation, Filter, ChevronDown } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import Navbar from '../assets/components/Navbar';
+import apiClient from '../utils/apiClient';
+import { AuthContext } from '../assets/components/context/AuthContext';
 import '../assets/css/map/map_page.css';
 
 export function MapPage() {
   const navigate = useNavigate();
+  const { isAuthenticated } = useContext(AuthContext);
   const [searchTerm, setSearchTerm] = useState('');
   const [userLocation, setUserLocation] = useState(undefined);
   const [isLoadingLocation, setIsLoadingLocation] = useState(false);
   const [selectedFilter, setSelectedFilter] = useState(null);
+  const [clinics, setClinics] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [selectedClinic, setSelectedClinic] = useState(null);
+  const [mapCenter, setMapCenter] = useState([-1.9441, 30.0619]); // Default to Kigali
+  const [showFilterDropdown, setShowFilterDropdown] = useState(false);
+  const filterDropdownRef = useRef(null);
 
   const navItems = [
     { icon: Home, label: "Home", path: "/" },
@@ -21,21 +30,53 @@ export function MapPage() {
     { icon: User, label: "Profile", path: "/profile" }
   ];
 
-  const healthFacilities = [
-    { id: 1, name: 'Youth Health Center', type: 'Youth Clinic', address: 'KG 123 St, Kigali', phone: '+250 78 123 4567', website: 'https://example.com', position: [-1.9437, 30.0594], services: ['Reproductive health counseling', 'STI testing and treatment', 'Contraceptive services', 'Youth-friendly services'] },
-    { id: 2, name: 'Reproductive Health Clinic', type: 'Specialized Clinic', address: 'KG 456 St, Kigali', phone: '+250 78 987 6543', position: [-1.9507, 30.0626], services: ['Family planning', 'Prenatal care', 'Reproductive health education', 'Gynecological services'] },
-    { id: 3, name: 'Community Health Center', type: 'Public Health Center', address: 'KG 789 St, Kigali', phone: '+250 78 567 8901', website: 'https://example.com', position: [-1.939, 30.065], services: ['General healthcare', 'Reproductive health services', 'HIV testing and counseling', 'Health education'] },
-    { id: 4, name: 'Kigali Central Hospital', type: 'Hospital', address: 'KN 4 Ave, Kigali', phone: '+250 78 111 2222', website: 'https://example.com', position: [-1.945, 30.063], services: ['Comprehensive reproductive health services', 'Emergency contraception', 'Obstetrics and gynecology', 'Sexual health counseling'] }
-  ];
-
-  const filters = ['All', 'Youth Clinic', 'Specialized Clinic', 'Public Health Center', 'Hospital'];
+  const filters = ['All', 'clinic', 'hotline', 'counselor', 'NGO', 'hospital', 'youth clinic'];
 
   useEffect(() => {
+    loadClinics();
     if (navigator.geolocation && typeof window !== 'undefined' && window.localStorage) {
       const storedPermission = localStorage.getItem('nganiriza_location_permission');
       if (storedPermission === 'granted') getUserLocation();
     }
   }, []);
+
+  // Close dropdown when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (filterDropdownRef.current && !filterDropdownRef.current.contains(event.target)) {
+        setShowFilterDropdown(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
+
+  useEffect(() => {
+    // Center map on selected clinic or user location
+    if (selectedClinic?.position) {
+      setMapCenter(selectedClinic.position);
+    } else if (userLocation) {
+      setMapCenter(userLocation);
+    } else if (clinics.length > 0 && clinics[0].position) {
+      setMapCenter(clinics[0].position);
+    }
+  }, [selectedClinic, userLocation, clinics]);
+
+  const loadClinics = async () => {
+    try {
+      setLoading(true);
+      const response = await apiClient.get('/api/admin/service-providers/public/');
+      setClinics(response.data || []);
+    } catch (error) {
+      console.error('Failed to load clinics:', error);
+      setClinics([]);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const getUserLocation = () => {
     if (!navigator.geolocation) return;
@@ -55,64 +96,186 @@ export function MapPage() {
     );
   };
 
-  const filteredFacilities = healthFacilities.filter((facility) => {
+  const handleClinicClick = (clinic) => {
+    setSelectedClinic(clinic);
+    if (clinic.position) {
+      setMapCenter(clinic.position);
+    }
+  };
+
+  const filteredClinics = clinics.filter((clinic) => {
     const s = searchTerm.toLowerCase();
     const matchesSearch =
-      facility.name.toLowerCase().includes(s) ||
-      facility.type.toLowerCase().includes(s) ||
-      facility.services.some((service) => service.toLowerCase().includes(s));
+      clinic.name?.toLowerCase().includes(s) ||
+      clinic.type?.toLowerCase().includes(s);
     const matchesFilter =
-      selectedFilter === 'All' || selectedFilter === null || facility.type === selectedFilter;
+      selectedFilter === 'All' || selectedFilter === null || clinic.type === selectedFilter;
     return matchesSearch && matchesFilter;
   });
+
+  // Filter clinics with GPS coordinates for map display
+  const clinicsWithLocation = filteredClinics.filter(clinic => clinic.position);
+
+  const handleFilterSelect = (filter) => {
+    setSelectedFilter(filter === 'All' ? null : filter);
+    setShowFilterDropdown(false);
+  };
 
   return (
     <div className="map-page">
       <Navbar />
-      <div className="page-header"><h1>Find Health Services</h1></div>
+      <div className="map-page-layout">
+        {/* Sidebar with clinic cards */}
+        <div className="map-page-sidebar">
+          <div className="sidebar-header">
+            <div className="sidebar-search-row">
+              <div className="sidebar-search">
+                <SearchIcon size={20} />
+                <input
+                  type="text"
+                  placeholder="Search health services..."
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                />
+              </div>
+              <div className="filter-dropdown-wrapper" ref={filterDropdownRef}>
+                <button
+                  className="filter-dropdown-btn"
+                  onClick={() => setShowFilterDropdown(!showFilterDropdown)}
+                  aria-label="Filter clinics"
+                >
+                  <Filter size={18} />
+                  <ChevronDown size={16} className={showFilterDropdown ? 'rotate' : ''} />
+                </button>
+                {showFilterDropdown && (
+                  <div className="filter-dropdown-menu">
+                    {filters.map((filter) => (
+                      <button
+                        key={filter}
+                        onClick={() => handleFilterSelect(filter)}
+                        className={`filter-dropdown-item ${(filter === 'All' && selectedFilter === null) || selectedFilter === filter ? 'active' : ''}`}
+                      >
+                        {filter}
+                        {(filter === 'All' && selectedFilter === null) || selectedFilter === filter ? (
+                          <span className="filter-check">✓</span>
+                        ) : null}
+                      </button>
+                    ))}
+                  </div>
+                )}
+              </div>
+            </div>
 
-      <div className="controls">
-        <div className="panel">
-          <div className="input-row" style={{ marginBottom: '0.75rem' }}>
-            <SearchIcon size={20} style={{ color: '#9ca3af', marginRight: 8 }} />
-            <input
-              type="text"
-              placeholder="Search health services..."
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-            />
+            <button 
+              className="get-location-btn" 
+              onClick={getUserLocation} 
+              disabled={isLoadingLocation}
+            >
+              {isLoadingLocation ? (
+                <>
+                  <div className="spinner" />
+                  <span>Getting location...</span>
+                </>
+              ) : (
+                <>
+                  <MapPinIcon size={18} />
+                  <span>{userLocation ? 'Update my location' : 'Use my location'}</span>
+                </>
+              )}
+            </button>
           </div>
 
-          <div className="pill-row" style={{ paddingBottom: 8, marginBottom: 12 }}>
-            {filters.map((filter) => (
-              <button
-                key={filter}
-                onClick={() => setSelectedFilter(filter === 'All' ? null : filter)}
-                className={`pill ${(filter === 'All' && selectedFilter === null) || selectedFilter === filter ? 'active' : ''}`}
-              >
-                {filter}
-              </button>
-            ))}
-          </div>
+          <div className="sidebar-content">
+            {loading ? (
+              <div className="sidebar-loading">Loading clinics...</div>
+            ) : filteredClinics.length > 0 ? (
+              <div className="clinic-cards">
+                {filteredClinics.map((clinic) => (
+                  <div
+                    key={clinic.id}
+                    className={`clinic-card ${selectedClinic?.id === clinic.id ? 'active' : ''}`}
+                    onClick={() => handleClinicClick(clinic)}
+                  >
+                    <div className="clinic-card-header">
+                      <h3 className="clinic-card-name">{clinic.name}</h3>
+                      <span className="clinic-card-type">{clinic.type}</span>
+                    </div>
+                    
+                    {clinic.open_hours && (
+                      <div className="clinic-card-info">
+                        <Clock size={14} />
+                        <span>{clinic.open_hours}</span>
+                      </div>
+                    )}
 
-          <button className="get-location" onClick={getUserLocation} disabled={isLoadingLocation}>
-            {isLoadingLocation ? (
-              <>
-                <div className="spinner" />
-                <span>Getting location...</span>
-              </>
+                    {(clinic.sector || clinic.district || clinic.province) && (
+                      <div className="clinic-card-info">
+                        <MapPinIcon size={14} />
+                        <span>
+                          {[clinic.sector, clinic.district, clinic.province]
+                            .filter(Boolean)
+                            .join(', ')}
+                        </span>
+                      </div>
+                    )}
+
+                    {clinic.phone && (
+                      <div className="clinic-card-info">
+                        <Phone size={14} />
+                        <span>{clinic.phone}</span>
+                      </div>
+                    )}
+
+                    {clinic.position && (
+                      <div className="clinic-card-actions">
+                        <a
+                          href={`https://www.google.com/maps/dir/?api=1&destination=${clinic.position[0]},${clinic.position[1]}`}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="clinic-card-action-btn"
+                          onClick={(e) => e.stopPropagation()}
+                        >
+                          <Navigation size={14} />
+                          Directions
+                        </a>
+                        {clinic.phone && (
+                          <a
+                            href={`tel:${clinic.phone}`}
+                            className="clinic-card-action-btn clinic-card-action-btn-primary"
+                            onClick={(e) => e.stopPropagation()}
+                          >
+                            <Phone size={14} />
+                            Call
+                          </a>
+                        )}
+                      </div>
+                    )}
+                  </div>
+                ))}
+              </div>
             ) : (
-              <>
-                <MapPinIcon size={18} style={{ marginRight: 8 }} />
-                <span>{userLocation ? 'Update my location' : 'Use my location'}</span>
-              </>
+              <div className="sidebar-empty">
+                <MapPinIcon size={48} />
+                <p>No clinics found</p>
+                <p className="sidebar-empty-hint">Try adjusting your search or filters</p>
+              </div>
             )}
-          </button>
+          </div>
         </div>
-      </div>
 
-      <div className="map-wrap">
-        <MapView facilities={filteredFacilities} userLocation={userLocation} />
+        {/* Map section */}
+        <div className="map-page-map">
+          {loading ? (
+            <div className="map-loading">Loading map...</div>
+          ) : (
+            <PublicMapView 
+              clinics={clinicsWithLocation} 
+              userLocation={userLocation}
+              selectedClinic={selectedClinic}
+              mapCenter={mapCenter}
+            />
+          )}
+        </div>
       </div>
 
       {/* Bottom Navigation Bar - Mobile Only */}
