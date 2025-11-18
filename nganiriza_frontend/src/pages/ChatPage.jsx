@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef, useContext } from 'react';
-import { Send as SendIcon, Home, MessageCircle, Users, MapPin, ArrowLeft, Menu, Plus } from 'lucide-react';
+import { Send as SendIcon, Home, MessageCircle, Users, MapPin, ArrowLeft, Menu, Plus, User, BookOpen } from 'lucide-react';
 import { LanguageContext } from '../assets/components/context/LanguageContext.tsx';
 import { useNavigate } from 'react-router-dom';
 import Navbar from '../assets/components/Navbar';
@@ -207,7 +207,9 @@ export function ChatPage() {
     { icon: Home, label: "Home", path: "/" },
     { icon: MessageCircle, label: "Chat", path: "/chat", active: true },
     { icon: Users, label: "Specialists", path: "/specialists" },
-    { icon: MapPin, label: "Map", path: "/map" }
+    { icon: MapPin, label: "Map", path: "/map" },
+    { icon: BookOpen, label: "Learn", path: "/learn" },
+    { icon: User, label: "Profile", path: "/profile" }
   ];
 
   return (

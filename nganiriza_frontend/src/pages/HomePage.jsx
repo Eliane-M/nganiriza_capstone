@@ -1,5 +1,5 @@
 import React from 'react';
-import { Send as SendIcon, Home, MessageCircle, Users, MapPin, ArrowLeft } from 'lucide-react';
+import { Send as SendIcon, Home, MessageCircle, Users, MapPin, ArrowLeft, User, BookOpen } from 'lucide-react';
 import Navbar from '../assets/components/Navbar.jsx';
 import { useNavigate } from 'react-router-dom';
 import '../assets/css/homePage/homePage.css';
@@ -61,8 +61,10 @@ export function HomePage() {
   const navItems = [
     { icon: Home, label: "Home", path: "/", active: true},
     { icon: MessageCircle, label: "Chat", path: "/chat" },
-    { icon: Users, label: "Community", path: "/community" },
-    { icon: MapPin, label: "Map", path: "/map" }
+    { icon: Users, label: "Specialists", path: "/specialists" },
+    { icon: MapPin, label: "Map", path: "/map" },
+    { icon: BookOpen, label: "Learn", path: "/learn" },
+    { icon: User, label: "Profile", path: "/profile" }
   ];
 
   return (
@@ -160,12 +162,45 @@ export function HomePage() {
       <footer className="footer">
         <div className="container">
           <div className="footer-content">
-            <span>© {new Date().getFullYear()} Nganiriza</span>
-            <div className="footer-links">
-              <button onClick={() => navigate('help')}>Help Center</button>
-              <button onClick={() => navigate('privacy')}>Privacy</button>
-              <button onClick={() => navigate('terms')}>Terms</button>
+            <div className="footer-section">
+              <h4 className="footer-title">Nganiriza</h4>
+              <p className="footer-description">
+                Your trusted companion for sexual and reproductive health
+              </p>
             </div>
+            
+            <div className="footer-section">
+              <h4 className="footer-title">Quick Links</h4>
+              <div className="footer-links">
+                <button onClick={() => navigate('/')}>Home</button>
+                <button onClick={() => navigate('/chat')}>Chat</button>
+                <button onClick={() => navigate('/specialists')}>Specialists</button>
+                <button onClick={() => navigate('/map')}>Map</button>
+                <button onClick={() => navigate('/learn')}>Learn</button>
+              </div>
+            </div>
+            
+            <div className="footer-section">
+              <h4 className="footer-title">Resources</h4>
+              <div className="footer-links">
+                <button onClick={() => navigate('/learn')}>Educational Resources</button>
+                <button onClick={() => navigate('/specialists')}>Find a Specialist</button>
+                <button onClick={() => navigate('/map')}>Health Services</button>
+              </div>
+            </div>
+            
+            <div className="footer-section">
+              <h4 className="footer-title">Legal</h4>
+              <div className="footer-links">
+                <button onClick={() => navigate('/privacy')}>Privacy Policy</button>
+                <button onClick={() => navigate('/terms')}>Terms of Service</button>
+                <button onClick={() => navigate('/help')}>Help Center</button>
+              </div>
+            </div>
+          </div>
+          
+          <div className="footer-bottom">
+            <span>© {new Date().getFullYear()} Nganiriza. All rights reserved.</span>
           </div>
         </div>
       </footer>

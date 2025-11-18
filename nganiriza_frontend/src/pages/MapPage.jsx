@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { MapView } from '../assets/components/MapView.tsx';
-import { Search as SearchIcon, MapPin as MapPinIcon, Home, MessageCircle, Users } from 'lucide-react';
+import { Search as SearchIcon, MapPin as MapPinIcon, Home, MessageCircle, Users, User, BookOpen } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import Navbar from '../assets/components/Navbar';
 import '../assets/css/map/map_page.css';
@@ -16,7 +16,9 @@ export function MapPage() {
     { icon: Home, label: "Home", path: "/" },
     { icon: MessageCircle, label: "Chat", path: "/chat" },
     { icon: Users, label: "Specialists", path: "/specialists" },
-    { icon: MapPinIcon, label: "Map", path: "/map", active: true }
+    { icon: MapPinIcon, label: "Map", path: "/map", active: true },
+    { icon: BookOpen, label: "Learn", path: "/learn" },
+    { icon: User, label: "Profile", path: "/profile" }
   ];
 
   const healthFacilities = [

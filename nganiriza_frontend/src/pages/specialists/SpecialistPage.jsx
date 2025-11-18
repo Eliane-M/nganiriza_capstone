@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { Search as SearchIcon, Users, Heart, Brain, Apple, Stethoscope, Building2, ChevronLeft, Send, CalendarDays, Star, Briefcase, MapPin, Clock, Menu, Plus, MessageSquare, Calendar, Home, MessageCircle } from 'lucide-react';
+import { Search as SearchIcon, Users, Heart, Brain, Apple, Stethoscope, Building2, ChevronLeft, Send, CalendarDays, Star, Briefcase, MapPin, Clock, Menu, Plus, MessageSquare, Calendar, Home, MessageCircle, User, BookOpen } from 'lucide-react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import '../../assets/css/specialists/specialist_page.css';
 import BASE_URL from '../../config.js';
@@ -32,7 +32,9 @@ export function SpecialistPage() {
     { icon: Home, label: "Home", path: "/" },
     { icon: MessageCircle, label: "Chat", path: "/chat" },
     { icon: Users, label: "Specialists", path: "/specialists", active: true },
-    { icon: MapPin, label: "Map", path: "/map" }
+    { icon: MapPin, label: "Map", path: "/map" },
+    { icon: BookOpen, label: "Learn", path: "/learn" },
+    { icon: User, label: "Profile", path: "/profile" }
   ];
 
   const specialties = [
@@ -560,7 +562,7 @@ export function SpecialistPage() {
 
         {/* Content Wrapper */}
         <div className="specialist-content-wrapper">
-        <div className="hero-section">
+        {/* <div className="hero-section">
           <h1>
             Connect with trusted <span className="highlight">health specialists</span>
           </h1>
@@ -568,9 +570,9 @@ export function SpecialistPage() {
             Book consultations with certified healthcare professionals who specialize in
             women's and adolescent health.
           </p>
-        </div>
+        </div> */}
 
-        <div className="search-filter-section">
+        <div className="search-filter-section" style={{marginTop: '100px'}}>
           <div className="search-box">
             <SearchIcon size={20} className="search-icon" />
             <input
@@ -665,7 +667,7 @@ function SpecialistCard({ specialist, onSelect }) {
           alt={name}
           className="specialist-avatar"
           onError={(e) => {
-            e.target.src = 'https://via.placeholder.com/150?text=No+Image';
+            e.target.src = 'https://t4.ftcdn.net/jpg/10/97/89/35/360_F_1097893503_5eTvQyNp3mbiGcCzty6C6JKFKexmE9ew.webp';
           }}
         />
         <div className="specialist-info">

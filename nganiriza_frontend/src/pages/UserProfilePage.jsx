@@ -1,18 +1,29 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { User, Mail, Phone, MapPin, Calendar, Edit2, Save, X } from 'lucide-react';
+import { useNavigate, useLocation } from 'react-router-dom';
+import { User, Mail, Phone, MapPin, Calendar, Edit2, Save, X, Home, MessageCircle, Users, BookOpen } from 'lucide-react';
 import Navbar from '../assets/components/Navbar';
 import apiClient from '../utils/apiClient';
 import { AuthContext } from '../assets/components/context/AuthContext';
+import '../assets/css/profile/profile_page.css';
 
 const ProfilePage = () => {
   const navigate = useNavigate();
+  const location = useLocation();
   const { user: authUser } = useContext(AuthContext);
   const [loading, setLoading] = useState(true);
   const [editing, setEditing] = useState(false);
   const [saving, setSaving] = useState(false);
   const [profile, setProfile] = useState(null);
   const [formData, setFormData] = useState({});
+
+  const navItems = [
+    { icon: Home, label: "Home", path: "/" },
+    { icon: MessageCircle, label: "Chat", path: "/chat" },
+    { icon: Users, label: "Specialists", path: "/specialists" },
+    { icon: MapPin, label: "Map", path: "/map" },
+    { icon: BookOpen, label: "Learn", path: "/learn" },
+    { icon: User, label: "Profile", path: "/profile", active: true }
+  ];
 
   useEffect(() => {
     fetchProfile();
@@ -64,7 +75,7 @@ const ProfilePage = () => {
 
   if (loading) {
     return (
-      <div style={styles.page}>
+      <div className="profile-page" style={styles.page}>
         <Navbar />
         <div style={styles.loading}>Loading profile...</div>
       </div>
@@ -73,7 +84,7 @@ const ProfilePage = () => {
 
   if (!profile) {
     return (
-      <div style={styles.page}>
+      <div className="profile-page" style={styles.page}>
         <Navbar />
         <div style={styles.error}>Failed to load profile</div>
       </div>
@@ -81,7 +92,7 @@ const ProfilePage = () => {
   }
 
   return (
-    <div style={styles.page}>
+    <div className="profile-page" style={styles.page}>
       <Navbar />
       
       <div style={styles.container}>
@@ -222,6 +233,20 @@ const ProfilePage = () => {
             </div>
           </div>
         </div>
+      </div>
+
+      {/* Bottom Navigation Bar - Mobile Only */}
+      <div className="bottom-nav">
+        {navItems.map((item, i) => (
+          <button
+            key={i}
+            onClick={() => navigate(item.path)}
+            className={`nav-item ${item.active ? 'active' : ''}`}
+          >
+            <item.icon size={24} />
+            <span>{item.label}</span>
+          </button>
+        ))}
       </div>
     </div>
   );

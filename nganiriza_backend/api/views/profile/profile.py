@@ -9,10 +9,16 @@ from django.db import transaction
 
 
 @api_view(['GET'])
+@permission_classes([IsAuthenticated])
 def get_profile(request):
-    profile = Profile.objects.filter(user=request.user).first()
-    if not profile:
-        return Response({"success": False, "error": "Profile not found."}, status=404)
+    # Create profile if it doesn't exist (for users created before signal was added)
+    profile, created = Profile.objects.get_or_create(
+        user=request.user,
+        defaults={
+            'created_by': request.user,
+            'updated_by': request.user
+        }
+    )
     ser = ProfileSerializer(profile)
     return Response({"success": True, "profile": ser.data}, status=200)
 

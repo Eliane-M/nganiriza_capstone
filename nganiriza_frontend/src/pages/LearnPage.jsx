@@ -1,17 +1,28 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { LanguageContext } from '../contexts/AppContext';
-import { Search, BookOpen, Clock, ChevronRight } from 'lucide-react';
+import { Search, BookOpen, Clock, ChevronRight, Home, MessageCircle, Users, MapPin, User } from 'lucide-react';
 import Navbar from '../assets/components/Navbar';
 import apiClient from '../utils/apiClient';
+import '../assets/css/learn/learn_page.css';
 
 const LearnPage = () => {
   const navigate = useNavigate();
+  const location = useLocation();
   const { language } = useContext(LanguageContext);
   const [articles, setArticles] = useState([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedTag, setSelectedTag] = useState(null);
+
+  const navItems = [
+    { icon: Home, label: "Home", path: "/" },
+    { icon: MessageCircle, label: "Chat", path: "/chat" },
+    { icon: Users, label: "Specialists", path: "/specialists" },
+    { icon: MapPin, label: "Map", path: "/map" },
+    { icon: BookOpen, label: "Learn", path: "/learn", active: true },
+    { icon: User, label: "Profile", path: "/profile" }
+  ];
 
   const translations = {
     title: { en: 'Learn About Health', rw: 'Wige Ku Buzima' },
@@ -73,7 +84,7 @@ const LearnPage = () => {
   });
 
   return (
-    <div style={styles.page}>
+    <div className="learn-page" style={styles.page}>
       <Navbar />
       
       <div style={styles.container}>
@@ -157,6 +168,20 @@ const LearnPage = () => {
             <p>{translations.noArticles[language]}</p>
           </div>
         )}
+      </div>
+
+      {/* Bottom Navigation Bar - Mobile Only */}
+      <div className="bottom-nav">
+        {navItems.map((item, i) => (
+          <button
+            key={i}
+            onClick={() => navigate(item.path)}
+            className={`nav-item ${item.active ? 'active' : ''}`}
+          >
+            <item.icon size={24} />
+            <span>{item.label}</span>
+          </button>
+        ))}
       </div>
     </div>
   );

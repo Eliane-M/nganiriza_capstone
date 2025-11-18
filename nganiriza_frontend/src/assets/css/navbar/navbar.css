@@ -567,4 +567,22 @@
   .map-page > header.navbar {
     display: none !important;
   }
+
+  /* Hide navbar on learn page */
+  .learn-page .navbar,
+  .learn-page > header.navbar {
+    display: none !important;
+  }
+
+  /* Hide navbar on profile page */
+  .profile-page .navbar,
+  .profile-page > header.navbar {
+    display: none !important;
+  }
+
+  /* Hide navbar on homepage */
+  .homepage .navbar,
+  .homepage > header.navbar {
+    display: none !important;
+  }
 }/*# sourceMappingURL=navbar.css.map */
