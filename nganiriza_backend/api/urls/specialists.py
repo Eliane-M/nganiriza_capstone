@@ -17,6 +17,7 @@ urlpatterns = [
     path('appointments/specialist/',  list_specialist_appointments, name='list_specialist_appointments'),
     path('appointments/<int:pk>/status/',  update_appointment_status, name='update_appointment_status'),
     path('appointments/<int:pk>/reschedule/',  reschedule_appointment, name='reschedule_appointment'),
+    path('appointments/<int:pk>/history/',  get_appointment_history, name='get_appointment_history'),
     
     # Reviews
     path('reviews/create/',  create_review, name='create_review'),

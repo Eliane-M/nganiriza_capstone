@@ -6,6 +6,7 @@ from django.db.models import Q
 from models.models import (
     SpecialistProfile, 
     Appointment, 
+    AppointmentHistory,
     SpecialistReview,
     SpecialistMessage,
     Account
@@ -221,6 +222,17 @@ def create_appointment(request):
         if hasattr(appointment, 'name') and (not appointment.name or appointment.name.strip() == ''):
             appointment.name = f"Appointment - {appointment.user.username} - {appointment.appointment_date}"
             appointment.save()
+        
+        # Create initial history entry
+        AppointmentHistory.objects.create(
+            appointment=appointment,
+            action_type='created',
+            new_date=appointment.appointment_date,
+            new_time=appointment.appointment_time,
+            new_status=appointment.status,
+            changed_by=request.user
+        )
+        
         return Response(
             AppointmentSerializer(appointment).data,
             status=status.HTTP_201_CREATED
@@ -366,6 +378,9 @@ def update_appointment_status(request, pk):
                 status=status.HTTP_400_BAD_REQUEST
             )
         
+        # Store previous status for history
+        previous_status = appointment.status
+        
         appointment.status = new_status
         
         if new_status == 'cancelled':
@@ -382,6 +397,17 @@ def update_appointment_status(request, pk):
                 appointment.name = f"Appointment {appointment.id} - {appointment.user.username}"
         
         appointment.save()
+        
+        # Create history entry for status change
+        if previous_status != new_status:
+            AppointmentHistory.objects.create(
+                appointment=appointment,
+                action_type='status_changed',
+                previous_status=previous_status,
+                new_status=new_status,
+                notes=request.data.get('cancellation_reason', '') if new_status == 'cancelled' else '',
+                changed_by=request.user
+            )
         
         serializer = AppointmentSerializer(appointment)
         return Response(serializer.data, status=status.HTTP_200_OK)
@@ -447,14 +473,29 @@ def reschedule_appointment(request, pk):
                 status=status.HTTP_400_BAD_REQUEST
             )
         
+        # Store previous values for history
+        previous_date = appointment.appointment_date
+        previous_time = appointment.appointment_time
+        
         # Update appointment
         appointment.appointment_date = new_date
         appointment.appointment_time = new_time
-        if notes:
-            appointment.notes = f"{appointment.notes}\n[Rescheduled] {notes}".strip() if appointment.notes else f"[Rescheduled] {notes}"
         appointment.status = 'confirmed'  # Rescheduled appointments are confirmed
-        appointment.updated_by = request.user
+        if hasattr(appointment, 'updated_by'):
+            appointment.updated_by = request.user
         appointment.save()
+        
+        # Create history entry for reschedule
+        AppointmentHistory.objects.create(
+            appointment=appointment,
+            action_type='rescheduled',
+            previous_date=previous_date,
+            previous_time=previous_time,
+            new_date=new_date,
+            new_time=new_time,
+            notes=notes,
+            changed_by=request.user
+        )
         
         # Send notification email to patient
         try:
@@ -1059,3 +1100,73 @@ def get_specialist_appointments(request, pk):
     
     serializer = AppointmentSerializer(appointments, many=True)
     return Response(serializer.data)
+
+
+@extend_schema(
+    tags=["Appointments"],
+    responses={200: dict},
+    summary="Get appointment history including reschedules"
+)
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def get_appointment_history(request, pk):
+    """Get history of an appointment (reschedules, status changes, etc.)"""
+    try:
+        appointment = Appointment.objects.get(id=pk)
+        
+        # Check permissions
+        is_owner = appointment.user == request.user
+        is_specialist = False
+        try:
+            account = Account.objects.get(user=request.user, role='specialist')
+            specialist = SpecialistProfile.objects.get(specialist_account=account)
+            is_specialist = appointment.specialist == specialist
+        except (Account.DoesNotExist, SpecialistProfile.DoesNotExist):
+            pass
+        
+        if not (is_owner or is_specialist):
+            return Response(
+                {"error": "You don't have permission to view this appointment"},
+                status=status.HTTP_403_FORBIDDEN
+            )
+        
+        # Get appointment details
+        appointment_data = AppointmentSerializer(appointment).data
+        
+        # Get history
+        history = AppointmentHistory.objects.filter(appointment=appointment).order_by('-created_at')
+        history_data = []
+        for h in history:
+            history_item = {
+                'id': h.id,
+                'action_type': h.action_type,
+                'action_display': h.get_action_type_display(),
+                'created_at': h.created_at.isoformat(),
+                'changed_by': h.changed_by.get_full_name() if h.changed_by else 'System',
+                'notes': h.notes,
+            }
+            
+            # Add reschedule details
+            if h.action_type == 'rescheduled':
+                history_item['previous_date'] = h.previous_date.isoformat() if h.previous_date else None
+                history_item['previous_time'] = str(h.previous_time) if h.previous_time else None
+                history_item['new_date'] = h.new_date.isoformat() if h.new_date else None
+                history_item['new_time'] = str(h.new_time) if h.new_time else None
+            
+            # Add status change details
+            if h.action_type == 'status_changed':
+                history_item['previous_status'] = h.previous_status
+                history_item['new_status'] = h.new_status
+            
+            history_data.append(history_item)
+        
+        return Response({
+            'appointment': appointment_data,
+            'history': history_data
+        })
+        
+    except Appointment.DoesNotExist:
+        return Response(
+            {"error": "Appointment not found"}, 
+            status=status.HTTP_404_NOT_FOUND
+        )

@@ -232,6 +232,34 @@ class Appointment(BaseModel):
         return f"{self.user.username} with {self.specialist} on {self.appointment_date}"
 
 
+class AppointmentHistory(models.Model):
+    """Track appointment changes (reschedules, status changes, etc.)"""
+    appointment = models.ForeignKey(Appointment, on_delete=models.CASCADE, related_name='history')
+    action_type = models.CharField(max_length=50, choices=[
+        ('created', 'Created'),
+        ('rescheduled', 'Rescheduled'),
+        ('status_changed', 'Status Changed'),
+        ('cancelled', 'Cancelled'),
+        ('notes_updated', 'Notes Updated'),
+    ])
+    previous_date = models.DateField(null=True, blank=True)
+    previous_time = models.TimeField(null=True, blank=True)
+    previous_status = models.CharField(max_length=20, null=True, blank=True)
+    new_date = models.DateField(null=True, blank=True)
+    new_time = models.TimeField(null=True, blank=True)
+    new_status = models.CharField(max_length=20, null=True, blank=True)
+    notes = models.TextField(blank=True, help_text="Additional notes about this change")
+    changed_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True, related_name='appointment_changes')
+    created_at = models.DateTimeField(auto_now_add=True)
+    
+    class Meta:
+        ordering = ['-created_at']
+        verbose_name_plural = 'Appointment Histories'
+    
+    def __str__(self):
+        return f"{self.appointment} - {self.action_type} on {self.created_at}"
+
+
 class SpecialistReview(models.Model):
     """Reviews for specialists"""
     specialist = models.ForeignKey(SpecialistProfile, on_delete=models.CASCADE, related_name='reviews')

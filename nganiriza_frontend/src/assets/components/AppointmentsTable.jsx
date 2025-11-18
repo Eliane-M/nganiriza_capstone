@@ -1,8 +1,13 @@
-import React from 'react';
-import { Calendar, Clock, User, FileText, CheckCircle, XCircle, Clock as ClockIcon } from 'lucide-react';
+import React, { useState } from 'react';
+import { Calendar, Clock, User, CheckCircle, XCircle, Clock as ClockIcon, Eye, X } from 'lucide-react';
 import '../css/components/appointments_table.css';
+import apiClient from '../../utils/apiClient';
+import AppointmentHistoryView from './AppointmentHistoryView';
 
 const AppointmentsTable = ({ appointments, loading, specialistName }) => {
+  const [selectedAppointment, setSelectedAppointment] = useState(null);
+  const [historyData, setHistoryData] = useState(null);
+  const [loadingHistory, setLoadingHistory] = useState(false);
   const getStatusIcon = (status) => {
     switch (status) {
       case 'confirmed':
@@ -18,6 +23,25 @@ const AppointmentsTable = ({ appointments, loading, specialistName }) => {
 
   const getStatusClass = (status) => {
     return `status-badge status-${status}`;
+  };
+
+  const handleViewHistory = async (appointmentId) => {
+    try {
+      setLoadingHistory(true);
+      const response = await apiClient.get(`/api/specialists/appointments/${appointmentId}/history/`);
+      setHistoryData(response.data);
+      setSelectedAppointment(appointmentId);
+    } catch (error) {
+      console.error('Failed to load appointment history:', error);
+      alert('Failed to load appointment history. Please try again.');
+    } finally {
+      setLoadingHistory(false);
+    }
+  };
+
+  const handleCloseHistory = () => {
+    setSelectedAppointment(null);
+    setHistoryData(null);
   };
 
   if (loading) {
@@ -38,6 +62,17 @@ const AppointmentsTable = ({ appointments, loading, specialistName }) => {
     );
   }
 
+  if (selectedAppointment && historyData) {
+    return (
+      <AppointmentHistoryView
+        appointment={historyData.appointment}
+        history={historyData.history}
+        onClose={handleCloseHistory}
+        specialistName={specialistName}
+      />
+    );
+  }
+
   return (
     <div className="appointments-table-container">
       <table className="appointments-table">
@@ -47,7 +82,6 @@ const AppointmentsTable = ({ appointments, loading, specialistName }) => {
             <th>Time</th>
             <th>Status</th>
             <th>Specialist Name</th>
-            <th>Notes</th>
             <th>Actions</th>
           </tr>
         </thead>
@@ -82,25 +116,16 @@ const AppointmentsTable = ({ appointments, loading, specialistName }) => {
                 </div>
               </td>
               <td>
-                <div className="table-cell-content notes-cell">
-                  <FileText size={16} className="cell-icon" />
-                  <span className="notes-text" title={appointment.notes || 'No notes'}>
-                    {appointment.notes || 'No notes'}
-                  </span>
-                </div>
-              </td>
-              <td>
                 <div className="table-actions">
-                  {appointment.status === 'pending' && (
-                    <button className="action-btn cancel-btn" title="Cancel appointment">
-                      Cancel
-                    </button>
-                  )}
-                  {appointment.status === 'confirmed' && (
-                    <button className="action-btn view-btn" title="View details">
-                      View
-                    </button>
-                  )}
+                  <button 
+                    className="action-btn view-btn" 
+                    title="View appointment history"
+                    onClick={() => handleViewHistory(appointment.id)}
+                    disabled={loadingHistory}
+                  >
+                    <Eye size={16} />
+                    {loadingHistory && selectedAppointment === appointment.id ? 'Loading...' : 'View'}
+                  </button>
                 </div>
               </td>
             </tr>
