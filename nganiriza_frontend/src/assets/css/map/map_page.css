@@ -29,7 +29,7 @@
   padding: 1.25rem;
   border-bottom: 2px solid #f3e8ff;
   display: flex;
-  flex-direction: column;
+  /* flex-direction: column; */
   gap: 1rem;
   background: linear-gradient(to bottom, #faf5ff, #ffffff);
 }
