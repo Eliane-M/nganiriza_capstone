@@ -327,3 +327,6 @@ npm run lint
 ```
 
 ![Video Demo](https://drive.google.com/drive/folders/16UHIOxy-6FDUir9eZjVTyS97p1s5a79T?usp=drive_link)
+
+[Elaine Munezero_Final Capstone Version.pdf](https://github.com/user-attachments/files/23637811/Elaine.Munezero_Final.Capstone.Version.pdf)
+
