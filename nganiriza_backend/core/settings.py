@@ -54,7 +54,7 @@ MIDDLEWARE = [
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:3000",
     "http://127.0.0.1:8000",
-    "https://nganiriza-6k1e.onrender.com",
+    "https://nganiriza-0x9y.onrender.com",
 ]
 
 
