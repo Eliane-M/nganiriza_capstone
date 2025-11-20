@@ -281,11 +281,16 @@
   cursor: pointer;
   transition: all 0.2s;
 }
-.social-buttons .social-btn.google {
-  color: #d93025;
+.social-buttons .social-btn.google img {
+  width: 20px;
+  height: 20px;
 }
 .social-buttons .social-btn.facebook {
   color: #1877f2;
+}
+.social-buttons .social-btn.facebook img {
+  width: 20px;
+  height: 20px;
 }
 .social-buttons .social-btn:hover {
   border-color: #ff6bce;
