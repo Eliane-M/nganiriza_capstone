@@ -1,0 +1,551 @@
+[
+  {
+    "topic": "puberty",
+    "scenario": "A 13-year-old boy noticing changes like voice deepening and wet dreams",
+    "variant": 1,
+    "instruction": "Ni iki gituma ijwi ryanjye riniga kandi nkagira indoto ndiroteraho?",
+    "output": "Mu bwangavu, umubiri w’abahungu utangira guhinduka bitewe n’imisemburo. Ijwi riniga kubera igituza n’umuhogo bikura. Indoto zo kwiroteraho (wet dreams) ni ibisanzwe, ni igihe intanga zisohoka uri mu nzozi kandi ntaho bihurira n’uburwayi. Iyo bibaye kenshi cyangwa bitakubangamiye, nta kibazo kibirimo. Niba ufite impungenge, ushobora kubiganiraho n’umubyeyi cyangwa n’umujyanama w’ubuzima.",
+    "language": "kinyarwanda",
+    "domain": "sex-education"
+  },
+  {
+    "topic": "menstrual health",
+    "scenario": "A girl who just saw her period for the first time and is scared",
+    "variant": 1,
+    "instruction": "Ni iki nakora igihe mbonye imihango bwa mbere kandi nkagira ubwoba?",
+    "output": "Imihango ni ibisanzwe ku bakobwa bageze mu bwangavu. Amavuriro n’ikigo ntibikugomba gutera ubwoba. Koresha pads zisukuye, uzihindure buri masaha 4–6, wiyuhagire neza, kandi wikorere isuku. Ububabare buke bwo mu nda ni ibisanzwe, ariko iyo bubabaje cyane waganira n’umukozi w’ubuzima. Niba imihango itinda cyangwa yaza ikabije, na byo wavugana n’umubyeyi cyangwa muganga.",
+    "language": "kinyarwanda",
+    "domain": "sex-education"
+  },
+  {
+    "topic": "HIV prevention",
+    "scenario": "A teen asking how HIV is really transmitted and how to avoid it",
+    "variant": 1,
+    "instruction": "Ni gute umuntu yandura Virusi itera SIDA kandi ni gute nayirinda?",
+    "output": "VIH yandurira mu mibonano mpuzabitsina idakingiye, gusangira ibikoresho bikomeretsa nk’inshinge, n’umubyeyi wayanduza umwana igihe atwite cyangwa amwonsa. Ntizandurira mu gusangira ibiryo, gukoranaho, gukoresha umusarane umwe cyangwa gusomana. Wirinde gukora imibonano idakingiye, ukoreshe agakingirizo neza, ntusangire ibikoresho bikomeretsa, kandi ujye wipimisha kenshi.",
+    "language": "kinyarwanda",
+    "domain": "HIV-prevention"
+  },
+  {
+    "topic": "STIs",
+    "scenario": "A teen noticing unusual discharge and itching",
+    "variant": 1,
+    "instruction": "Nkoriki iyo mbona uruzi rutari rusanzwe n’umuriro mu gitsina?",
+    "output": "Ayo ni amwe mu bimenyetso by’indwara zandurira mu mibonano mpuzabitsina nka imitezi, mburugu cyangwa uburagaza. Izi ndwara ntizikira utagiye kwa muganga. Ntukoreshe imiti yo kugura utabwiwe na muganga kuko byagutera ibindi bibazo. Jya ku kigo nderabuzima, bapime kandi baguhe imiti ikwiye. Wirinde kongera gukora imibonano utaravurwa neza.",
+    "language": "kinyarwanda",
+    "domain": "sexual-health"
+  },
+  {
+    "topic": "body changes",
+    "scenario": "A 12-year-old girl asking why her breasts are growing",
+    "variant": 1,
+    "instruction": "Ni iki gituma amabere yanjye atangira gukura?",
+    "output": "Mu gihe cy’ubwangavu, umubiri w’umukobwa utangira guhinduka bitewe n’imisemburo. Amabere akura buhoro buhoro, rimwe rimwe akababaza cyangwa akiyongera ku buryo butandukanye. Ni uko umubiri ugera ku gihe cyo gukura no kubyaruka mu bihe bizaza. Nta kibazo kirimo keretse habaye ububabare budasanzwe cyangwa urubavu rwijimye, aho wakwiyambaza muganga.",
+    "language": "kinyarwanda",
+    "domain": "sex-education"
+  },
+  {
+    "topic": "consent",
+    "scenario": "A teen confused about what consent means in relationships",
+    "variant": 1,
+    "instruction": "Consent bivuga iki mu rukundo?",
+    "output": "Consent ni ukwemera ikintu mu buryo bwuzuye, nta gitutu, nta guhatirwa, nta banga, nta ruswa. Iyo umwe atemeye cyangwa aterwa ubwoba cyangwa ari muto utarageza ku myaka y’ubukure (munsi ya 18), nta consent iba ihari. Imibonano mpuzabitsina ikozwe nta consent ni ihohoterwa rihanwa n’amategeko. Buri gihe ushobora kuvuga OYA kandi birubahirizwa.",
+    "language": "kinyarwanda",
+    "domain": "relationships"
+  },
+  {
+    "topic": "pregnancy",
+    "scenario": "A teen girl worried she might be pregnant because her period is late",
+    "variant": 1,
+    "instruction": "Ese imihango yatinda bishobora kuba ari uburwayi cyangwa gutwita?",
+    "output": "Imihango ishobora gutinda kubera guhangayika, imirire, uburwayi, imyitozo myinshi cyangwa impinduka z’umubiri. Ariko iyo wakoze imibonano mpuzabitsina idakingiye bishobora kuba ikimenyetso cy’isama. Intambwe ya mbere ni ugupimisha inda ku kigo nderabuzima. Ibisubizo byizewe nibyo bitanga umutekano. Niba utarigeze ukoresha imibonano mpuzabitsina, ntibishobora kuba gutwita.",
+    "language": "kinyarwanda",
+    "domain": "SRH"
+  },
+  {
+    "topic": "condoms",
+    "scenario": "A teen asking if condoms really prevent pregnancy and HIV",
+    "variant": 1,
+    "instruction": "Agakingirizo koko karinda gutwita no kwandura SIDA?",
+    "output": "Yego, agakingirizo gakoreshwe neza buri gihe ni bwo buryo bwizewe kurinda gusama no kwandura Virusi itera SIDA n’izindi STIs. Karinda amasohoro ntayinjire mu nda ibyara kandi karinda amaraso n'amatembabuzi kudahura. Gakoresha rimwe gusa, ugakurambura neza, ukirinda kugakoresha igihe cyarengeje.",
+    "language": "kinyarwanda",
+    "domain": "HIV-prevention"
+  },
+  {
+    "topic": "parent-child communication",
+    "scenario": "A teen afraid to talk to parents about body changes",
+    "variant": 1,
+    "instruction": "Nigute naganira n’ababyeyi ku bihinduka mu mubiri wanjye ntatinye?",
+    "output": "Hitamo igihe bafite umwanya, ubabwire ibyo wifuza kumenya mu buryo bworoheje. Ibiganiro n’ababyeyi bitanga amakuru yizewe, bigafasha kugabanya impungenge. Babwire uko wumva ibintu bihinduka kandi wite ku bitekerezo bakugira. Kwigirira icyizere no kubaha umwanya bituma ibiganiro bigenda neza.",
+    "language": "kinyarwanda",
+    "domain": "family-education"
+  },
+  {
+    "topic": "peer pressure",
+    "scenario": "A teen pressured by friends to try sex early",
+    "variant": 1,
+    "instruction": "Nigute navuga OYA ku nshuti zinsaba gukora imibonano mpuzabitsina?",
+    "output": "Kuvuga OYA ni uburenganzira bwawe kandi ni ikimenyetso cy’ubushishozi. Shaka impamvu zisobanutse: 'Siniteguye', 'Ndubaha umubiri wanjye', cyangwa 'Sinshaka ingaruka'. Niba inshuti ziguhatira, si inshuti nziza. Ushobora kwihangana, gusiga aho bari cyangwa kugisha inama umuntu mukuru wizewe.",
+    "language": "kinyarwanda",
+    "domain": "youth-life-skills"
+  },
+  {
+    "topic": "abuse",
+    "scenario": "A teen afraid to tell a trusted adult about abuse",
+    "variant": 1,
+    "instruction": "Nigute naganira n’abagore ku bihinduka mu mubiri wanjye ntatinye?",
+    "output": "Hitamo igihe bafite umwanya, ubabwire ibyo wifuza kumenya mu buryo bworoheje. Ibiganiro n’ababyeyi bitanga amakuru yizewe, bigafasha kugabanya impungenge. Babwire uko wumva ibintu bihinduka kandi wite ku bitekerezo bakugira. Kwigirira icyizere no kubaha umwanya bituma ibiganiro bigenda neza.",
+    "language": "kinyarwanda",
+    "domain": "family-education"
+  },
+  {
+    "topic": "puberty",
+    "scenario": "A boy experiencing sudden growth spurts and body odor",
+    "variant": 2,
+    "instruction": "Kuki umubiri wanjye utangiye kugira impumuro mbi kandi nkamera umusatsi aho utari?",
+    "output": "Iyo ugeze mu bwangavu, umubiri utangira gukora ibituntu byinshi, harimo n’imisemburo ituma umubiri urangira impumuro. Ni ibisanzwe kubona umusatsi mu nkwaha no mu gitsina. Jya wiyuhagira buri munsi, wambarire isuku, ukoreshe isabune n'udutumano tw’isuku. Ibi byose ni ibimenyetso byo gukura kandi nta kibi kirimo.",
+    "language": "kinyarwanda",
+    "domain": "sex-education"
+  },
+  {
+    "topic": "HIV-awareness",
+    "scenario": "A teen believing HIV can be seen by looking at someone",
+    "variant": 3,
+    "instruction": "Ese umuntu wanduye SIDA wabimenya umurebye gusa?",
+    "output": "Oya, ntibishoboka. Virusi itera SIDA ntigaragarira amaso. Abantu benshi babana na yo basa neza kandi ntibagaragaza ibimenyetso. Ni yo mpamvu ari ngombwa kwipimisha aho gutekereza ko uzi uko umuntu ameze. Kwipimisha ni byo bitanga igisubizo nyacyo.",
+    "language": "kinyarwanda",
+    "domain": "HIV-prevention"
+  },
+  {
+    "topic": "menstrual health",
+    "scenario": "A teen asking if bathing during menstruation is dangerous",
+    "variant": 4,
+    "instruction": "Ese kwiyuhagira igihe mfite imihango bitera ikibazo?",
+    "output": "Oya, kwiyuhagira igihe ufite imihango ni ngombwa kandi byiza. Birafasha kugumana isuku, kugabanya impumuro no kwirinda indwara z'uruhu. Koresha amazi meza n’isabune, uhindure pads kenshi kandi witondere isuku ku gitsina. Nta kibazo kirimo keretse hari ububabare budasanzwe.",
+    "language": "kinyarwanda",
+    "domain": "menstrual-health"
+  },
+  {
+    "topic": "STIs",
+    "scenario": "A teen asking if STIs can heal on their own",
+    "variant": 5,
+    "instruction": "Ese indwara zandurira mu mibonano mpuzabitsina zikikira zonyine?",
+    "output": "Oya, nta STI ikikira yonyine. Zose zisaba kubonwa na muganga kugira ngo zivurwe neza. Kwivurisha imiti y’amagendu bituma indwara yiyongera cyangwa igasubira. Jya kwa muganga igihe cyose wumva ibimenyetso nko kubabara, kuribwa, uruzi cyangwa udusebe. Ni byo bituma ukira neza.",
+    "language": "kinyarwanda",
+    "domain": "sexual-health"
+  },
+  {
+    "topic": "pregnancy",
+    "scenario": "A teen asking if pregnancy can happen the first time",
+    "variant": 6,
+    "instruction": "Ese umuntu ashobora gutwita n'ubwo yaba abikoze bwa mbere gusa?",
+    "output": "Yego birashoboka cyane. Iyo intanga ngabo ihuye n’intanga ngore haba isama, kandi ibyo bishobora kuba bwa mbere ukoranye imibonano mpuzabitsina. Niyo mpamvu kwifata cyangwa gukoresha agakingirizo neza ari ngombwa. Gutekereza ko bwa mbere ntacyo bitanga ni imyumvire itari yo.",
+    "language": "kinyarwanda",
+    "domain": "SRH"
+  },
+  {
+    "topic": "relationships",
+    "scenario": "A teen whose partner asks for sex to prove love",
+    "variant": 7,
+    "instruction": "Umukunzi wanjye ambwira ko ntagiye gukora imibonano mpuzabitsina nabimwereka ko nkunda. Nkora iki?",
+    "output": "Urukundo nyarwo ntirugerwaho n’ibikorwa byo kotsa igitutu. Niba umuntu aguhatira gukora imibonano kugira ngo umuhamirize ko umukunda, ntiyubaha umutekano wawe n’agaciro kawe. Ushobora kuvuga OYA mu bwisanzure kandi ugakomeza kuba wowe. Uwubaha ubuzima bwawe ntaguhatira gukora ikintu utiteguye.",
+    "language": "kinyarwanda",
+    "domain": "relationships"
+  },
+  {
+    "topic": "consent",
+    "scenario": "A teen unsure if silence counts as consent",
+    "variant": 8,
+    "instruction": "Ese guceceka cyangwa kutavuga birafatwa nko kwemera?",
+    "output": "Oya, guceceka si ugutanga uburenganzira. Consent bisaba amagambo cyangwa igikorwa cyerekana ko wemeye nta gitutu. Iyo umuntu acecetse, atinya, ashyushye umujinya cyangwa atari mu mwanya wo gufata icyemezo, consent ntiba ihari. Buri gihe ukwiye kumenya niba uwo muri kumwe abyemeye mu buryo bugaragara.",
+    "language": "kinyarwanda",
+    "domain": "protection"
+  },
+  {
+    "topic": "body autonomy",
+    "scenario": "A teen being touched inappropriately by a relative",
+    "variant": 9,
+    "instruction": "Nkoriki niba hari ugerageza kunkoraho mu buryo ntakwiriye?",
+    "output": "Ufite uburenganzira bwo kubuza umuntu uwo ari we wese kugukoraho mu buryo butagukwiriye. Gerageza kumubwira ko ubangamiwe, ujye ahantu hari abandi bantu, kandi ubwire umuntu mukuru wizewe: umubyeyi, umurezi, umujyanama cyangwa umukozi w’ubuzima. Ibi bikorwa ni ihohoterwa kandi birahanirwa n’amategeko.",
+    "language": "kinyarwanda",
+    "domain": "child-protection"
+  },
+  {
+    "topic": "HIV-myths",
+    "scenario": "A teen asking if HIV can be cured by herbal remedies",
+    "variant": 10,
+    "instruction": "Ese imiti y’imitiro cyangwa ibimera yakiza SIDA?",
+    "output": "Oya, nta miti y’imitiro ivura VIH. Icyonyine gihagarika gukura kwa virusi ni imiti igabanya ubukana (ARV). Ibimera bishobora gufasha ku mubiri ariko ntibisimbura imiti yemewe. Kwita ku miti ya muganga, kurya neza no kubahiriza inama z’ubuzima ni byo bituma umuntu abana neza na VIH.",
+    "language": "kinyarwanda",
+    "domain": "HIV-awareness"
+  },
+  {
+    "topic": "peer pressure",
+    "scenario": "A teen encouraged to try alcohol to ‘fit in’",
+    "variant": 11,
+    "instruction": "Inshuti zinsaba kunywa inzoga ngo nongere kugendana na zo. Nkora iki?",
+    "output": "Gutsimbarara ku byo wumva ari byo ni ubuhanga. Inzoga zangiza ubuzima, ubushobozi bwo gutekereza no gufata ibyemezo. Ushobora kubabwira ko udashaka kunywa cyangwa ukahava niba baguhatiriza. Inshuti nziza ntizigukoresha ibyo utashakaga gukora. Ihitiremo icyiza n’umutekano wawe.",
+    "language": "kinyarwanda",
+    "domain": "youth-life-skills"
+  },
+  {
+    "topic": "puberty",
+    "scenario": "A teen worried about developing slower than friends",
+    "variant": 12,
+    "instruction": "Kuki abandi banganya imyaka batangiye gukura cyane ariko jyewe bikaza buhoro?",
+    "output": "Umubiri w’umuntu ukura mu buryo bwawo bwihariye. Hari abatangira ubwangavu hakiri kare cyangwa hakereranye, ariko byose ni ibisanzwe. Nta bwo gutinda gukura bivuze ko hari ikibazo. Gufata neza umubiri, kurya neza, kuruhuka bihagije no kunywa amazi bituma ukura neza. Niba ufite impungenge zikomeye, ushobora kugisha inama muganga.",
+    "language": "kinyarwanda",
+    "domain": "sex-education"
+  },
+  {
+    "topic": "menstrual pain",
+    "scenario": "A girl having painful cramps and looking for guidance",
+    "variant": 13,
+    "instruction": "Nkoriki iyo mbabara mu nda cyane igihe mfite imihango?",
+    "output": "Ububabare bwo mu mihango ni ibisanzwe ku bakobwa benshi. Ushobora gushyira agatabi gashyushye ku nda, kunywa amazi menshi, kwirinda stress no gukora imyitozo yoroshye. Niba ububabare burenze urugero cyangwa bugatuma udashobora gukora imirimo yawe, ni byiza kwiyambaza muganga kugira ngo akugire inama y’imiti ikwiye.",
+    "language": "kinyarwanda",
+    "domain": "menstrual-health"
+  },
+  {
+    "topic": "STI prevention",
+    "scenario": "A teen asking whether two condoms give extra protection",
+    "variant": 14,
+    "instruction": "Ese gukoresha udukingirizo tubiri icyarimwe bitanga umutekano urenze?",
+    "output": "Oya, gukoresha udukingirizo tubiri icyarimwe ni bibi kuko dushobora kwangirika byoroshye bitewe no kwikubanaho no gushitura. Agakingirizo kamwe gakoze neza, gashyizwe neza kandi gakoreshwa rimwe ni ko gutanga ubwirinzi bwizewe. Kwirinda imibonano idakingiye ni bwo buryo bwizewe kurusha ibindi.",
+    "language": "kinyarwanda",
+    "domain": "sexual-health"
+  },
+  {
+    "topic": "pregnancy myths",
+    "scenario": "A teen asking if you can get pregnant by sitting where a boy sat",
+    "variant": 15,
+    "instruction": "Ese umukobwa ashobora gutwita kubera kwicara aho umuhungu yicaye?",
+    "output": "Oya, ntibishoboka. Gutwita bibaho gusa iyo intanga ngabo ihuye n’intanga ngore mu gihe cy’imibonano mpuzabitsina cyangwa mu bwandu bw’amasohoro ku gitsina imbere. Kwicara ku ntebe kimwe n’abandi ntibituma umuntu atwita. Ibyo ni ibihuha bikunze kwitirirwa ubwangavu.",
+    "language": "kinyarwanda",
+    "domain": "SRH"
+  },
+  {
+    "topic": "digital safety",
+    "scenario": "A teen being pressured to send nude pictures",
+    "variant": 16,
+    "instruction": "Nkora iki niba hari unshaka ko mwoherezaho amafoto yanjye yambaye ubusa?",
+    "output": "Kwifata no kwanga birakwiye. Kwohereza amafoto yambaye ubusa bishobora guteza ingaruka zikomeye: guhohoterwa, gucyeshwa, gusakazwa ku mbuga cyangwa no guhatwaho igitutu. Nta muntu ubikwiriye kugusaba. Hindura ibyo mwandikirana, ubimenyeshe umubyeyi cyangwa umujyanama wizewe. Uburenganzira ku mubiri wawe ni ubwawe.",
+    "language": "kinyarwanda",
+    "domain": "digital-safety"
+  },
+  {
+    "topic": "self-esteem",
+    "scenario": "A teen feeling insecure because of acne",
+    "variant": 17,
+    "instruction": "Ese mperuka kugira uduheri twinshi mu maso bigatuma ntiyizera. Nkoriki?",
+    "output": "Uduheri (acne) ni ibisanzwe mu bwangavu kuko umubiri uba uhinduka bitewe n’imisemburo. Kwoza mu maso kabiri ku munsi, kwirinda gusiga ibirungo byinshi no kurya neza bifasha kugabanya uduheri. Ntiwigaye cyangwa ngo wumve ko bidakwiye—ni igice gisanzwe cyo gukura. Niba bibabaza cyane, ushobora kugisha inama muganga.",
+    "language": "kinyarwanda",
+    "domain": "youth-wellbeing"
+  },
+  {
+    "topic": "HIV testing",
+    "scenario": "A teen afraid to get tested for HIV",
+    "variant": 18,
+    "instruction": "Ntewe ubwoba no kwipimisha VIH. Mbigenze nte?",
+    "output": "Kwipimisha ni intambwe ikomeye kandi y’ubushishozi. Abakozi b’ubuzima bakubikira ibanga kandi bakaguha amakuru yizewe. Iyo wipimishije, uba ubashije gufata imyanzuro ikurinda cyangwa igufasha kubaho neza. Guhangayika ni ibisanzwe, ariko kumenya neza uko uhagaze ni bwo butuma utekana.",
+    "language": "kinyarwanda",
+    "domain": "HIV-prevention"
+  },
+  {
+    "topic": "contraception",
+    "scenario": "A teen asking if emergency pills can be used often",
+    "variant": 19,
+    "instruction": "Ese uburyo bw’'emergency pill' bushobora gukoreshwa buri gihe?",
+    "output": "Oya, 'emergency pill' ntigomba gukoreshwa kenshi kuko igenewe igihe habaye ikibazo kidateganyijwe. Gufata kenshi bishobora guhungabanya imihango no kudatanga umutekano wuzuye. Uburyo bwo kwirinda bw’igihe kirekire ni nk’agakingirizo, uburyo bwa planning cyangwa kutagira imibonano. Ugire inama muganga mbere yo guhitamo uburyo bukunogeye.",
+    "language": "kinyarwanda",
+    "domain": "contraception"
+  },
+  {
+    "topic": "sexual pressure",
+    "scenario": "A teen whose partner threatens to leave if they refuse sex",
+    "variant": 20,
+    "instruction": "Ese niba ambwira ko turi buhagarare niba ntamuhaye imibonano, mbigenze nte?",
+    "output": "Iryo ni ihohoterwa rishingiye ku gitutu. Urukundo rwuzuye ntirugaragazwa no guhatiriza imibonano mpuzabitsina. Ukeneye umuntu ukwubaha, ugushyigikira kandi wemera gufata umwanya ukwiye. Niba agusaba ibyo utiteguye, kuvuga OYA ni ngombwa kandi ni uburenganzira bwawe.",
+    "language": "kinyarwanda",
+    "domain": "relationships"
+  },
+  {
+    "topic": "parent communication",
+    "scenario": "A teen unsure how to ask parents about contraception",
+    "variant": 21,
+    "instruction": "Nigute nabaza ababyeyi ibijyanye no kwirinda gusama ntangiza umubano?",
+    "output": "Shaka igihe bafite umwanya, ubabwire mu buryo bworoshye ko ushaka kumenya byinshi ku buzima bw’imyororokere. Ababyeyi bafite uburambe kandi bashobora kugufasha gukura neza mu buryo butekanye. Guhisha amakuru bishobora gutera ingorane, ariko kubaza no kumva inama zabo bitanga umutekano n'ubushishozi.",
+    "language": "kinyarwanda",
+    "domain": "family-education"
+  },
+  {
+    "topic": "puberty emotions",
+    "scenario": "A teen confused about mood swings during adolescence",
+    "variant": 22,
+    "instruction": "Kuki numva mpinduranya amarangamutima cyane muri ubu bwangavu?",
+    "output": "Mu bwangavu, imisemburo y'umubiri irahinduka cyane bigatera amarangamutima kuzamuka no kumanuka vuba. Ni ibisanzwe kumva uburakari, ibyishimo, agahinda cyangwa gushidikanya kuri wowe ubwawe. Gufungura umutima ukaganira n’inshuti nziza cyangwa umubyeyi bifasha gukomeza gutekereza neza. Kwihangana, kuruhuka no kwita ku buzima bigufasha kuringaniza amarangamutima.",
+    "language": "kinyarwanda",
+    "domain": "mental-health"
+  },
+  {
+    "topic": "menstrual myths",
+    "scenario": "A teen asking if running or sports during periods is harmful",
+    "variant": 23,
+    "instruction": "Ese gukora siporo igihe mfite imihango byangiza umubiri?",
+    "output": "Oya, gukora siporo yoroheje nk’ugusiganwa buhoro, yoga cyangwa kugenda n'ibirenge birafasha kureka ububabare bwo mu nda bugabanuke. Siporo ntibangiza imihango, ahubwo bituma umubiri uhumeka neza. Keretse wumva uburwayi bukomeye, naho ubundi gukora imyitozo byemewe kandi ni byiza.",
+    "language": "kinyarwanda",
+    "domain": "menstrual-health"
+  },
+  {
+    "topic": "STIs and symptoms",
+    "scenario": "A teen wondering if STIs always have visible symptoms",
+    "variant": 24,
+    "instruction": "Ese indwara zandurira mu mibonano mpuzabitsina zose zigaragaza ibimenyetso?",
+    "output": "Oya, STI nyinshi ntizigaragaza ibimenyetso mu ntangiriro. Benshi bandura ntibamenye ko banduye bigatuma bazanduza abandi. Ni yo mpamvu wipimisha igihe cyose wamaze gukora imibonano idakingiye cyangwa uhangayikishijwe n'uko wifashe. Kwa muganga ni ho bapima neza kandi bagatanga imiti ikwiye.",
+    "language": "kinyarwanda",
+    "domain": "sexual-health"
+  },
+  {
+    "topic": "pregnancy signs",
+    "scenario": "A teen experiencing nausea and asking if it's pregnancy",
+    "variant": 25,
+    "instruction": "Ese kurwara isesemi gusa byaba bivuze ko ntwite?",
+    "output": "Isesemi ntirivuga gusa gutwita. Rishobora guterwa n’indyo mbi, umunaniro, umunyerere cyangwa uburwayi busanzwe. Ariko niba wakoze imibonano mpuzabitsina idakingiye, isesemi rishobora kuba kimwe mu bimenyetso by'isama. Ugomba kwipimisha inda kugira ngo umenye ukuri. Ni byo bitanga igisubizo nyacyo.",
+    "language": "kinyarwanda",
+    "domain": "SRH"
+  },
+  {
+    "topic": "online safety",
+    "scenario": "A teen receiving sexual messages from strangers online",
+    "variant": 26,
+    "instruction": "Nkora iki niba abantu bo kuri internet bambwira amagambo ajyanye n’imibonano mpuzabitsina?",
+    "output": "Ibyo ni ihohoterwa ryo kuri internet. Ihutira guhagarika kuvugana n’uwo muntu, ufate screenshot niba bikenewe, maze ubibwire umuntu mukuru wizewe cyangwa ubushinzwe umutekano. Ntugerageze gusubiza cyangwa gutanga amakuru akwerekeyeho. Kuguma mu mutekano ni ingenzi kuri internet.",
+    "language": "kinyarwanda",
+    "domain": "digital-safety"
+  },
+  {
+    "topic": "self-worth",
+    "scenario": "A teen feeling pressured to change their body to be accepted",
+    "variant": 27,
+    "instruction": "Inshuti zinsaba guhindura umubiri ngo ndebe neza. Nkabigenza nte?",
+    "output": "Umubiri wawe ufite agaciro uko uri. Guhindura umubiri ugendeye ku gitutu cy’abandi bishobora gutera intimba n’ibibazo by’ihungabana. Ihitiremo gukora ibyo wumva bikomeye kandi byubaka ubuzima bwawe. Inshuti nziza zemerera umuntu kuba uwo ari we. Kwiyitaho no kwiyakira ni byo bikomeye.",
+    "language": "kinyarwanda",
+    "domain": "youth-wellbeing"
+  },
+  {
+    "topic": "HIV treatment",
+    "scenario": "A teen asking if someone with HIV can live a normal life",
+    "variant": 28,
+    "instruction": "Ese umuntu ubana na VIH aba ashobora kubaho ubuzima busanzwe?",
+    "output": "Yego, ashobora kubaho ubuzima bwiza kandi burebure. Abafata imiti igabanya ubukana (ARV) neza buri munsi barabaho neza, bakiga, bagakora kandi bagagira umuryango. Imiti ituma virusi igabanuka ku rwego rutagaragara kandi igatuma ukomeza kubaho neza. Icy’ingenzi ni ubufasha, isuku n’imibereho myiza.",
+    "language": "kinyarwanda",
+    "domain": "HIV-awareness"
+  },
+  {
+    "topic": "contraception myths",
+    "scenario": "A teen thinking contraceptives cause infertility",
+    "variant": 29,
+    "instruction": "Ese uburyo bwo kuboneza urubyaro butuma umuntu atabyara burundu?",
+    "output": "Oya, uburyo bwo kuboneza urubyaro ntibutera kubura ubushobozi bwo kubyara. Uburyo bwinshi bwifashishwa burinda gusa gutwita mu gihe wabisabye, ariko nyuma yo kubureka ushobora kongera gutwita nk'uko bisanzwe. Ni ibihuha by’uko butera ikibazo cy’amabere cyangwa imyanya myibarukiro.",
+    "language": "kinyarwanda",
+    "domain": "contraception"
+  },
+  {
+    "topic": "violence prevention",
+    "scenario": "A teen witnessing sexual harassment at school",
+    "variant": 30,
+    "instruction": "Nkoriki igihe mbonye umuntu ahohoterwa mu buryo bw’igitsina ku ishuri?",
+    "output": "Ntugomba gucecetse. Uyimenyesha umuyobozi w’ishuri, umwarimu wizerwa cyangwa umujyanama w’abanyeshuri. Niba bidashoboka, ubivugane n’umubyeyi wawe. Ihohoterwa ryo mu mashuri ni icyaha kandi rirahanwa. Kwihagararaho no gutanga amakuru bitabara ubuzima bwa benshi.",
+    "language": "kinyarwanda",
+    "domain": "child-protection"
+  },
+  {
+    "topic": "parent communication",
+    "scenario": "A teen wanting to tell parents about being in a relationship",
+    "variant": 31,
+    "instruction": "Nigute nabwira ababyeyi ko ndi mu rukundo ntibantuke?",
+    "output": "Hitamo igihe batekanye maze ubabwire mu kuri ko ushaka kubaganiriza ku buzima bwawe bw’imibereho. Tangira ubanyuzamo uko wiyumva, icyubahiro ubaha n’impamvu ushaka kuganira. Iyo ukuri kuzanwe mu buryo bwicisha bugufi, bituma ababyeyi bumva neza ibyo wifuzaga kuvuga.",
+    "language": "kinyarwanda",
+    "domain": "family-education"
+  },
+  {
+    "topic": "puberty development",
+    "scenario": "A teen boy worried that one testicle hangs lower than the other",
+    "variant": 32,
+    "instruction": "Kuki agasambi kamwe gasa nk’agamanuka kurusha akandi?",
+    "output": "Ni ibisanzwe ko agasambi kamwe kaba kamanutse kurusha akandi. Umubiri uteye gutyo kugira ngo kagorohoke neza kandi gafashe intanga gukonja mu rugero rukwiye. Keretse niba ubabara cyangwa hari imvubura idasanzwe, ntacyo kiba kibaye. Niba hari impinduka zidasanzwe, wabaza muganga.",
+    "language": "kinyarwanda",
+    "domain": "sex-education"
+  },
+  {
+    "topic": "menstrual cycle",
+    "scenario": "A teen confused why their period is irregular",
+    "variant": 33,
+    "instruction": "Kuki imihango yanjye rimwe iza kare, rimwe igatinda?",
+    "output": "Mu myaka ya mbere y’ubwangavu, imihango ishobora kutajya ku gihe bitewe n'uko umubiri ukiri kwiga uburyo bwo kwiyobora. Stress, imyitozo myinshi, kubura ibiryo bihagije cyangwa impinduka mu buzima bishobora gutuma imihango idahora ku gihe. Niba bitinda cyane cyangwa bikabije, ushobora kugisha inama muganga.",
+    "language": "kinyarwanda",
+    "domain": "menstrual-health"
+  },
+  {
+    "topic": "STIs fear",
+    "scenario": "A teen thinking kissing can transmit STIs",
+    "variant": 34,
+    "instruction": "Ese gusomana bishobora kwanduza STI?",
+    "output": "Gusomana bisanzwe ntibikunda kwanduza STIs, keretse mu gihe hari udusebe mu kanwa cyangwa indwara nka herpes. STIs nyinshi zinyura mu mibonano mpuzabitsina idakingiye, atari mu gusomana. Ariko ugomba kwirinda gusomana n’umuntu ufite udusebe, ibisebe cyangwa amaronda mu kanwa.",
+    "language": "kinyarwanda",
+    "domain": "sexual-health"
+  },
+  {
+    "topic": "pregnancy prevention",
+    "scenario": "A teen wondering if withdrawal method is safe",
+    "variant": 35,
+    "instruction": "Ese uburyo bwo gukuramo igitsina mbere yo gusohora burinda gutwita?",
+    "output": "Oya, ntibukwiriye kwizerwa. Mbere yo gusohora, haba hashobora gusohoka amatembabuzi arimo intanga gake, ashobora gutera isama. Ni uburyo bufite ibyago byinshi. Agakingirizo gakoreshwa neza ni bwo buryo bwizewe kurusha ubundi bwose bwo kwirinda gutwita no kwirinda STIs.",
+    "language": "kinyarwanda",
+    "domain": "SRH"
+  },
+  {
+    "topic": "emotional wellbeing",
+    "scenario": "A teen feeling lonely and isolated due to body changes",
+    "variant": 36,
+    "instruction": "Numva ndigunga cyane kubera impinduka z’umubiri. Nkoriki?",
+    "output": "Kumva wigunze mu bwangavu ni ibisanzwe kuko impinduka z’umubiri zizana amarangamutima atandukanye. Gerageza kuganira n’inshuti wizeye cyangwa umubyeyi, ukore siporo yoroheje, wumve umuziki cyangwa wige ikintu gishya. Niba guhangayika bikabije, ushobora kugisha inama umujyanama w’ubuzima.",
+    "language": "kinyarwanda",
+    "domain": "mental-health"
+  },
+  {
+    "topic": "HIV transmission",
+    "scenario": "A teen asking if sharing food can transmit HIV",
+    "variant": 37,
+    "instruction": "Ese gusangira ibiryo n’umuntu wanduye VIH byanduza?",
+    "output": "Oya, gusangira ibiryo, ibinyobwa, amazi cyangwa ibikoresho byo mu rugo ntibyanduza VIH. Virusi itera SIDA yandurira gusa mu maraso, amasohoro, amatembabuzi cyangwa ku mwana utwite cyangwa umwonsa. Kubana, kurya hamwe no gukoranaho ntibifite ibyago.",
+    "language": "kinyarwanda",
+    "domain": "HIV-awareness"
+  },
+  {
+    "topic": "consent and safety",
+    "scenario": "A teen unsure if a drunk person can give consent",
+    "variant": 38,
+    "instruction": "Ese umuntu wanyweye inzoga cyangwa ufite agahungiro ashobora gutanga consent?",
+    "output": "Oya, umuntu wanyweye inzoga cyangwa ufite ihungabana ntashobora gufata icyemezo gitekereje. Imibonano mpuzabitsina ikorerwa umuntu utari mu bushobozi bwo kuvuga yego mu buryo bugaragara ni ihohoterwa. Consent isaba ubwenge bwuzuye, umutekano n’ubushobozi bwo gufata icyemezo.",
+    "language": "kinyarwanda",
+    "domain": "protection"
+  },
+  {
+    "topic": "peer pressure",
+    "scenario": "A teen urged by friends to try drugs",
+    "variant": 39,
+    "instruction": "Inshuti zinsaba kwinjira mu biyobyabwenge. Nakora iki?",
+    "output": "Ibiyobyabwenge byangiza ubwonko, ubuzima n’ejo hazaza. Oya yawe ifite agaciro kandi ituma urokoka ingaruka zikomeye. Ushobora guhagarika uwo mubano cyangwa gushaka inshuti zubaka. Niba uhangayitse cyangwa hari uwaguhatira, ubibwire umurezi cyangwa umuntu mukuru wizewe.",
+    "language": "kinyarwanda",
+    "domain": "youth-life-skills"
+  },
+  {
+    "topic": "body image",
+    "scenario": "A teen struggling with weight changes during puberty",
+    "variant": 40,
+    "instruction": "Kuki umubiri wanjye wiyongeraho ibiro cyangwa bikagabanuka cyane muri ubu bwangavu?",
+    "output": "Imisemburo ihinduka mu bwangavu ishobora gutuma ibiro byiyongera cyangwa bikagabanuka. Ibi ni ibisanzwe kandi ntibigomba kugutera ubwoba. Kurya indyo yuzuye, gukora siporo yoroheje no kuruhuka bihagije bizafasha umubiri wawe gukura neza. Niba impinduka zikabije, ushobora kugisha inama muganga.",
+    "language": "kinyarwanda",
+    "domain": "wellbeing"
+  },
+  {
+    "topic": "healthy relationships",
+    "scenario": "A teen unsure how to identify a toxic relationship",
+    "variant": 41,
+    "instruction": "Nigute menya ko ndi mu rukundo rutameze neza cyangwa rudashyitse?",
+    "output": "Urukundo rutameze neza rurangwa no guhatirwa, gutukwa, kugenzurwa, kugucyaha cyangwa kuguca intege. Iyo uwo mukundana ahora agusaba ibyo utiteguye, agutera ubwoba, aguhoza ku gitutu cyangwa aguca mu nshuti, urwo rukundo si rwiza. Urukundo rubyara ituze, kubahana no kumva ko ufite agaciro.",
+    "language": "kinyarwanda",
+    "domain": "relationships"
+  },
+  {
+    "topic": "puberty hygiene",
+    "scenario": "A teen asking why sweat increases during puberty",
+    "variant": 42,
+    "instruction": "Kuki mpura n’icyuya kinini muri ubu bwangavu?",
+    "output": "Mu bwangavu, imisemburo izamuka bigatuma ibice by'umubiri bikora ibyuya byinshi. Ni ibisanzwe kandi nta kibazo bitera. Kandi impumuro y'icyuya iriyongera kuko umubiri uba uri gukura. Kwiyuhagira buri munsi, guhindura imyenda y'imbere no gukoresha deodorant bifasha kugumana isuku no guca impumuro mbi.",
+    "language": "kinyarwanda",
+    "domain": "sex-education"
+  },
+  {
+    "topic": "menstrual stigma",
+    "scenario": "A teen ashamed to buy pads in public",
+    "variant": 43,
+    "instruction": "Numva isoni zo kugura pads mu ruhame. Mbigenze nte?",
+    "output": "Imihango ni ibisanzwe ku mukobwa wese, kandi kugura pads si ikintu gitera isoni. Ushobora kujya mu iduka ufite icyizere cyangwa ugasabira ubufasha umuntu wizewe. Icy’ingenzi ni uko uba uharanira ubuzima bwawe n’isuku yawe. Kwiyakira no kumva ko imihango atari ikintu kibi bituma wumva ufite imbaraga.",
+    "language": "kinyarwanda",
+    "domain": "menstrual-health"
+  },
+  {
+    "topic": "STI misconceptions",
+    "scenario": "A teen thinking STIs only affect adults",
+    "variant": 44,
+    "instruction": "Ese indwara zandurira mu mibonano mpuzabitsina zigira abo zigira gusa?",
+    "output": "Oya, STIs zishobora kwandura ku bakuru n’urubyiruko rwose gukorana imibonano idakingiye. Nta myaka igaragaza uwo bigera ho. Ni yo mpamvu kubwirwa no kwirinda hakiri kare ari ingenzi. Ibyo birimo kwifata, gukoresha agakingirizo neza no kwipimisha igihe habaye ibyago.",
+    "language": "kinyarwanda",
+    "domain": "sexual-health"
+  },
+  {
+    "topic": "pregnancy fear",
+    "scenario": "A teen asking if pregnancy can happen without penetration",
+    "variant": 45,
+    "instruction": "Ese umukobwa ashobora gutwita n'iyo nta gitsina kimwinjijwemo?",
+    "output": "Yego birashoboka cyane iyo amasohoro y’umuhungu ageze hafi cyangwa imbere ku gitsina cy’umukobwa, nubwo nta gitsina cyinjiye. Intanga zishobora kwinjira imbere no gutera isama. Ni yo mpamvu kwirinda imibonano y’imitwe cyangwa gukoranaho mu buryo bw’igitsina ari ingenzi.",
+    "language": "kinyarwanda",
+    "domain": "SRH"
+  },
+  {
+    "topic": "online predators",
+    "scenario": "A teen being befriended online by an adult pretending to be young",
+    "variant": 46,
+    "instruction": "Nkoriki niba hari umuntu w'ikigendereye wiyoberanya kuri internet ashaka kumenyana nanjye?",
+    "output": "Abantu biyoberanya kuri internet ntibiba bafite imigambi myiza. Nuhita usiba no gufunga uwo mubano, ntimumenye amakuru yawe bwite, kandi ubibwire umuntu mukuru wizewe. Internet ifite abagusha mu mutego bashaka kubeshya urubyiruko, ni ngombwa kwitwararika no kwirinda.",
+    "language": "kinyarwanda",
+    "domain": "digital-safety"
+  },
+  {
+    "topic": "self-esteem and looks",
+    "scenario": "A teen upset about not looking like social media influencers",
+    "variant": 47,
+    "instruction": "Kuki ntasa n'abantu mbona kuri social media, kandi bikambera umutwaro?",
+    "output": "Abantu benshi bo kuri social media bakoresha camera, amavuta, filter, photoshop n'ibikorwa byo gutuma basa neza kurusha uko bari. Kwigendaho ntibivuze ko utagira ubwiza—umwihariko wawe ufite agaciro. Kwiyitaho, kwiyubaha no kwiyakira biruta kwigereranya n'amafoto ahinduwe.",
+    "language": "kinyarwanda",
+    "domain": "youth-wellbeing"
+  },
+  {
+    "topic": "HIV stigma",
+    "scenario": "A teen worried about sitting next to someone with HIV",
+    "variant": 48,
+    "instruction": "Ese kwicara hafi y’umuntu ubana na VIH byatera ikibazo?",
+    "output": "Oya, kwicara hamwe n’umuntu ubana na VIH, kumukoranaho cyangwa gusangira intebe ntibyanduza virusi. VIH yandurira mu mibonano idakingiye, gusangira ibikoresho bikomeretsa cyangwa hagati y’umubyeyi n’umwana. Nta mpamvu yo gutinya cyangwa gusegregate umuntu ubana na VIH.",
+    "language": "kinyarwanda",
+    "domain": "HIV-awareness"
+  },
+  {
+    "topic": "contraceptive access",
+    "scenario": "A teen wanting to know if they can get contraceptives privately",
+    "variant": 49,
+    "instruction": "Ese urubyiruko rushobora kubona uburyo bwo kwirinda mu ibanga?",
+    "output": "Yego, ku mavuriro menshi, serivisi zo kwirinda zirahabwa mu ibanga kandi nta muntu ubitangaza. Abakozi b'ubuzima barubahiriza ubuzima bwite. Ushobora kugana ikigo nderabuzima cyangwa kubaza umujyanama w’ubuzima wizewe kugira ngo ubone ubufasha bukwiye.",
+    "language": "kinyarwanda",
+    "domain": "contraception"
+  },
+  {
+    "topic": "body safety",
+    "scenario": "A teen being touched inappropriately by someone their age",
+    "variant": 50,
+    "instruction": "Nkoriki niba hari undi mwana uri mu kigero cyanjye unkoraho nabi?",
+    "output": "Nta muntu n’umwe ugeze cyangwa atageze ku myaka 18 wemerewe kugukoraho mu buryo butakwiriye. Bwabaye ubugira ngo uhagarike icyo gikorwa, uvuge 'OYA', kandi ujye aho hari abandi. Uhindukire ubibwire umurezi, umubyeyi cyangwa undi mukuru wizewe. Uburenganzira bwo kurindwa ni ubwawe.",
+    "language": "kinyarwanda",
+    "domain": "child-protection"
+  },
+  {
+    "topic": "healthy communication",
+    "scenario": "A teen struggling to express feelings in a relationship",
+    "variant": 51,
+    "instruction": "Nigute navuga amarangamutima yanjye mu rukundo ntatinye cyangwa ngo numve ko ndi kwivuna?",
+    "output": "Gutangira ibiganiro mu rukundo bisaba ukwizerana no kubahana. Hitamo igihe mwese mufite ituze, utangire ubwira mugenzi wawe uko wiyumva mu buryo bworoshye: ibyagushimishije, ibikubabaje cyangwa ibyo wifuza. Ubutumwa butuje n'ubwubahane bituma mwumva neza ibyiyumvo byombi. Urukundo rwiza ruteza imbere kumva no kumvikana.",
+    "language": "kinyarwanda",
+    "domain": "relationships"
+  }
+]

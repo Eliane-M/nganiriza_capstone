@@ -2,6 +2,10 @@ import React, { useState, useContext } from 'react';
 import { useNavigate, Link, useLocation } from 'react-router-dom';
 import '../../assets/css/authPages/login.css';
 import { AuthContext } from '../../assets/components/context/AuthContext';
+// import { GoogleLogin, GoogleOAuthProvider } from '@react-oauth/google';
+// import { FacebookLoginButton } from 'react-social-login-buttons';
+import facebook_icon from '../../images/facebook_icon.jpeg';
+import google_icon from '../../images/google.jpeg';
 
 const LoginForm = () => {
   const navigate = useNavigate();
@@ -127,10 +131,10 @@ const LoginForm = () => {
 
           <div className="social-buttons">
             <button type="button" className="social-btn google">
-              G Google
+              <img src={google_icon} alt="Google" /> Google
             </button>
             <button type="button" className="social-btn facebook">
-              f Facebook
+              <img src={facebook_icon} alt="Facebook" /> Facebook
             </button>
           </div>
 

@@ -183,8 +183,19 @@
     gap: 8px;
     cursor: pointer;
     transition: all 0.2s;
-    &.google { color: #d93025; }
-    &.facebook { color: #1877f2; }
+    &.google { 
+      img {
+        width: 20px;
+        height: 20px;
+      }
+    }
+    &.facebook { 
+      img {
+        width: 20px;
+        height: 20px;
+      }
+      color: #1877f2; 
+    }
     &:hover {
       border-color: $primary-color;
       background: #fdf2f8;
