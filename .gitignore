@@ -4,3 +4,4 @@ node_modules
 mobile_interface/
 
 nganiriza_backend/models/qwen2.5-0.5b-instruct-q5_k_m.gguf
+nganirza_ai/gemma-kinyarwanda.gguf
