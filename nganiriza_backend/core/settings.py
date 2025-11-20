@@ -256,6 +256,10 @@ AI_MODEL_MAX_TOKENS = 512
 AI_MODEL_TEMPERATURE = 0.7
 AI_MODEL_N_GPU_LAYERS = 0
 
+# Ollama Configuration
+OLLAMA_SERVICE_URL = os.getenv('OLLAMA_SERVICE_URL', 'http://ollama1:11434')
+OLLAMA_MODEL_NAME = os.getenv('OLLAMA_MODEL_NAME', 'kinyarwanda-counseling')
+
 
 # Cache settings for offline capability
 CACHES = {

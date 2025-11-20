@@ -67,6 +67,14 @@ class ConversationsSerializer(serializers.ModelSerializer):
     class Meta:
         model = Conversations
         fields = '__all__'
+    
+    def to_representation(self, instance):
+        """Override to map id_number to id for frontend compatibility"""
+        representation = super().to_representation(instance)
+        # Map id_number to id for easier frontend access
+        if 'id_number' in representation:
+            representation['id'] = representation['id_number']
+        return representation
 
     def create(self, validated_data):
         user = self.context['request'].user
@@ -74,9 +82,12 @@ class ConversationsSerializer(serializers.ModelSerializer):
 
     def get_first_message_preview(self, obj):
         """Get the first user message as preview"""
-        first_user_message = obj.messages.filter(role='user').order_by('created_at').first()
-        if first_user_message:
-            return first_user_message.content[:100]  # First 100 characters
+        try:
+            first_user_message = obj.messages.filter(role='user').order_by('created_at').first()
+            if first_user_message:
+                return first_user_message.content[:100]  # First 100 characters
+        except Exception:
+            pass
         return None
 
     def get_last_message(self, obj):
@@ -101,7 +112,8 @@ class MessagesSerializer(serializers.ModelSerializer):
     class Meta:
         model = Messages
         fields = '__all__'
-
+        read_only_fields = ['basemodel_ptr', 'id_number', 'slug', 'created_at', 'updated_at', 'name']
+    
     def validate_role(self, value):
         if value not in dict(Messages.ROLE_CHOICES):
             raise serializers.ValidationError("Invalid role")
@@ -140,7 +152,9 @@ class ServiceProviderSerializer(serializers.ModelSerializer):
         return None
 
 class QuerySerializer(serializers.Serializer):
+    conversation_id = serializers.UUIDField(required=False, allow_null=True)
     query = serializers.CharField(required=True, max_length=2000)
+    language = serializers.CharField(required=False, default="eng", max_length=10)
     context = serializers.JSONField(required=False, default=dict)
     max_tokens = serializers.IntegerField(required=False, min_value=1, max_value=2048)
     temperature = serializers.FloatField(required=False, min_value=0.0, max_value=2.0)

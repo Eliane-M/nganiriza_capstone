@@ -26,12 +26,36 @@ export function ChatPage() {
   const [isLoading, setIsLoading] = useState(false);
   const [sidebarOpen, setSidebarOpen] = useState(true); // Default to open
   const [conversations, setConversations] = useState([]);
-  const [currentConversationId, setCurrentConversationId] = useState(null);
+  // Load conversation ID from localStorage on mount
+  const [currentConversationId, setCurrentConversationId] = useState(() => {
+    try {
+      return localStorage.getItem('currentConversationId') || null;
+    } catch (e) {
+      return null;
+    }
+  });
   const [loadingConversations, setLoadingConversations] = useState(false);
   const messagesEndRef = useRef(null);
   const { language } = useContext(LanguageContext);
   const { isAuthenticated } = useContext(AuthContext);
   const navigate = useNavigate();
+
+  // Save conversation ID to localStorage whenever it changes
+  useEffect(() => {
+    if (currentConversationId) {
+      try {
+        localStorage.setItem('currentConversationId', currentConversationId);
+      } catch (e) {
+        console.error('Failed to save conversation ID to localStorage:', e);
+      }
+    } else {
+      try {
+        localStorage.removeItem('currentConversationId');
+      } catch (e) {
+        console.error('Failed to remove conversation ID from localStorage:', e);
+      }
+    }
+  }, [currentConversationId]);
 
   const translations = {
     placeholder: { en: "Type a message...", fr: "Écrivez un message...", rw: "Andika ubutumwa..." },
@@ -49,6 +73,15 @@ export function ChatPage() {
   useEffect(() => {
     if (isAuthenticated) {
       loadConversations();
+      
+      // If we have a saved conversation ID, load its messages after conversations are loaded
+      const savedConversationId = localStorage.getItem('currentConversationId');
+      if (savedConversationId) {
+        // Small delay to ensure loadConversations completes first
+        setTimeout(() => {
+          loadConversation(savedConversationId);
+        }, 100);
+      }
     }
   }, [isAuthenticated]);
 
@@ -57,9 +90,32 @@ export function ChatPage() {
     try {
       setLoadingConversations(true);
       const response = await apiClient.get('/api/dashboard/');
-      setConversations(response.data.results || []);
+      // Handle both array response and paginated response
+      let conversationsList = [];
+      if (Array.isArray(response.data)) {
+        conversationsList = response.data;
+      } else if (response.data.results && Array.isArray(response.data.results)) {
+        conversationsList = response.data.results;
+      } else if (response.data && typeof response.data === 'object') {
+        // If it's a single object, wrap it in an array
+        conversationsList = [response.data];
+      }
+      
+      // Deduplicate conversations by ID and filter out invalid ones
+      const seenIds = new Set();
+      const uniqueConversations = conversationsList.filter(conv => {
+        const convId = conv.id || conv.id_number;
+        if (!convId || seenIds.has(convId)) {
+          return false;
+        }
+        seenIds.add(convId);
+        return true;
+      });
+      
+      setConversations(uniqueConversations);
     } catch (error) {
       console.error('Failed to load conversations', error);
+      setConversations([]);
     } finally {
       setLoadingConversations(false);
     }
@@ -68,12 +124,10 @@ export function ChatPage() {
   const createNewConversation = async () => {
     if (!isAuthenticated) return;
     try {
-      const response = await apiClient.post('/api/dashboard/conversations/', {
-        title: '',
-        language: language === 'rw' ? 'kin' : language === 'fr' ? 'fre' : 'eng',
-        channel: 'web'
-      });
-      setCurrentConversationId(response.data.id);
+      // Clear current conversation ID
+      setCurrentConversationId(null);
+      
+      // Reset messages to welcome message
       setMessages([{
         id: 1,
         text: {
@@ -84,6 +138,7 @@ export function ChatPage() {
         isUser: false,
         timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
       }]);
+      
       await loadConversations();
       setSidebarOpen(false);
     } catch (error) {
@@ -92,16 +147,29 @@ export function ChatPage() {
   };
 
   const loadConversation = async (conversationId) => {
-    if (!isAuthenticated) return;
+    if (!isAuthenticated || !conversationId) {
+      console.error('Cannot load conversation: not authenticated or no conversationId');
+      return;
+    }
     try {
       setCurrentConversationId(conversationId);
       const response = await apiClient.get(`/api/dashboard/conversations/${conversationId}/messages/`);
-      const loadedMessages = response.data.map(msg => ({
+      
+      // Handle both array and object responses
+      let messagesData = [];
+      if (Array.isArray(response.data)) {
+        messagesData = response.data;
+      } else if (response.data && typeof response.data === 'object') {
+        messagesData = [response.data];
+      }
+      
+      const loadedMessages = messagesData.map(msg => ({
         id: msg.id_number || msg.id,
         text: msg.content,
         isUser: msg.role === 'user',
         timestamp: new Date(msg.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
       }));
+      
       setMessages(loadedMessages.length > 0 ? loadedMessages : [{
         id: 1,
         text: {
@@ -115,19 +183,31 @@ export function ChatPage() {
       setSidebarOpen(false);
     } catch (error) {
       console.error('Failed to load conversation', error);
+      // Reset to empty state on error
+      setMessages([{
+        id: 1,
+        text: {
+          en: "Hi! I'm your AI health companion. What would you like to know about women's health today?",
+          fr: "Salut ! Je suis votre compagnon IA. Que souhaitez-vous savoir sur la santé des femmes ?",
+          rw: "Muraho! Ndi umujyanama wawe wa AI. Wifuza kumenya iki ku buzima bw'abagore uyu munsi?"
+        },
+        isUser: false,
+        timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+      }]);
     }
   };
 
-  async function askAI(query) {
+  async function askAI(query, conversationId = null) {
     try {
-      const res = await fetch('/api/ai/query/', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ query, use_cache: true, language })
+      const res = await apiClient.post('/api/ai/query/', {
+        query, 
+        use_cache: true, 
+        language,
+        conversation_id: conversationId
       });
-      const data = await res.json();
-      return data.success ? data.response : "Sorry, I couldn't respond right now.";
-    } catch {
+      return res.data.success ? res.data.response : "Sorry, I couldn't respond right now.";
+    } catch (error) {
+      console.error('AI query error:', error);
       return translations.typing[language].replace('typing', 'connect');
     }
   }
@@ -147,58 +227,66 @@ export function ChatPage() {
     setInputText('');
     setIsLoading(true);
 
-    // Create conversation if none exists and user is authenticated
-    let conversationId = currentConversationId;
-    if (isAuthenticated && !conversationId) {
-      try {
-        const convResponse = await apiClient.post('/api/dashboard/conversations/', {
-          title: '',
-          language: language === 'rw' ? 'kin' : language === 'fr' ? 'fre' : 'eng',
-          channel: 'web'
-        });
-        conversationId = convResponse.data.id;
-        setCurrentConversationId(conversationId);
-      } catch (error) {
-        console.error('Failed to create conversation', error);
-      }
-    }
-
-    // Save user message to backend if authenticated
-    if (isAuthenticated && conversationId) {
-      try {
-        await apiClient.post(`/api/dashboard/conversations/${conversationId}/messages/`, {
-          role: 'user',
-          content: messageText
-        });
-      } catch (error) {
-        console.error('Failed to save message', error);
-      }
-    }
-
     const typing = { id: 'typing', isUser: false, isTyping: true };
     setMessages(prev => [...prev, typing]);
 
-    const reply = await askAI(messageText);
-
-    // Save assistant reply to backend if authenticated
-    if (isAuthenticated && conversationId) {
-      try {
-        await apiClient.post(`/api/dashboard/conversations/${conversationId}/messages/`, {
-          role: 'assistant',
-          content: reply
-        });
-        await loadConversations();
-      } catch (error) {
-        console.error('Failed to save assistant message', error);
+    // Unified API call - this will handle everything: save message, call Ollama, save reply, generate title
+    try {
+      const response = await apiClient.post('/api/ai/query/', {
+        query: messageText,
+        conversation_id: currentConversationId,
+        language: language === 'rw' ? 'kin' : language === 'fr' ? 'fre' : 'eng',
+        use_cache: true
+      });
+      
+      let reply = null;
+      let newConversationId = currentConversationId;
+      
+      if (response.data && response.data.success) {
+        reply = response.data.response;
+        
+        // Update conversation ID if a new one was created
+        if (response.data.conversation_id) {
+          newConversationId = response.data.conversation_id;
+          if (newConversationId !== currentConversationId) {
+            setCurrentConversationId(newConversationId);
+          }
+        }
+        
+        // Reload conversations to get updated title
+        if (isAuthenticated) {
+          await loadConversations();
+        }
+      } else {
+        reply = response.data?.error || "Sorry, I couldn't respond right now.";
       }
+      
+      // Remove typing indicator and add assistant reply
+      setMessages(prev => {
+        const filtered = prev.filter(m => m.id !== 'typing');
+        if (reply) {
+          return filtered.concat({
+            id: Date.now() + 1,
+            text: reply,
+            isUser: false,
+            timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+          });
+        }
+        return filtered;
+      });
+    } catch (error) {
+      console.error('Failed to send message', error);
+      // Remove typing indicator
+      setMessages(prev => prev.filter(m => m.id !== 'typing'));
+      
+      // Show error message
+      setMessages(prev => prev.concat({
+        id: Date.now() + 1,
+        text: "Sorry, I'm having trouble connecting. Please try again.",
+        isUser: false,
+        timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+      }));
     }
-
-    setMessages(prev => prev.filter(m => m.id !== 'typing').concat({
-      id: Date.now() + 1,
-      text: reply,
-      isUser: false,
-      timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
-    }));
 
     setIsLoading(false);
   };
@@ -236,20 +324,27 @@ export function ChatPage() {
               ) : conversations.length === 0 ? (
                 <div className="empty-conversations">{translations.noConversations[language]}</div>
               ) : (
-                conversations.map((conv) => (
-                  <button
-                    key={conv.id}
-                    onClick={() => loadConversation(conv.id)}
-                    className={`conversation-item ${currentConversationId === conv.id ? 'active' : ''}`}
-                  >
-                    <div className="conversation-preview">
-                      {conv.first_message_preview || 'New conversation'}
-                    </div>
-                    <div className="conversation-time">
-                      {new Date(conv.updated_at).toLocaleDateString()}
-                    </div>
-                  </button>
-                ))
+                conversations.map((conv) => {
+                  const convId = conv.id || conv.id_number;
+                  if (!convId) {
+                    console.warn('Conversation missing ID:', conv);
+                    return null;
+                  }
+                  return (
+                    <button
+                      key={convId}
+                      onClick={() => loadConversation(convId)}
+                      className={`conversation-item ${currentConversationId === convId ? 'active' : ''}`}
+                    >
+                      <div className="conversation-preview">
+                        {conv.title || conv.first_message_preview || 'New conversation'}
+                      </div>
+                      <div className="conversation-time">
+                        {conv.updated_at ? new Date(conv.updated_at).toLocaleDateString() : ''}
+                      </div>
+                    </button>
+                  );
+                }).filter(Boolean)
               )}
             </div>
           </div>

@@ -1,0 +1,104 @@
+services:
+  # Django Backend Service
+  backend:
+    build:
+      context: ./nganiriza_backend
+      dockerfile: dockerfile
+    container_name: nganiriza_backend
+    ports:
+      - "8001:8000"
+    environment:
+      - DEBUG=True
+      - SECRET_KEY=${SECRET_KEY:-django-insecure-change-me-in-production}
+      - DATABASE_URL=${DATABASE_URL:-sqlite:///db.sqlite3}
+      - EMAIL_HOST=${EMAIL_HOST:-localhost}
+      - EMAIL_PORT=${EMAIL_PORT:-587}
+      - EMAIL_HOST_USER=${EMAIL_HOST_USER:-}
+      - EMAIL_HOST_PASSWORD=${EMAIL_HOST_PASSWORD:-}
+      - DEFAULT_FROM_EMAIL=${DEFAULT_FROM_EMAIL:-no-reply@localhost}
+      - OLLAMA_SERVICE_URL=http://ollama1:11434
+      - OLLAMA_SERVICE_EXTERNAL_URL=http://localhost:11435
+    volumes:
+      - ./nganiriza_backend:/app
+      - backend_static:/app/staticfiles
+      - backend_media:/app/media
+    depends_on:
+      - ollama1
+    networks:
+      - nganiriza_network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/admin/"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+  # React Frontend Service
+  frontend:
+    build:
+      context: ./nganiriza_frontend
+      dockerfile: Dockerfile
+      args:
+        - VITE_API_URL=${VITE_API_URL:-http://localhost:8001}
+        - REACT_APP_API_URL=${REACT_APP_API_URL:-http://localhost:8001}
+    container_name: nganiriza_frontend
+    ports:
+      - "3000:80"
+    environment:
+      - REACT_APP_API_URL=${REACT_APP_API_URL:-http://localhost:8001}
+      - VITE_API_URL=${VITE_API_URL:-http://localhost:8001}
+      - REACT_APP_OLLAMA_SERVICE_URL=${REACT_APP_OLLAMA_SERVICE_URL:-http://localhost:11435}
+    depends_on:
+      - backend
+    networks:
+      - nganiriza_network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # Ollama Service: Kinyarwanda Counseling Model
+  ollama1:
+    build:
+      context: ./nganirza_ai
+      dockerfile: Dockerfile.ollama1
+    container_name: nganiriza_ollama
+    ports:
+      - "11435:11434"
+    volumes:
+      - ollama_models:/models
+      - ollama_data:/root/.ollama
+    environment:
+      - OLLAMA_HOST=0.0.0.0:11434
+      - OLLAMA_MODELS=/models
+      - OLLAMA_NUM_GPU=0
+      - OLLAMA_NUM_THREAD=4
+    networks:
+      - nganiriza_network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:11434/api/tags"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+    deploy:
+      resources:
+        limits:
+          memory: 8G
+        reservations:
+          memory: 4G
+
+volumes:
+  backend_static:
+  backend_media:
+  ollama_models:
+  ollama_data:
+
+networks:
+  nganiriza_network:
+    driver: bridge
+
