@@ -3,5 +3,8 @@ venv/
 node_modules
 mobile_interface/
 
+# Large model files (exceed GitHub's 100MB limit)
+*.gguf
 nganiriza_backend/models/qwen2.5-0.5b-instruct-q5_k_m.gguf
 nganiriza_backend/nganirza_ai/gemma-kinyarwanda.gguf
+nganirza_ai/gemma-kinyarwanda.gguf
