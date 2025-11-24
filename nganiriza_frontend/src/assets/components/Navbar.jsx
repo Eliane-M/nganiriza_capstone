@@ -3,6 +3,7 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import { Menu, Sun, Moon, LogIn, ChevronDown, LogOut, User, Globe, MessageCircle, Users, MapPin, BookOpen } from 'lucide-react';
 import { ThemeContext, LanguageContext } from '../../contexts/AppContext';
 import { AuthContext } from './context/AuthContext';
+import { useTranslation } from '../../utils/translations';
 import '../../assets/css/navbar/navbar.css';
 
 export default function Navbar() {
@@ -10,6 +11,7 @@ export default function Navbar() {
   const location = useLocation();
   const { theme, toggleTheme } = useContext(ThemeContext);
   const { language, setLanguage } = useContext(LanguageContext);
+  const { t } = useTranslation(language);
   const [open, setOpen] = useState(false);
   const { user, isAuthenticated, logout } = useContext(AuthContext);
 
@@ -51,25 +53,25 @@ export default function Navbar() {
               onClick={() => handleNavigation('/chat')}
               className={`nav-tab ${location.pathname === '/chat' ? 'active' : ''}`}
             >
-              Chat with AI
+              {t('nav.chat')}
             </button>
             <button 
               onClick={() => handleNavigation('/specialists')}
               className={`nav-tab ${location.pathname === '/specialists' || location.pathname.startsWith('/specialists/') ? 'active' : ''}`}
             >
-              Find Specialists
+              {t('nav.specialists')}
             </button>
             <button 
               onClick={() => handleNavigation('/map')}
               className={`nav-tab ${location.pathname === '/map' ? 'active' : ''}`}
             >
-              Health Map
+              {t('nav.map')}
             </button>
             <button 
               onClick={() => handleNavigation('/learn')}
               className={`nav-tab ${location.pathname === '/learn' || location.pathname.startsWith('/learn/') ? 'active' : ''}`}
             >
-              Learn
+              {t('nav.learn')}
             </button>
           </nav>
 
@@ -80,10 +82,10 @@ export default function Navbar() {
               <button
                 onClick={() => handleNavigation('/login')}
                 className="login-btn"
-                title="Log In"
+                title={t('auth.login.signIn')}
               >
                 <LogIn size={18} />
-                <span className="login-btn-text">Log In</span>
+                <span className="login-btn-text">{t('auth.login.signIn')}</span>
               </button>
             )}
 
@@ -128,36 +130,36 @@ export default function Navbar() {
 
                     {/* Navigation Items */}
                     <div className="dropdown-section">
-                      <div className="section-label">Navigation</div>
+                      <div className="section-label">{t('common.navigation') || 'Navigation'}</div>
                       <button
                         onClick={() => handleNavigation('/chat')}
                         className="dropdown-item"
                       >
-                        <MessageCircle size={16} /> Chat with AI
+                        <MessageCircle size={16} /> {t('nav.chat')}
                       </button>
                       <button
                         onClick={() => handleNavigation('/specialists')}
                         className="dropdown-item"
                       >
-                        <Users size={16} /> Find Specialists
+                        <Users size={16} /> {t('nav.specialists')}
                       </button>
                       <button
                         onClick={() => handleNavigation('/map')}
                         className="dropdown-item"
                       >
-                        <MapPin size={16} /> Health Map
+                        <MapPin size={16} /> {t('nav.map')}
                       </button>
                       <button
                         onClick={() => handleNavigation('/learn')}
                         className="dropdown-item"
                       >
-                        <BookOpen size={16} /> Learn
+                        <BookOpen size={16} /> {t('nav.learn')}
                       </button>
                       <button
                         onClick={() => handleNavigation('/profile')}
                         className="dropdown-item"
                       >
-                        <User size={16} /> Profile
+                        <User size={16} /> {t('nav.profile')}
                       </button>
                     </div>
 
@@ -167,7 +169,7 @@ export default function Navbar() {
                     <div className="dropdown-section">
                       <div className="section-label">
                         <Globe size={14} style={{ marginRight: '0.25rem' }} />
-                        Language
+                        {t('common.language') || 'Language'}
                       </div>
                       <div className="language-switcher">
                         {languages.map(lang => (
@@ -194,7 +196,7 @@ export default function Navbar() {
                       className="dropdown-item"
                     >
                       {theme === 'dark' ? <Sun size={16}/> : <Moon size={16}/>}
-                      <span>Switch to {theme === 'dark' ? 'Light' : 'Dark'} Mode</span>
+                      <span>{theme === 'dark' ? (t('common.switchToLight') || 'Switch to Light Mode') : (t('common.switchToDark') || 'Switch to Dark Mode')}</span>
                     </button>
 
                     {/* Logout Section */}
@@ -203,7 +205,7 @@ export default function Navbar() {
                       onClick={handleLogout}
                       className="dropdown-item logout-item"
                     >
-                      <LogOut size={16}/> Log Out
+                      <LogOut size={16}/> {t('common.logOut') || 'Log Out'}
                     </button>
                   </div>
                 )}

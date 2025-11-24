@@ -1,6 +1,8 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { Search as SearchIcon, Users, Heart, Brain, Apple, Stethoscope, Building2, ChevronLeft, Send, CalendarDays, Star, Briefcase, MapPin, Clock, Menu, Plus, MessageSquare, Calendar, Home, MessageCircle, User, BookOpen } from 'lucide-react';
 import { useNavigate, useLocation } from 'react-router-dom';
+import { LanguageContext } from '../../contexts/AppContext';
+import { useTranslation } from '../../utils/translations';
 import '../../assets/css/specialists/specialist_page.css';
 import BASE_URL from '../../config.js';
 import apiClient from '../../utils/apiClient';
@@ -13,6 +15,8 @@ import Tabs from '../../assets/components/Tabs';
 
 export function SpecialistPage() {
   const { isAuthenticated } = useContext(AuthContext);
+  const { language } = useContext(LanguageContext);
+  const { t } = useTranslation(language);
   const navigate = useNavigate();
   const location = useLocation();
   const [searchTerm, setSearchTerm] = useState('');
@@ -29,12 +33,12 @@ export function SpecialistPage() {
   const [activeTab, setActiveTab] = useState('messages');
 
   const navItems = [
-    { icon: Home, label: "Home", path: "/" },
-    { icon: MessageCircle, label: "Chat", path: "/chat" },
-    { icon: Users, label: "Specialists", path: "/specialists", active: true },
-    { icon: MapPin, label: "Map", path: "/map" },
-    { icon: BookOpen, label: "Learn", path: "/learn" },
-    { icon: User, label: "Profile", path: "/profile" }
+    { icon: Home, label: t('nav.home'), path: "/" },
+    { icon: MessageCircle, label: t('nav.chat'), path: "/chat" },
+    { icon: Users, label: t('nav.specialists'), path: "/specialists", active: true },
+    { icon: MapPin, label: t('nav.map'), path: "/map" },
+    { icon: BookOpen, label: t('nav.learn'), path: "/learn" },
+    { icon: User, label: t('nav.profile'), path: "/profile" }
   ];
 
   const specialties = [
@@ -156,7 +160,7 @@ export function SpecialistPage() {
     return (
       <div className="specialist-page-v2">
         <div className="hero-section">
-          <div className="loading-spinner">Loading specialists...</div>
+          <div className="loading-spinner">{t('common.loading')}</div>
         </div>
       </div>
     );
@@ -169,7 +173,7 @@ export function SpecialistPage() {
           <div className="error-message">
             <p>{error}</p>
             <button onClick={loadSpecialists} className="retry-button">
-              Retry
+              {t('common.retry') || 'Retry'}
             </button>
           </div>
         </div>
@@ -195,12 +199,12 @@ export function SpecialistPage() {
           <div className="specialist-sidebar-content">
             <button onClick={handleContactNewSpecialist} className="contact-new-btn">
               <Plus size={18} />
-              <span>Contact New Specialist</span>
+              <span>{t('specialists.contactNew') || 'Contact New Specialist'}</span>
             </button>
             
             <div className="contacted-specialists">
               {loadingContacts ? (
-                <div className="loading-text">Loading...</div>
+                <div className="loading-text">{t('common.loading')}</div>
               ) : (
                 <>
                   {contactedSpecialists.active.length > 0 && (
@@ -257,7 +261,7 @@ export function SpecialistPage() {
                   )}
                   
                   {contactedSpecialists.active.length === 0 && contactedSpecialists.past.length === 0 && (
-                    <div className="empty-contacts">No contacted specialists yet</div>
+                    <div className="empty-contacts">{t('specialists.noContacted') || 'No contacted specialists yet'}</div>
                   )}
                 </>
               )}
@@ -333,12 +337,12 @@ export function SpecialistPage() {
             <div className="specialist-sidebar-content">
               <button onClick={handleContactNewSpecialist} className="contact-new-btn">
                 <Plus size={18} />
-                <span>Contact New Specialist</span>
+                <span>{t('specialists.contactNew') || 'Contact New Specialist'}</span>
               </button>
               
               <div className="contacted-specialists">
                 {loadingContacts ? (
-                  <div className="loading-text">Loading...</div>
+                  <div className="loading-text">{t('common.loading')}</div>
                 ) : (
                   <>
                     {contactedSpecialists.active.length > 0 && (
@@ -395,7 +399,7 @@ export function SpecialistPage() {
                     )}
                     
                     {contactedSpecialists.active.length === 0 && contactedSpecialists.past.length === 0 && (
-                      <div className="empty-contacts">No contacted specialists yet</div>
+                      <div className="empty-contacts">{t('specialists.noContacted') || 'No contacted specialists yet'}</div>
                     )}
                   </>
                 )}
@@ -577,7 +581,7 @@ export function SpecialistPage() {
             <SearchIcon size={20} className="search-icon" />
             <input
               type="text"
-              placeholder="Search by name or specialty"
+              placeholder={t('specialists.search')}
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
             />
@@ -611,7 +615,7 @@ export function SpecialistPage() {
               ))
             ) : (
               <div className="empty-state">
-                <p>No specialists match your search criteria.</p>
+                <p>{t('specialists.noSpecialists')}</p>
               </div>
             )}
           </div>
@@ -637,6 +641,8 @@ export function SpecialistPage() {
 }
 
 function SpecialistCard({ specialist, onSelect }) {
+  const { language } = useContext(LanguageContext);
+  const { t } = useTranslation(language);
   const name = specialist.name || specialist.user?.name || 'Unknown Specialist';
   const specialtyLabel = specialist.specialty_display || specialist.specialty || 'General Practice';
   const experience = specialist.years_of_experience ?? specialist.years_experience ?? specialist.experience;
@@ -710,7 +716,7 @@ function SpecialistCard({ specialist, onSelect }) {
             onSelect?.(specialist);
           }}
         >
-          View Profile
+          {t('specialists.viewProfile') || 'View Profile'}
         </button>
       </div>
     </div>
@@ -718,6 +724,8 @@ function SpecialistCard({ specialist, onSelect }) {
 }
 
 function SpecialistDetailView({ specialist, onBack, isAuthenticated }) {
+  const { language } = useContext(LanguageContext);
+  const { t } = useTranslation(language);
   const [appointmentForm, setAppointmentForm] = useState({
     appointment_date: '',
     appointment_time: '',
@@ -745,11 +753,11 @@ function SpecialistDetailView({ specialist, onBack, isAuthenticated }) {
   const handleAppointmentSubmit = async (event) => {
     event.preventDefault();
     if (!isAuthenticated) {
-      setAppointmentFeedback({ type: 'error', text: 'Please sign in to request an appointment.' });
+      setAppointmentFeedback({ type: 'error', text: t('specialists.signInToRequest') || 'Please sign in to request an appointment.' });
       return;
     }
     if (!appointmentForm.appointment_date || !appointmentForm.appointment_time) {
-      setAppointmentFeedback({ type: 'error', text: 'Please select a date and time.' });
+      setAppointmentFeedback({ type: 'error', text: t('specialists.selectDateAndTime') || 'Please select a date and time.' });
       return;
     }
 
@@ -765,14 +773,14 @@ function SpecialistDetailView({ specialist, onBack, isAuthenticated }) {
           notes: appointmentForm.notes,
         }
       );
-      setAppointmentFeedback({ type: 'success', text: 'Appointment request sent successfully.' });
+      setAppointmentFeedback({ type: 'success', text: t('specialists.appointmentRequestSent') || 'Appointment request sent successfully.' });
       setAppointmentForm({
         appointment_date: '',
         appointment_time: '',
         notes: '',
       });
     } catch (err) {
-      const fallback = err.response?.data?.error || 'Unable to submit appointment request.';
+      const fallback = err.response?.data?.error || t('specialists.unableToSubmitAppointment') || 'Unable to submit appointment request.';
       setAppointmentFeedback({ type: 'error', text: fallback });
     } finally {
       setAppointmentLoading(false);
@@ -786,7 +794,7 @@ function SpecialistDetailView({ specialist, onBack, isAuthenticated }) {
       return;
     }
     if (!messageForm.subject || !messageForm.message) {
-      setMessageFeedback({ type: 'error', text: 'Please add a subject and message.' });
+      setMessageFeedback({ type: 'error', text: t('specialists.addSubjectAndMessage') || 'Please add a subject and message.' });
       return;
     }
 
@@ -801,13 +809,13 @@ function SpecialistDetailView({ specialist, onBack, isAuthenticated }) {
           message: messageForm.message,
         }
       );
-      setMessageFeedback({ type: 'success', text: 'Message delivered to the specialist.' });
+      setMessageFeedback({ type: 'success', text: t('specialists.messageDelivered') || 'Message delivered to the specialist.' });
       setMessageForm({
         subject: '',
         message: '',
       });
     } catch (err) {
-      const fallback = err.response?.data?.error || 'Unable to send your message.';
+      const fallback = err.response?.data?.error || t('specialists.unableToSendMessage') || 'Unable to send your message.';
       setMessageFeedback({ type: 'error', text: fallback });
     } finally {
       setMessageLoading(false);
@@ -850,10 +858,10 @@ function SpecialistDetailView({ specialist, onBack, isAuthenticated }) {
           <form className="detail-form" onSubmit={handleAppointmentSubmit}>
             <div className="detail-form-header">
               <CalendarDays size={20} />
-              <h3>Request an appointment</h3>
+              <h3>{t('specialists.bookAppointment')}</h3>
             </div>
             <label>
-              Preferred date
+              {t('specialists.preferredDate') || 'Preferred date'}
               <input
                 type="date"
                 name="appointment_date"
@@ -863,7 +871,7 @@ function SpecialistDetailView({ specialist, onBack, isAuthenticated }) {
               />
             </label>
             <label>
-              Preferred time
+              {t('specialists.preferredTime') || 'Preferred time'}
               <input
                 type="time"
                 name="appointment_time"
@@ -873,47 +881,47 @@ function SpecialistDetailView({ specialist, onBack, isAuthenticated }) {
               />
             </label>
             <label>
-              Notes (optional)
+              {t('specialists.notes') || 'Notes (optional)'}
               <textarea
                 name="notes"
                 rows="4"
                 value={appointmentForm.notes}
                 onChange={handleAppointmentChange}
-                placeholder="Share any symptoms or preferences..."
+                placeholder={t('specialists.notesPlaceholder') || 'Share any symptoms or preferences...'}
               />
             </label>
             {appointmentFeedback && (
               <p className={`form-feedback ${appointmentFeedback.type}`}>{appointmentFeedback.text}</p>
             )}
             <button type="submit" disabled={appointmentLoading}>
-              {appointmentLoading ? 'Sending request...' : 'Send appointment request'}
+              {appointmentLoading ? t('common.loading') : t('specialists.sendAppointmentRequest') || 'Send appointment request'}
             </button>
           </form>
 
           <form className="detail-form" onSubmit={handleMessageSubmit}>
             <div className="detail-form-header">
               <Send size={20} />
-              <h3>Message this specialist</h3>
+              <h3>{t('specialists.message')}</h3>
             </div>
             <label>
-              Subject
+              {t('specialists.subject') || 'Subject'}
               <input
                 type="text"
                 name="subject"
                 value={messageForm.subject}
                 onChange={handleMessageChange}
-                placeholder="Short summary"
+                placeholder={t('specialists.subjectPlaceholder') || 'Short summary'}
                 required
               />
             </label>
             <label>
-              Message
+              {t('specialists.message')}
               <textarea
                 name="message"
                 rows="6"
                 value={messageForm.message}
                 onChange={handleMessageChange}
-                placeholder="Introduce yourself and describe how they can help..."
+                placeholder={t('specialists.messagePlaceholder') || 'Introduce yourself and describe how they can help...'}
                 required
               />
             </label>
@@ -921,7 +929,7 @@ function SpecialistDetailView({ specialist, onBack, isAuthenticated }) {
               <p className={`form-feedback ${messageFeedback.type}`}>{messageFeedback.text}</p>
             )}
             <button type="submit" disabled={messageLoading}>
-              {messageLoading ? 'Sending message...' : 'Send message'}
+              {messageLoading ? t('common.loading') : t('specialists.sendMessage') || 'Send message'}
             </button>
           </form>
         </div>
@@ -950,6 +958,8 @@ const formatLanguages = (value) => {
 };
 
 function SpecialistContactDetailView({ specialistId, specialistData, onBack, activeTab, setActiveTab }) {
+  const { language } = useContext(LanguageContext);
+  const { t } = useTranslation(language);
   const [messages, setMessages] = useState([]);
   const [appointments, setAppointments] = useState([]);
   const [loadingMessages, setLoadingMessages] = useState(false);
@@ -985,8 +995,8 @@ function SpecialistContactDetailView({ specialistId, specialistData, onBack, act
   };
 
   const tabs = [
-    { id: 'messages', label: 'Messages', icon: MessageSquare },
-    { id: 'appointments', label: 'Appointments', icon: Calendar }
+    { id: 'messages', label: t('specialists.messages') || 'Messages', icon: MessageSquare },
+    { id: 'appointments', label: t('specialists.appointments') || 'Appointments', icon: Calendar }
   ];
 
   return (
@@ -994,7 +1004,7 @@ function SpecialistContactDetailView({ specialistId, specialistData, onBack, act
       <div className="detail-header-section">
         <button onClick={onBack} className="detail-back-button">
           <ChevronLeft size={18} />
-          Back to Specialists
+          {t('specialists.backToSpecialists') || 'Back to Specialists'}
         </button>
         <div className="specialist-header-info">
           <div className="specialist-header-avatar">

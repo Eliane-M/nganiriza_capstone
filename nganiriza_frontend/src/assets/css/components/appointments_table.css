@@ -316,6 +316,131 @@
   background: #e5e7eb;
 }
 
+/* Dark Mode Styles */
+html.dark .appointments-table,
+.dark .appointments-table {
+  background: #18181b;
+  color: #fafafa;
+}
+
+html.dark .appointments-table thead,
+.dark .appointments-table thead {
+  background: #27272a;
+  border-bottom-color: #3f3f46;
+}
+
+html.dark .appointments-table th,
+.dark .appointments-table th {
+  color: #d4d4d8;
+}
+
+html.dark .appointments-table td,
+.dark .appointments-table td {
+  border-bottom-color: #3f3f46;
+  color: #d4d4d8;
+}
+
+html.dark .appointments-table tbody tr:hover,
+.dark .appointments-table tbody tr:hover {
+  background: #27272a;
+}
+
+html.dark .appointments-empty p,
+.dark .appointments-empty p {
+  color: #a1a1aa;
+}
+
+html.dark .appointment-feedback.success,
+.dark .appointment-feedback.success {
+  background: rgba(34, 197, 94, 0.15);
+  color: #4ade80;
+  border-color: rgba(34, 197, 94, 0.3);
+}
+
+html.dark .appointment-feedback.error,
+.dark .appointment-feedback.error {
+  background: rgba(239, 68, 68, 0.15);
+  color: #f87171;
+  border-color: rgba(239, 68, 68, 0.3);
+}
+
+html.dark .appointment-card,
+.dark .appointment-card {
+  background: #18181b;
+  border-color: #3f3f46;
+}
+
+html.dark .appointment-card:hover,
+.dark .appointment-card:hover {
+  box-shadow: 0 4px 12px rgba(168, 85, 247, 0.2);
+}
+
+html.dark .date-info,
+html.dark .time-info,
+.dark .date-info,
+.dark .time-info {
+  color: #a1a1aa;
+}
+
+html.dark .appointment-notes,
+.dark .appointment-notes {
+  background: #27272a;
+  color: #d4d4d8;
+}
+
+html.dark .reschedule-form,
+.dark .reschedule-form {
+  background: #27272a;
+  border-color: #3f3f46;
+}
+
+html.dark .reschedule-form h4,
+.dark .reschedule-form h4 {
+  color: #fafafa;
+}
+
+html.dark .reschedule-form label,
+.dark .reschedule-form label {
+  color: #d4d4d8;
+}
+
+html.dark .reschedule-form input,
+html.dark .reschedule-form textarea,
+.dark .reschedule-form input,
+.dark .reschedule-form textarea {
+  background: #18181b;
+  border-color: #3f3f46;
+  color: #fafafa;
+}
+
+html.dark .reschedule-form input::placeholder,
+html.dark .reschedule-form textarea::placeholder,
+.dark .reschedule-form input::placeholder,
+.dark .reschedule-form textarea::placeholder {
+  color: #71717a;
+}
+
+html.dark .reschedule-form input:focus,
+html.dark .reschedule-form textarea:focus,
+.dark .reschedule-form input:focus,
+.dark .reschedule-form textarea:focus {
+  border-color: #a855f7;
+  box-shadow: 0 0 0 3px rgba(168, 85, 247, 0.2);
+}
+
+html.dark .cancel-btn,
+.dark .cancel-btn {
+  background: #27272a;
+  color: #d4d4d8;
+  border: 1px solid #3f3f46;
+}
+
+html.dark .cancel-btn:hover,
+.dark .cancel-btn:hover {
+  background: #3f3f46;
+  border-color: #52525b;
+}
+
 @media (max-width: 768px) {
   .reschedule-form .form-row {
     grid-template-columns: 1fr;

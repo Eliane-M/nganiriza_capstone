@@ -1,18 +1,22 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { MapPin, BookOpen, Users, UserCheck, LayoutDashboard } from 'lucide-react';
+import { LanguageContext } from '../../../contexts/AppContext';
+import { useTranslation } from '../../../utils/translations';
 import Sidebar from '../Sidebar';
 
 const AdminSidebar = ({ isOpen, onClose, onToggle }) => {
   const navigate = useNavigate();
   const location = useLocation();
+  const { language } = useContext(LanguageContext);
+  const { t } = useTranslation(language);
 
   const menuItems = [
-    { icon: LayoutDashboard, label: 'Dashboard', path: '/admin' },
-    { icon: MapPin, label: 'Map Management', path: '/admin/map' },
-    { icon: BookOpen, label: 'Learning Resources', path: '/admin/learning' },
-    { icon: UserCheck, label: 'Specialist Approval', path: '/admin/specialists' },
-    { icon: Users, label: 'User Management', path: '/admin/users' },
+    { icon: LayoutDashboard, label: t('admin.dashboard'), path: '/admin' },
+    { icon: MapPin, label: t('admin.map'), path: '/admin/map' },
+    { icon: BookOpen, label: t('admin.learning'), path: '/admin/learning' },
+    { icon: UserCheck, label: t('admin.specialists'), path: '/admin/specialists' },
+    { icon: Users, label: t('admin.users'), path: '/admin/users' },
   ];
 
   const handleNavigate = (path) => {
@@ -25,7 +29,7 @@ const AdminSidebar = ({ isOpen, onClose, onToggle }) => {
       isOpen={isOpen}
       onClose={onClose}
       onToggle={onToggle}
-      title="Admin Dashboard"
+      title={t('admin.dashboard')}
       className="admin-sidebar"
     >
       <nav className="admin-sidebar-nav">

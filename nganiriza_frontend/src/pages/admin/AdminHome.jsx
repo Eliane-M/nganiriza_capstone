@@ -1,36 +1,40 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { MapPin, BookOpen, Users, UserCheck, ArrowRight } from 'lucide-react';
+import { LanguageContext } from '../../contexts/AppContext';
+import { useTranslation } from '../../utils/translations';
 
 const AdminHome = () => {
   const navigate = useNavigate();
+  const { language } = useContext(LanguageContext);
+  const { t } = useTranslation(language);
 
   const quickActions = [
     {
       icon: MapPin,
-      title: 'Map Management',
-      description: 'Add and manage health clinics',
+      title: t('admin.map'),
+      description: t('admin.mapDescription') || 'Add and manage health clinics',
       path: '/admin/map',
       color: 'bg-blue-500'
     },
     {
       icon: BookOpen,
-      title: 'Learning Resources',
-      description: 'Create and edit educational articles',
+      title: t('admin.learning'),
+      description: t('admin.learningDescription') || 'Create and edit educational articles',
       path: '/admin/learning',
       color: 'bg-purple-500'
     },
     {
       icon: UserCheck,
-      title: 'Specialist Approval',
-      description: 'Review and approve specialist profiles',
+      title: t('admin.specialists'),
+      description: t('admin.specialistsDescription') || 'Review and approve specialist profiles',
       path: '/admin/specialists',
       color: 'bg-green-500'
     },
     {
       icon: Users,
-      title: 'User Management',
-      description: 'View and manage all users',
+      title: t('admin.users'),
+      description: t('admin.usersDescription') || 'View and manage all users',
       path: '/admin/users',
       color: 'bg-orange-500'
     },
@@ -39,8 +43,8 @@ const AdminHome = () => {
   return (
     <div className="admin-home">
       <div className="admin-home-header">
-        <h1>Admin Dashboard</h1>
-        <p>Manage your platform from here</p>
+        <h1>{t('admin.dashboard')}</h1>
+        <p>{t('admin.managePlatform') || 'Manage your platform from here'}</p>
       </div>
 
       <div className="admin-home-grid">

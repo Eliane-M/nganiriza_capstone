@@ -67,3 +67,78 @@
   }
 }
 
+/* Dark Mode Styles */
+html.dark .learn-page .bottom-nav {
+  background: #18181b;
+  border-top-color: #27272a;
+}
+
+html.dark .learn-page .nav-item {
+  color: #71717a;
+}
+
+html.dark .learn-page .nav-item.active {
+  color: #ec4899;
+}
+
+html.dark .learn-page .nav-item:hover {
+  color: #ec4899;
+}
+
+/* Dark mode for learn page content */
+html.dark .learn-page {
+  background: #09090b;
+  color: #fafafa;
+}
+
+html.dark .learn-page .search-section,
+html.dark .learn-page .articles-section {
+  background: #09090b;
+  color: #fafafa;
+}
+
+html.dark .learn-page .article-card {
+  background: #18181b;
+  border-color: #27272a;
+  color: #fafafa;
+}
+
+html.dark .learn-page .article-card:hover {
+  border-color: #a855f7;
+  box-shadow: 0 4px 12px rgba(168, 85, 247, 0.2);
+}
+
+html.dark .learn-page .article-card h3 {
+  color: #fafafa;
+}
+
+html.dark .learn-page .article-card p {
+  color: #d4d4d8;
+}
+
+html.dark .learn-page .search-input {
+  background: #18181b;
+  border-color: #3f3f46;
+  color: #fafafa;
+}
+
+html.dark .learn-page .search-input::placeholder {
+  color: #a1a1aa;
+}
+
+html.dark .learn-page .tag-button {
+  background: #27272a;
+  border-color: #3f3f46;
+  color: #d4d4d8;
+}
+
+html.dark .learn-page .tag-button.active {
+  background: #a855f7;
+  color: white;
+}
+
+html.dark .learn-page .tag-button:hover {
+  background: #3f3f46;
+  color: #fafafa;
+}
+

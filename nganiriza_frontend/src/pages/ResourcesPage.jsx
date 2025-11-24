@@ -1,18 +1,14 @@
 import React, { useContext, useState } from 'react';
 import { ResourceCard } from '../assets/components/ResourceCard.tsx';
 import { MapPin as MapPinIcon, Search as SearchIcon } from 'lucide-react';
-import { LanguageContext } from '../assets/components/context/LanguageContext.tsx';
+import { LanguageContext } from '../contexts/AppContext';
+import { useTranslation } from '../utils/translations';
 import Navbar from '../assets/components/Navbar';
 import '../assets/css/resources/resources_page.scss';
 
 export function ResourcesPage() {
   const { language } = useContext(LanguageContext);
-
-  const translations = {
-    title: { en: 'Health Resources', fr: 'Ressources de Santé', rw: "Ibikoresho by'Ubuzima" },
-    search: { en: 'Search resources near you', fr: 'Rechercher des ressources près de chez vous', rw: 'Gushaka ibikoresho hafi yawe' },
-    nearby: { en: 'Nearby Services', fr: 'Services à Proximité', rw: 'Serivisi Ziri Hafi' }
-  };
+  const { t } = useTranslation(language);
 
   const resources = [
     { id: 1, title: 'Youth Health Center', description: 'Confidential services for young people including counseling, testing, and education.', address: 'KG 123 St, Kigali', phone: '+250 78 123 4567', website: 'https://example.com', distance: '1.2 km' },
@@ -27,7 +23,7 @@ export function ResourcesPage() {
   return (
     <div className="resources-page">
       <Navbar />
-      <div className="page-header"><h1>{translations.title[language]}</h1></div>
+      <div className="page-header"><h1>{t('resources.title')}</h1></div>
 
       <div className="body">
         <div className="search-card">
@@ -35,7 +31,7 @@ export function ResourcesPage() {
             <SearchIcon size={20} style={{ color: '#9ca3af', marginRight: 8 }} />
             <input
               type="text"
-              placeholder={translations.search[language]}
+              placeholder={t('resources.search')}
               value={query}
               onChange={(e) => setQuery(e.target.value)}
             />
@@ -43,12 +39,12 @@ export function ResourcesPage() {
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', marginTop: 16 }}>
             <button className="use-location">
               <MapPinIcon size={18} style={{ marginRight: 8 }} />
-              <span>Use my location</span>
+              <span>{t('resources.useLocation')}</span>
             </button>
           </div>
         </div>
 
-        <h2>{translations.nearby[language]}</h2>
+        <h2>{t('resources.nearby')}</h2>
         {filtered.map((resource) => (
           <ResourceCard
             key={resource.id}

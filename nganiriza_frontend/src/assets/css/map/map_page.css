@@ -597,3 +597,204 @@
     display: none;
   }
 }
+
+/* Dark Mode Styles */
+html.dark .container-page,
+html.dark .map-page {
+  background: #09090b;
+  color: #fafafa;
+}
+
+html.dark .map-page-sidebar {
+  background: #18181b;
+  border-right-color: #27272a;
+}
+
+html.dark .sidebar-header {
+  background: linear-gradient(to bottom, #27272a, #18181b);
+  border-bottom-color: #27272a;
+}
+
+html.dark .sidebar-search {
+  background: #27272a;
+  border-color: #3f3f46;
+}
+
+html.dark .sidebar-search:focus-within {
+  border-color: #a855f7;
+  box-shadow: 0 0 0 3px rgba(168, 85, 247, 0.2);
+}
+
+html.dark .sidebar-search input {
+  color: #fafafa;
+}
+
+html.dark .sidebar-search input::placeholder {
+  color: #71717a;
+}
+
+html.dark .filter-dropdown-btn {
+  background: #27272a;
+  border-color: #3f3f46;
+  color: #d4d4d8;
+}
+
+html.dark .filter-dropdown-btn:hover {
+  background: #3f3f46;
+  border-color: #a855f7;
+}
+
+html.dark .filter-dropdown-menu {
+  background: #18181b;
+  border-color: #27272a;
+}
+
+html.dark .filter-dropdown-item {
+  background: #18181b;
+  color: #d4d4d8;
+}
+
+html.dark .filter-dropdown-item:hover {
+  background: #27272a;
+  color: #a855f7;
+}
+
+html.dark .filter-dropdown-item.active {
+  background: #3f1f4f;
+  color: #c084fc;
+}
+
+html.dark .sidebar-content {
+  background: #18181b;
+}
+
+html.dark .sidebar-content::-webkit-scrollbar-track {
+  background: #27272a;
+}
+
+html.dark .sidebar-content::-webkit-scrollbar-thumb {
+  background: #52525b;
+}
+
+html.dark .sidebar-content::-webkit-scrollbar-thumb:hover {
+  background: #71717a;
+}
+
+html.dark .sidebar-loading {
+  color: #a1a1aa;
+}
+
+html.dark .clinic-card {
+  background: #27272a;
+  border-color: #3f3f46;
+}
+
+html.dark .clinic-card:hover {
+  border-color: #a855f7;
+}
+
+html.dark .clinic-card.active {
+  background: linear-gradient(135deg, #3f1f4f, #2d1b3d);
+  border-color: #a855f7;
+}
+
+html.dark .clinic-card-name {
+  color: #fafafa;
+}
+
+html.dark .clinic-card-type {
+  background: #3f1f4f;
+  color: #c084fc;
+}
+
+html.dark .clinic-card-info {
+  color: #a1a1aa;
+}
+
+html.dark .clinic-card-actions {
+  border-top-color: #3f3f46;
+}
+
+html.dark .clinic-card-action-btn {
+  background: #3f3f46;
+  color: #c084fc;
+}
+
+html.dark .clinic-card-action-btn:hover {
+  background: #52525b;
+  color: #d8b4fe;
+}
+
+html.dark .sidebar-empty {
+  color: #a1a1aa;
+}
+
+html.dark .sidebar-empty-hint {
+  color: #71717a;
+}
+
+html.dark .map-page-map {
+  background: #18181b;
+}
+
+html.dark .map-loading {
+  background: #18181b;
+  color: #a1a1aa;
+}
+
+html.dark .clinic-details-panel {
+  background: #18181b;
+  border-top-color: #27272a;
+}
+
+html.dark .clinic-details-close {
+  color: #a1a1aa;
+}
+
+html.dark .clinic-details-close:hover {
+  background: #27272a;
+  color: #fafafa;
+}
+
+html.dark .clinic-details-title {
+  color: #fafafa;
+}
+
+html.dark .clinic-details-type {
+  color: #a1a1aa;
+}
+
+html.dark .clinic-details-info {
+  color: #d4d4d8;
+}
+
+html.dark .clinic-details-info strong {
+  color: #fafafa;
+}
+
+html.dark .clinic-action-btn {
+  background: #3f3f46;
+  color: #c084fc;
+}
+
+html.dark .clinic-action-btn:hover {
+  background: #52525b;
+  color: #d8b4fe;
+}
+
+html.dark .bottom-nav {
+  background: #18181b;
+  border-top-color: #27272a;
+}
+
+html.dark .nav-item {
+  color: #71717a;
+}
+
+html.dark .nav-item.active {
+  color: #ec4899;
+}
+
+html.dark .nav-item:hover {
+  color: #ec4899;
+}

@@ -1,11 +1,15 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import { useNavigate, Link } from "react-router-dom";
 import apiClient from "../../utils/apiClient";
+import { LanguageContext } from '../../contexts/AppContext';
+import { useTranslation } from '../../utils/translations';
 import '../../assets/css/authPages/signup.css';
 import { Eye, EyeOff, UserPlus } from 'lucide-react';
 
 const SignupPage = () => {
   const navigate = useNavigate();
+  const { language } = useContext(LanguageContext);
+  const { t } = useTranslation(language);
 
   const [formData, setFormData] = useState({
     userType: 'user',
@@ -131,53 +135,53 @@ const SignupPage = () => {
           className="cancel-btn"
           onClick={() => navigate('/')}
         >
-          Cancel
+          {t('common.cancel')}
         </button>
 
         <div className="header">
-          <h2>Join Our Community</h2>
-          <p>Start your journey to better health awareness</p>
+          <h2>{t('auth.signup.title')}</h2>
+          <p>{t('auth.signup.subtitle')}</p>
         </div>
 
         <form onSubmit={handleSubmit} className="signup-form">
           <div className="user-type-selector">
-            <span className="label">I am a:</span>
+            <span className="label">{t('auth.signup.userType') || 'I am a:'}</span>
             <div className="toggle-buttons">
               <button
                 type="button"
                 className={`toggle-btn ${formData.userType === 'user' ? 'active' : ''}`}
                 onClick={() => setFormData(s => ({ ...s, userType: 'user' }))}
               >
-                User
+                {t('auth.signup.user') || 'User'}
               </button>
               <button
                 type="button"
                 className={`toggle-btn ${formData.userType === 'specialist' ? 'active' : ''}`}
                 onClick={() => setFormData(s => ({ ...s, userType: 'specialist' }))}
               >
-                Specialist
+                {t('auth.signup.specialist') || 'Specialist'}
               </button>
             </div>
           </div>
 
           <div className="name-fields">
             <div className="input-group">
-              <label>First Name</label>
+              <label>{t('auth.signup.firstName')}</label>
               <input
                 type="text"
                 name="firstName"
-                placeholder="Enter your first name"
+                placeholder={t('auth.signup.firstName')}
                 value={formData.firstName}
                 onChange={handleInputChange}
               />
               {errors.firstName && <small className="error">{errors.firstName}</small>}
             </div>
             <div className="input-group">
-              <label>Last Name</label>
+              <label>{t('auth.signup.lastName')}</label>
               <input
                 type="text"
                 name="lastName"
-                placeholder="Enter your last name"
+                placeholder={t('auth.signup.lastName')}
                 value={formData.lastName}
                 onChange={handleInputChange}
               />
@@ -186,11 +190,11 @@ const SignupPage = () => {
           </div>
 
           <div className="input-group full-width">
-            <label>Email Address</label>
+            <label>{t('auth.signup.email')}</label>
             <input
               type="email"
               name="email"
-              placeholder="Enter your email"
+              placeholder={t('auth.signup.email')}
               value={formData.email}
               onChange={handleInputChange}
             />
@@ -223,12 +227,12 @@ const SignupPage = () => {
           </div>
 
           <div className="input-group full-width">
-            <label>Password</label>
+            <label>{t('auth.signup.password')}</label>
             <div className="password-wrapper">
               <input
                 type={showPwd ? 'text' : 'password'}
                 name="password"
-                placeholder="Create a password"
+                placeholder={t('auth.signup.password')}
                 value={formData.password}
                 onChange={handleInputChange}
               />
@@ -244,12 +248,12 @@ const SignupPage = () => {
           </div>
 
           <div className="input-group full-width">
-            <label>Confirm Password</label>
+            <label>{t('auth.signup.confirmPassword')}</label>
             <div className="password-wrapper">
               <input
                 type={showPwd2 ? 'text' : 'password'}
                 name="confirmPassword"
-                placeholder="Confirm your password"
+                placeholder={t('auth.signup.confirmPassword')}
                 value={formData.confirmPassword}
                 onChange={handleInputChange}
               />
@@ -281,11 +285,11 @@ const SignupPage = () => {
           {submitError && <div className="submit-error">{submitError}</div>}
 
           <button type="submit" className="create-account-btn" disabled={loading}>
-            {loading ? 'Creating...' : 'Create Account'}
+            {loading ? t('common.loading') : t('auth.signup.createAccount')}
           </button>
 
           <p className="signin-link">
-            Already have an account? <Link to="/login">Sign in here</Link>
+            {t('auth.signup.haveAccount')} <Link to="/login">{t('auth.signup.signIn')}</Link>
           </p>
         </form>
       </div>

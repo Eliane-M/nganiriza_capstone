@@ -136,4 +136,88 @@
 .education_page .topics-wrap .did-you-know p {
   color: #374151;
   font-size: 0.95rem;
+}
+
+/* Dark Mode Styles */
+html.dark .container-page,
+html.dark .education_page {
+  background: #09090b;
+  color: #fafafa;
+}
+
+html.dark .education_page .topics-wrap .did-you-know,
+html.dark .education_page .topics-wrap .topic-card {
+  background: #18181b;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+}
+
+html.dark .input-row {
+  border-color: #3f3f46;
+  background: #27272a;
+}
+
+html.dark .input-row input {
+  color: #fafafa;
+}
+
+html.dark .input-row input::placeholder {
+  color: #71717a;
+}
+
+html.dark .pill-row .pill {
+  background: #27272a;
+  color: #d4d4d8;
+}
+
+html.dark .pill-row .pill.active {
+  background: #7e22ce;
+  color: #ffffff;
+}
+
+html.dark .education_page .topics-wrap h2 {
+  color: #fafafa;
+}
+
+html.dark .education_page .topics-wrap .topic-card {
+  border-color: #3f3f46;
+}
+
+html.dark .education_page .topics-wrap .topic-card .icon-wrap {
+  background: #27272a;
+}
+
+html.dark .education_page .topics-wrap .topic-card.purple {
+  background: #3f1f4f;
+  color: #c084fc;
+  border-color: #5b21b6;
+}
+
+html.dark .education_page .topics-wrap .topic-card.pink {
+  background: #4a1f2d;
+  color: #f9a8d4;
+  border-color: #6b1f3d;
+}
+
+html.dark .education_page .topics-wrap .topic-card.blue {
+  background: #1e3a5f;
+  color: #93c5fd;
+  border-color: #2563eb;
+}
+
+html.dark .education_page .topics-wrap .topic-card.teal {
+  background: #0f4e3e;
+  color: #5eead4;
+  border-color: #14b8a6;
+}
+
+html.dark .education_page .topics-wrap .did-you-know h3 {
+  color: #c084fc;
+}
+
+html.dark .education_page .topics-wrap .did-you-know p {
+  color: #d4d4d8;
+}
+
+html.dark .notice-muted {
+  color: #71717a;
 }/*# sourceMappingURL=education_page.css.map */

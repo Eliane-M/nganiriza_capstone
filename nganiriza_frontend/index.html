@@ -11,6 +11,39 @@
     <link rel="apple-touch-icon" href="/nganiriza.png" />
 
     <title>NGANIRIZA</title>
+    <script>
+      // Apply theme immediately to prevent flash of unstyled content
+      (function() {
+        const theme = localStorage.getItem('theme') || 'light';
+        const root = document.documentElement;
+        
+        if (theme === 'dark') {
+          root.classList.add('dark');
+          root.setAttribute('data-theme', 'dark');
+        } else {
+          root.classList.remove('dark');
+          root.setAttribute('data-theme', 'light');
+        }
+        
+        // Apply to body when DOM is ready (body might not exist yet when script runs in head)
+        const applyThemeToBody = () => {
+          if (document.body) {
+            if (theme === 'dark') {
+              document.body.classList.add('dark');
+            } else {
+              document.body.classList.remove('dark');
+            }
+          }
+        };
+        
+        // Try immediately, or wait for DOMContentLoaded
+        if (document.readyState === 'loading') {
+          document.addEventListener('DOMContentLoaded', applyThemeToBody);
+        } else {
+          applyThemeToBody();
+        }
+      })();
+    </script>
   </head>
   <body>
     <noscript>You need to enable JavaScript to run this app.</noscript>

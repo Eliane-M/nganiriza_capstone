@@ -242,3 +242,96 @@
   }
 }
 
+/* Dark Mode Styles */
+html.dark .article-detail-page {
+  background: linear-gradient(to bottom, #09090b, #18181b);
+}
+
+html.dark .article-back-btn {
+  background: #27272a;
+  border-color: #3f3f46;
+  color: #d4d4d8;
+}
+
+html.dark .article-back-btn:hover {
+  background: #3f3f46;
+  border-color: #a855f7;
+  color: #c084fc;
+}
+
+html.dark .article-content {
+  background: #18181b;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+}
+
+html.dark .article-header {
+  border-bottom-color: #3f3f46;
+}
+
+html.dark .article-read-time {
+  color: #a1a1aa;
+}
+
+html.dark .article-tag {
+  background: #3f1f4f;
+  color: #c084fc;
+}
+
+html.dark .article-title {
+  color: #fafafa;
+}
+
+html.dark .article-body {
+  color: #d4d4d8;
+}
+
+html.dark .article-body h1,
+html.dark .article-body h2,
+html.dark .article-body h3 {
+  color: #fafafa;
+}
+
+html.dark .article-body a {
+  color: #c084fc;
+}
+
+html.dark .article-body a:hover {
+  color: #d8b4fe;
+}
+
+html.dark .article-body blockquote {
+  border-left-color: #a855f7;
+  color: #a1a1aa;
+}
+
+html.dark .article-body code {
+  background: #27272a;
+  color: #fafafa;
+}
+
+html.dark .article-body pre {
+  background: #27272a;
+  color: #fafafa;
+}
+
+html.dark .article-footer {
+  border-top-color: #3f3f46;
+}
+
+html.dark .article-back-link {
+  color: #c084fc;
+}
+
+html.dark .article-back-link:hover {
+  color: #d8b4fe;
+}
+
+html.dark .article-loading,
+html.dark .article-error {
+  color: #a1a1aa;
+}
+
+html.dark .article-error {
+  color: #f87171;
+}
+

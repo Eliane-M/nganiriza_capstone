@@ -1,6 +1,7 @@
 import React, { useEffect, useState, useRef, useContext } from 'react';
 import { Send as SendIcon, Home, MessageCircle, Users, MapPin, ArrowLeft, Menu, Plus, User, BookOpen } from 'lucide-react';
-import { LanguageContext } from '../assets/components/context/LanguageContext.tsx';
+import { LanguageContext } from '../contexts/AppContext';
+import { useTranslation } from '../utils/translations';
 import { useNavigate } from 'react-router-dom';
 import Navbar from '../assets/components/Navbar';
 import Sidebar from '../assets/components/Sidebar';
@@ -37,6 +38,7 @@ export function ChatPage() {
   const [loadingConversations, setLoadingConversations] = useState(false);
   const messagesEndRef = useRef(null);
   const { language } = useContext(LanguageContext);
+  const { t } = useTranslation(language);
   const { isAuthenticated } = useContext(AuthContext);
   const navigate = useNavigate();
 
@@ -56,15 +58,6 @@ export function ChatPage() {
       }
     }
   }, [currentConversationId]);
-
-  const translations = {
-    placeholder: { en: "Type a message...", fr: "Écrivez un message...", rw: "Andika ubutumwa..." },
-    typing: { en: "AI is typing...", fr: "L'IA écrit...", rw: "AI iri kwandika..." },
-    back: { en: "Back", fr: "Retour", rw: "Subira inyuma" },
-    newChat: { en: "New Chat", fr: "Nouvelle conversation", rw: "Inkuru nshya" },
-    chatHistory: { en: "Chat History", fr: "Historique", rw: "Amateka" },
-    noConversations: { en: "No conversations yet", fr: "Aucune conversation", rw: "Nta nkuru" }
-  };
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -208,7 +201,7 @@ export function ChatPage() {
       return res.data.success ? res.data.response : "Sorry, I couldn't respond right now.";
     } catch (error) {
       console.error('AI query error:', error);
-      return translations.typing[language].replace('typing', 'connect');
+      return t('chat.typing').replace('typing', 'connect');
     }
   }
 
@@ -320,12 +313,12 @@ export function ChatPage() {
   };
 
   const navItems = [
-    { icon: Home, label: "Home", path: "/" },
-    { icon: MessageCircle, label: "Chat", path: "/chat", active: true },
-    { icon: Users, label: "Specialists", path: "/specialists" },
-    { icon: MapPin, label: "Map", path: "/map" },
-    { icon: BookOpen, label: "Learn", path: "/learn" },
-    { icon: User, label: "Profile", path: "/profile" }
+    { icon: Home, label: t('nav.home'), path: "/" },
+    { icon: MessageCircle, label: t('nav.chat'), path: "/chat", active: true },
+    { icon: Users, label: t('nav.specialists'), path: "/specialists" },
+    { icon: MapPin, label: t('nav.map'), path: "/map" },
+    { icon: BookOpen, label: t('nav.learn'), path: "/learn" },
+    { icon: User, label: t('nav.profile'), path: "/profile" }
   ];
 
   return (
@@ -338,19 +331,19 @@ export function ChatPage() {
           isOpen={sidebarOpen}
           onClose={() => setSidebarOpen(false)}
           onToggle={() => setSidebarOpen(!sidebarOpen)}
-          title={translations.chatHistory[language]}
+          title={t('chat.chatHistory')}
         >
           <div className="chat-sidebar-content">
             <button onClick={createNewConversation} className="new-chat-btn">
               <Plus size={18} />
-              <span>{translations.newChat[language]}</span>
+              <span>{t('chat.newChat')}</span>
             </button>
             
             <div className="conversations-list">
               {loadingConversations ? (
                 <div className="loading-text">Loading...</div>
               ) : conversations.length === 0 ? (
-                <div className="empty-conversations">{translations.noConversations[language]}</div>
+                <div className="empty-conversations">{t('chat.noConversations')}</div>
               ) : (
                 conversations.map((conv) => {
                   const convId = conv.id || conv.id_number;
@@ -394,11 +387,11 @@ export function ChatPage() {
           <button onClick={() => setSidebarOpen(true)} className="menu-btn">
             <Menu size={24} />
           </button>
-          <div className="header-title">
+            <div className="header-title">
             <div className="avatar-small">AI</div>
             <div>
-              <h3>AI Health Companion</h3>
-              <span className="online">Online</span>
+              <h3>{t('chat.aiCompanion')}</h3>
+              <span className="online">{t('chat.online')}</span>
             </div>
           </div>
         </div>
@@ -436,7 +429,7 @@ export function ChatPage() {
               value={inputText}
               onChange={e => setInputText(e.target.value)}
               onKeyDown={e => e.key === 'Enter' && !e.shiftKey && handleSend()}
-              placeholder={translations.placeholder[language]}
+              placeholder={t('chat.placeholder')}
               disabled={isLoading}
             />
             <button onClick={handleSend} disabled={!inputText.trim() || isLoading}>
