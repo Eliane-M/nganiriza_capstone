@@ -331,7 +331,7 @@ class Messages(BaseModel):
     ]
 
     id_number = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    conversation = models.ForeignKey(Conversations, on_delete=models.CASCADE)
+    conversation = models.ForeignKey(Conversations, on_delete=models.CASCADE, related_name='messages')
     role = models.CharField(max_length=20, choices=ROLE_CHOICES, default='user')
     content = models.TextField()
     detected_intent = models.CharField(max_length=100, blank=True, null=True)
