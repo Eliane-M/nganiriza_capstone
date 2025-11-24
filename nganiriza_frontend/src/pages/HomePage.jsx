@@ -1,13 +1,17 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { Send as SendIcon, Home, MessageCircle, Users, MapPin, ArrowLeft, User, BookOpen } from 'lucide-react';
 import Navbar from '../assets/components/Navbar.jsx';
 import { useNavigate } from 'react-router-dom';
+import { LanguageContext } from '../contexts/AppContext';
+import { useTranslation } from '../utils/translations';
 import '../assets/css/homePage/homePage.css';
 import hero_section from '../images/hero_section.jpg';
 import { useA2HS } from '../pwa/useA2HS.js'
 
 export function HomePage() {
   const navigate = useNavigate();
+  const { language } = useContext(LanguageContext);
+  const { t } = useTranslation(language);
   
   const features = [
     {
@@ -16,8 +20,8 @@ export function HomePage() {
           <path d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20zM12 6v6l4 2" />
         </svg>
       ),
-      title: 'AI Health Companion',
-      desc: 'Get instant, accurate answers about your body and health changes',
+      title: t('home.features.aiCompanion.title'),
+      desc: t('home.features.aiCompanion.desc'),
       onClick: () => navigate('chat'),
       gradientClass: 'gradient-primary',
     },
@@ -27,8 +31,8 @@ export function HomePage() {
           <path d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20zM12 6v6l4 2" />
         </svg>
       ),
-      title: 'Expert Specialists',
-      desc: 'Connect with certified healthcare professionals who understand you',
+      title: t('home.features.specialists.title'),
+      desc: t('home.features.specialists.desc'),
       onClick: () => navigate('specialists'),
       gradientClass: 'gradient-pink',
     },
@@ -38,8 +42,8 @@ export function HomePage() {
           <path d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20zM12 6v6l4 2" />
         </svg>
       ),
-      title: 'Health Services Map',
-      desc: 'Find nearby clinics, pharmacies, and emergency services instantly',
+      title: t('home.features.map.title'),
+      desc: t('home.features.map.desc'),
       onClick: () => navigate('map'),
       gradientClass: 'gradient-orange',
     },
@@ -49,8 +53,8 @@ export function HomePage() {
           <path d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20zM12 6v6l4 2" />
         </svg>
       ),
-      title: 'Educational Resources',
-      desc: 'Learn about your body with age-appropriate, medically accurate content',
+      title: t('home.features.education.title'),
+      desc: t('home.features.education.desc'),
       onClick: () => navigate('learn'),
       gradientClass: 'gradient-yellow',
     },
@@ -59,12 +63,12 @@ export function HomePage() {
   const { canPrompt, promptInstall } = useA2HS()
 
   const navItems = [
-    { icon: Home, label: "Home", path: "/", active: true},
-    { icon: MessageCircle, label: "Chat", path: "/chat" },
-    { icon: Users, label: "Specialists", path: "/specialists" },
-    { icon: MapPin, label: "Map", path: "/map" },
-    { icon: BookOpen, label: "Learn", path: "/learn" },
-    { icon: User, label: "Profile", path: "/profile" }
+    { icon: Home, label: t('nav.home'), path: "/", active: true},
+    { icon: MessageCircle, label: t('nav.chat'), path: "/chat" },
+    { icon: Users, label: t('nav.specialists'), path: "/specialists" },
+    { icon: MapPin, label: t('nav.map'), path: "/map" },
+    { icon: BookOpen, label: t('nav.learn'), path: "/learn" },
+    { icon: User, label: t('nav.profile'), path: "/profile" }
   ];
 
   return (
@@ -78,14 +82,14 @@ export function HomePage() {
             {/* Left Content */}
             <div className="hero-content">
               <h1 className="hero-title">
-                Your trusted companion for{' '}
+                {t('home.heroTitle')}{' '}
                 <span className="gradient-text">
-                  sexual and reproductive health
+                  {t('home.heroTitleHighlight')}
                 </span>
               </h1>
 
               <p className="hero-description">
-                Get your journey with confidence. Get answers, find support, and stay empowered in a safe, private space.
+                {t('home.heroDescription')}
               </p>
 
               <div className="hero-actions">
@@ -93,14 +97,14 @@ export function HomePage() {
                   onClick={() => navigate('chat')}
                   className="btn btn-primary"
                 >
-                  Start Chatting with AI
+                  {t('home.startChatting')}
                 </button>
                 {canPrompt && (
                   <button
                     className="btn btn-primary"
                     onClick={promptInstall}
                   >
-                    Install App
+                    {t('home.installApp')}
                   </button>
                 )}
                 {/* <button className='btn btn-primary' onClick={promptInstall}>Install App</button> */}
@@ -145,13 +149,13 @@ export function HomePage() {
           <div className="cta-band">
             <div className="cta-content">
               <h4 className="cta-title">
-                Everything you need to feel confident and informed
+                {t('home.ctaTitle')}
               </h4>
               <button
                 onClick={() => navigate('signup')}
                 className="btn btn-cta"
               >
-                Get Started Today
+                {t('home.ctaButton')}
               </button>
             </div>
           </div>
@@ -165,42 +169,42 @@ export function HomePage() {
             <div className="footer-section">
               <h4 className="footer-title">Nganiriza</h4>
               <p className="footer-description">
-                Your trusted companion for sexual and reproductive health
+                {t('home.footer.description')}
               </p>
             </div>
             
             <div className="footer-section">
-              <h4 className="footer-title">Quick Links</h4>
+              <h4 className="footer-title">{t('home.footer.quickLinks')}</h4>
               <div className="footer-links">
-                <button onClick={() => navigate('/')}>Home</button>
-                <button onClick={() => navigate('/chat')}>Chat</button>
-                <button onClick={() => navigate('/specialists')}>Specialists</button>
-                <button onClick={() => navigate('/map')}>Map</button>
-                <button onClick={() => navigate('/learn')}>Learn</button>
+                <button onClick={() => navigate('/')}>{t('nav.home')}</button>
+                <button onClick={() => navigate('/chat')}>{t('nav.chat')}</button>
+                <button onClick={() => navigate('/specialists')}>{t('nav.specialists')}</button>
+                <button onClick={() => navigate('/map')}>{t('nav.map')}</button>
+                <button onClick={() => navigate('/learn')}>{t('nav.learn')}</button>
               </div>
             </div>
             
             <div className="footer-section">
-              <h4 className="footer-title">Resources</h4>
+              <h4 className="footer-title">{t('home.footer.resources')}</h4>
               <div className="footer-links">
-                <button onClick={() => navigate('/learn')}>Educational Resources</button>
-                <button onClick={() => navigate('/specialists')}>Find a Specialist</button>
-                <button onClick={() => navigate('/map')}>Health Services</button>
+                <button onClick={() => navigate('/learn')}>{t('home.footer.educationalResources')}</button>
+                <button onClick={() => navigate('/specialists')}>{t('home.footer.findSpecialist')}</button>
+                <button onClick={() => navigate('/map')}>{t('home.footer.healthServices')}</button>
               </div>
             </div>
             
             <div className="footer-section">
-              <h4 className="footer-title">Legal</h4>
+              <h4 className="footer-title">{t('home.footer.legal')}</h4>
               <div className="footer-links">
-                <button onClick={() => navigate('/privacy')}>Privacy Policy</button>
-                <button onClick={() => navigate('/terms')}>Terms of Service</button>
-                <button onClick={() => navigate('/help')}>Help Center</button>
+                <button onClick={() => navigate('/privacy')}>{t('home.footer.privacyPolicy')}</button>
+                <button onClick={() => navigate('/terms')}>{t('home.footer.termsOfService')}</button>
+                <button onClick={() => navigate('/help')}>{t('home.footer.helpCenter')}</button>
               </div>
             </div>
           </div>
           
           <div className="footer-bottom">
-            <span>© {new Date().getFullYear()} Nganiriza. All rights reserved.</span>
+            <span>© {new Date().getFullYear()} Nganiriza. {t('home.footer.copyright')}</span>
           </div>
         </div>
       </footer>

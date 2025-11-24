@@ -37,7 +37,7 @@
   transition: transform 0.3s ease;
 }
 
-:global(.dark) .sidebar {
+html.dark .sidebar {
   background: #18181b;
   border-right: 1px solid #27272a;
 }
@@ -62,7 +62,7 @@
   gap: 1rem;
 }
 
-:global(.dark) .sidebar-header {
+html.dark .sidebar-header {
   background: #27272a;
   border-bottom-color: #3f3f46;
 }
@@ -76,7 +76,7 @@
   white-space: nowrap;
 }
 
-:global(.dark) .sidebar-title {
+html.dark .sidebar-title {
   color: #fafafa;
 }
 
@@ -108,11 +108,11 @@
   color: #18181b;
 }
 
-:global(.dark) .sidebar-toggle-header {
+html.dark .sidebar-toggle-header {
   color: #a1a1aa;
 }
 
-:global(.dark) .sidebar-toggle-header:hover {
+html.dark .sidebar-toggle-header:hover {
   background: rgba(255, 255, 255, 0.1);
   color: #fafafa;
 }
@@ -137,11 +137,11 @@
   color: #18181b;
 }
 
-:global(.dark) .sidebar-close {
+html.dark .sidebar-close {
   color: #a1a1aa;
 }
 
-:global(.dark) .sidebar-close:hover {
+html.dark .sidebar-close:hover {
   background: rgba(255, 255, 255, 0.1);
   color: #fafafa;
 }
@@ -161,7 +161,7 @@
   background: #fafafa;
 }
 
-:global(.dark) .sidebar-content::-webkit-scrollbar-track {
+html.dark .sidebar-content::-webkit-scrollbar-track {
   background: #27272a;
 }
 
@@ -170,7 +170,7 @@
   border-radius: 3px;
 }
 
-:global(.dark) .sidebar-content::-webkit-scrollbar-thumb {
+html.dark .sidebar-content::-webkit-scrollbar-thumb {
   background: #52525b;
 }
 
@@ -178,7 +178,7 @@
   background: #9ca3af;
 }
 
-:global(.dark) .sidebar-content::-webkit-scrollbar-thumb:hover {
+html.dark .sidebar-content::-webkit-scrollbar-thumb:hover {
   background: #71717a;
 }
 

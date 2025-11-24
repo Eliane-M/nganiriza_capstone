@@ -4,12 +4,16 @@ import { User, Mail, Phone, MapPin, Calendar, Edit2, Save, X, Home, MessageCircl
 import Navbar from '../assets/components/Navbar';
 import apiClient from '../utils/apiClient';
 import { AuthContext } from '../assets/components/context/AuthContext';
+import { LanguageContext } from '../contexts/AppContext';
+import { useTranslation } from '../utils/translations';
 import '../assets/css/profile/profile_page.css';
 
 const ProfilePage = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const { user: authUser } = useContext(AuthContext);
+  const { language } = useContext(LanguageContext);
+  const { t } = useTranslation(language);
   const [loading, setLoading] = useState(true);
   const [editing, setEditing] = useState(false);
   const [saving, setSaving] = useState(false);
@@ -17,12 +21,12 @@ const ProfilePage = () => {
   const [formData, setFormData] = useState({});
 
   const navItems = [
-    { icon: Home, label: "Home", path: "/" },
-    { icon: MessageCircle, label: "Chat", path: "/chat" },
-    { icon: Users, label: "Specialists", path: "/specialists" },
-    { icon: MapPin, label: "Map", path: "/map" },
-    { icon: BookOpen, label: "Learn", path: "/learn" },
-    { icon: User, label: "Profile", path: "/profile", active: true }
+    { icon: Home, label: t('nav.home'), path: "/" },
+    { icon: MessageCircle, label: t('nav.chat'), path: "/chat" },
+    { icon: Users, label: t('nav.specialists'), path: "/specialists" },
+    { icon: MapPin, label: t('nav.map'), path: "/map" },
+    { icon: BookOpen, label: t('nav.learn'), path: "/learn" },
+    { icon: User, label: t('nav.profile'), path: "/profile", active: true }
   ];
 
   useEffect(() => {
@@ -77,7 +81,7 @@ const ProfilePage = () => {
     return (
       <div className="profile-page" style={styles.page}>
         <Navbar />
-        <div style={styles.loading}>Loading profile...</div>
+        <div style={styles.loading}>{t('common.loading')}</div>
       </div>
     );
   }
@@ -86,7 +90,7 @@ const ProfilePage = () => {
     return (
       <div className="profile-page" style={styles.page}>
         <Navbar />
-        <div style={styles.error}>Failed to load profile</div>
+        <div style={styles.error}>{t('common.error')}</div>
       </div>
     );
   }
@@ -114,17 +118,17 @@ const ProfilePage = () => {
             {!editing ? (
               <button onClick={() => setEditing(true)} style={styles.editBtn}>
                 <Edit2 size={18} />
-                Edit Profile
+                {t('profile.edit')}
               </button>
             ) : (
               <div style={styles.actionButtons}>
                 <button onClick={handleSave} style={styles.saveBtn} disabled={saving}>
                   <Save size={18} />
-                  {saving ? 'Saving...' : 'Save'}
+                  {saving ? t('common.loading') : t('profile.save')}
                 </button>
                 <button onClick={handleCancel} style={styles.cancelBtn}>
                   <X size={18} />
-                  Cancel
+                  {t('profile.cancel')}
                 </button>
               </div>
             )}
@@ -135,7 +139,7 @@ const ProfilePage = () => {
             <div style={styles.detailGroup}>
               <label style={styles.label}>
                 <Mail size={18} />
-                Email
+                {t('profile.email')}
               </label>
               <input
                 type="email"
@@ -149,23 +153,23 @@ const ProfilePage = () => {
             <div style={styles.detailGroup}>
               <label style={styles.label}>
                 <Phone size={18} />
-                Phone Number
+                {t('profile.phone')}
               </label>
               <input
                 type="tel"
                 name="phone_number"
-                value={editing ? formData.phone_number || '' : profile.phone_number || 'Not provided'}
+                value={editing ? formData.phone_number || '' : profile.phone_number || t('profile.notProvided') || 'Not provided'}
                 onChange={handleChange}
                 disabled={!editing}
                 style={editing ? styles.input : { ...styles.input, ...styles.inputDisabled }}
-                placeholder="Enter your phone number"
+                placeholder={t('profile.phone')}
               />
             </div>
 
             <div style={styles.detailGroup}>
               <label style={styles.label}>
                 <Calendar size={18} />
-                Date of Birth
+                {t('profile.dateOfBirth')}
               </label>
               <input
                 type="date"
@@ -213,7 +217,7 @@ const ProfilePage = () => {
 
           {/* Account Info */}
           <div style={styles.accountInfo}>
-            <h3 style={styles.sectionTitle}>Account Information</h3>
+            <h3 style={styles.sectionTitle}>{t('profile.accountInfo') || 'Account Information'}</h3>
             <div style={styles.infoGrid}>
               <div style={styles.infoItem}>
                 <span style={styles.infoLabel}>Member Since</span>

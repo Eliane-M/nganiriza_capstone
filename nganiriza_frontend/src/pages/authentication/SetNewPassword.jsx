@@ -1,10 +1,12 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { Lock, CheckCircle } from "lucide-react";
 import { useLocation, useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
+import { LanguageContext } from '../../contexts/AppContext';
+import { useTranslation } from '../../utils/translations';
 import BASE_URL from "../../config";
 import "../../assets/css/authPages/setnewpassword.css"; // We'll make this
 
@@ -21,6 +23,8 @@ export default function SetNewPassword() {
   const [isLoading, setIsLoading] = useState(false);
   const { state } = useLocation();
   const navigate = useNavigate();
+  const { language } = useContext(LanguageContext);
+  const { t } = useTranslation(language);
 
   // Redirect if no email
   const {
@@ -77,19 +81,19 @@ export default function SetNewPassword() {
           <CheckCircle className="success-icon" />
         </div>
 
-        <h1>Set New Password</h1>
+        <h1>{t('auth.setNewPassword.title')}</h1>
         <p className="subtitle">
-          Enter the code sent to <strong>{email}</strong> and choose a strong password
+          {t('auth.setNewPassword.subtitle')}
         </p>
 
         <form onSubmit={handleSubmit(onSubmit)} className="form">
           {/* 6-Char Code */}
           <div className="input-group">
-            <label>Verification Code</label>
+            <label>{t('auth.verifyCode.enterCode')}</label>
             <input
               type="text"
               maxLength="6"
-              placeholder="A1B2C3"
+              placeholder={t('auth.verifyCode.enterCode')}
               {...register("code")}
               className="code-input"
               style={{ textTransform: "uppercase", letterSpacing: "0.5rem", textAlign: "center" }}
@@ -99,10 +103,10 @@ export default function SetNewPassword() {
 
           {/* New Password */}
           <div className="input-group">
-            <label>New Password</label>
+            <label>{t('auth.setNewPassword.newPassword')}</label>
             <input
               type="password"
-              placeholder="••••••••"
+              placeholder={t('auth.setNewPassword.newPassword')}
               {...register("password")}
             />
             {errors.password && <span className="error-text">{errors.password.message}</span>}
@@ -110,22 +114,22 @@ export default function SetNewPassword() {
 
           {/* Confirm Password */}
           <div className="input-group">
-            <label>Confirm Password</label>
+            <label>{t('auth.setNewPassword.confirmPassword')}</label>
             <input
               type="password"
-              placeholder="••••••••"
+              placeholder={t('auth.setNewPassword.confirmPassword')}
               {...register("confirmPassword")}
             />
             {errors.confirmPassword && <span className="error-text">{errors.confirmPassword.message}</span>}
           </div>
 
           <button type="submit" className="submit-btn" disabled={isLoading}>
-            {isLoading ? "Changing Password..." : "Set New Password"}
+            {isLoading ? t('common.loading') : t('auth.setNewPassword.updatePassword')}
           </button>
         </form>
 
         <a href="/login" className="back-link">
-          ← Back to Log In
+          ← {t('auth.setNewPassword.backToLogin')}
         </a>
       </div>
     </div>

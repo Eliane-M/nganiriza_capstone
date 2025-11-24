@@ -2,6 +2,8 @@ import React, { useState, useContext } from 'react';
 import { useNavigate, Link, useLocation } from 'react-router-dom';
 import '../../assets/css/authPages/login.css';
 import { AuthContext } from '../../assets/components/context/AuthContext';
+import { LanguageContext } from '../../contexts/AppContext';
+import { useTranslation } from '../../utils/translations';
 // import { GoogleLogin, GoogleOAuthProvider } from '@react-oauth/google';
 // import { FacebookLoginButton } from 'react-social-login-buttons';
 import facebook_icon from '../../images/facebook_icon.jpeg';
@@ -11,6 +13,8 @@ const LoginForm = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const { login } = useContext(AuthContext);
+  const { language } = useContext(LanguageContext);
+  const { t } = useTranslation(language);
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -67,22 +71,22 @@ const LoginForm = () => {
             type="button"
             className="cancel-btn"
             onClick={() => navigate('/')}
-            aria-label="Cancel and go to homepage"
+            aria-label={t('common.cancel')}
           >
-            ✖ <span>Cancel</span>
+            ✖ <span>{t('common.cancel')}</span>
           </button>
-          <h2>Welcome Back</h2>
+          <h2>{t('auth.login.title')}</h2>
           <div className="spacer" />
         </div>
 
-        <p className="subtitle">Continue your health journey with us</p>
+        <p className="subtitle">{t('auth.login.subtitle')}</p>
 
         <form onSubmit={handleSubmit} className="auth-form">
           <div className="input-group">
-            <label>Email Address (Username)</label>
+            <label>{t('auth.login.email')}</label>
             <input
               type="text"  // Use "text" or "email" — depends on whether email is username
-              placeholder="Enter your email or username"
+              placeholder={t('auth.login.email')}
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               autoComplete="username"
@@ -91,11 +95,11 @@ const LoginForm = () => {
           </div>
 
           <div className="input-group">
-            <label>Password</label>
+            <label>{t('auth.login.password')}</label>
             <div className="password-wrapper">
               <input
                 type={showPwd ? 'text' : 'password'}
-                placeholder="Enter your password"
+                placeholder={t('auth.login.password')}
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 autoComplete="current-password"
@@ -115,18 +119,18 @@ const LoginForm = () => {
           <div className="options">
             <span />
             <Link to="/reset-password" className="forgot-link">
-              Forgot password?
+              {t('auth.login.forgotPassword')}
             </Link>
           </div>
 
           {errMsg && <div className="submit-error">{errMsg}</div>}
 
           <button type="submit" className="submit-btn" disabled={loading}>
-            {loading ? 'Logging in…' : 'Log In'}
+            {loading ? t('common.loading') : t('auth.login.signIn')}
           </button>
 
           <div className="divider">
-            <span>Or continue with</span>
+            <span>{t('auth.login.orContinueWith')}</span>
           </div>
 
           <div className="social-buttons">
@@ -139,7 +143,7 @@ const LoginForm = () => {
           </div>
 
           <p className="switch-link">
-            Don't have an account? <Link to="/signup">Sign up here</Link>
+            {t('auth.login.noAccount')} <Link to="/signup">{t('auth.login.signUp')}</Link>
           </p>
         </form>
 

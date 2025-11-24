@@ -5,11 +5,15 @@ import { useNavigate } from 'react-router-dom';
 import Navbar from '../assets/components/Navbar';
 import apiClient from '../utils/apiClient';
 import { AuthContext } from '../assets/components/context/AuthContext';
+import { LanguageContext } from '../contexts/AppContext';
+import { useTranslation } from '../utils/translations';
 import '../assets/css/map/map_page.css';
 
 export function MapPage() {
   const navigate = useNavigate();
   const { isAuthenticated } = useContext(AuthContext);
+  const { language } = useContext(LanguageContext);
+  const { t } = useTranslation(language);
   const [searchTerm, setSearchTerm] = useState('');
   const [userLocation, setUserLocation] = useState(undefined);
   const [isLoadingLocation, setIsLoadingLocation] = useState(false);
@@ -22,15 +26,23 @@ export function MapPage() {
   const filterDropdownRef = useRef(null);
 
   const navItems = [
-    { icon: Home, label: "Home", path: "/" },
-    { icon: MessageCircle, label: "Chat", path: "/chat" },
-    { icon: Users, label: "Specialists", path: "/specialists" },
-    { icon: MapPinIcon, label: "Map", path: "/map", active: true },
-    { icon: BookOpen, label: "Learn", path: "/learn" },
-    { icon: User, label: "Profile", path: "/profile" }
+    { icon: Home, label: t('nav.home'), path: "/" },
+    { icon: MessageCircle, label: t('nav.chat'), path: "/chat" },
+    { icon: Users, label: t('nav.specialists'), path: "/specialists" },
+    { icon: MapPinIcon, label: t('nav.map'), path: "/map", active: true },
+    { icon: BookOpen, label: t('nav.learn'), path: "/learn" },
+    { icon: User, label: t('nav.profile'), path: "/profile" }
   ];
 
-  const filters = ['All', 'clinic', 'hotline', 'counselor', 'NGO', 'hospital', 'youth clinic'];
+  const filters = [
+    { key: 'all', label: t('map.filters.all') },
+    { key: 'clinic', label: t('map.filters.clinic') },
+    { key: 'hotline', label: t('map.filters.hotline') },
+    { key: 'counselor', label: t('map.filters.counselor') },
+    { key: 'NGO', label: t('map.filters.ngo') },
+    { key: 'hospital', label: t('map.filters.hospital') },
+    { key: 'youth clinic', label: t('map.filters.youthClinic') }
+  ];
 
   useEffect(() => {
     loadClinics();
@@ -109,15 +121,15 @@ export function MapPage() {
       clinic.name?.toLowerCase().includes(s) ||
       clinic.type?.toLowerCase().includes(s);
     const matchesFilter =
-      selectedFilter === 'All' || selectedFilter === null || clinic.type === selectedFilter;
+      selectedFilter === null || selectedFilter === 'all' || clinic.type === selectedFilter;
     return matchesSearch && matchesFilter;
   });
 
   // Filter clinics with GPS coordinates for map display
   const clinicsWithLocation = filteredClinics.filter(clinic => clinic.position);
 
-  const handleFilterSelect = (filter) => {
-    setSelectedFilter(filter === 'All' ? null : filter);
+  const handleFilterSelect = (filterKey) => {
+    setSelectedFilter(filterKey === 'all' ? null : filterKey);
     setShowFilterDropdown(false);
   };
 
@@ -133,7 +145,7 @@ export function MapPage() {
                 <SearchIcon size={20} />
                 <input
                   type="text"
-                  placeholder="Search health services..."
+                  placeholder={t('map.searchPlaceholder')}
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
                 />
@@ -142,21 +154,38 @@ export function MapPage() {
                 <button
                   className="filter-dropdown-btn"
                   onClick={() => setShowFilterDropdown(!showFilterDropdown)}
-                  aria-label="Filter clinics"
+                  aria-label={t('map.filter') || 'Filter clinics'}
                 >
                   <Filter size={18} />
                   <ChevronDown size={16} className={showFilterDropdown ? 'rotate' : ''} />
                 </button>
+                <button 
+              className="get-location-btn" 
+              onClick={getUserLocation} 
+              disabled={isLoadingLocation}
+            >
+              {isLoadingLocation ? (
+                <>
+                  <div className="spinner" />
+                  {/* <span>{t('map.gettingLocation')}</span> */}
+                </>
+              ) : (
+                <>
+                  <MapPinIcon size={18} />
+                  {/* <span>{userLocation ? t('map.updateLocation') : t('map.useLocation')}</span> */}
+                </>
+              )}
+            </button>
                 {showFilterDropdown && (
                   <div className="filter-dropdown-menu">
                     {filters.map((filter) => (
                       <button
-                        key={filter}
-                        onClick={() => handleFilterSelect(filter)}
-                        className={`filter-dropdown-item ${(filter === 'All' && selectedFilter === null) || selectedFilter === filter ? 'active' : ''}`}
+                        key={filter.key}
+                        onClick={() => handleFilterSelect(filter.key)}
+                        className={`filter-dropdown-item ${(filter.key === 'all' && selectedFilter === null) || selectedFilter === filter.key ? 'active' : ''}`}
                       >
-                        {filter}
-                        {(filter === 'All' && selectedFilter === null) || selectedFilter === filter ? (
+                        {filter.label}
+                        {(filter.key === 'all' && selectedFilter === null) || selectedFilter === filter.key ? (
                           <span className="filter-check">✓</span>
                         ) : null}
                       </button>
@@ -165,29 +194,11 @@ export function MapPage() {
                 )}
               </div>
             </div>
-
-            <button 
-              className="get-location-btn" 
-              onClick={getUserLocation} 
-              disabled={isLoadingLocation}
-            >
-              {isLoadingLocation ? (
-                <>
-                  <div className="spinner" />
-                  <span>Getting location...</span>
-                </>
-              ) : (
-                <>
-                  <MapPinIcon size={18} />
-                  <span>{userLocation ? 'Update my location' : 'Use my location'}</span>
-                </>
-              )}
-            </button>
           </div>
 
           <div className="sidebar-content">
             {loading ? (
-              <div className="sidebar-loading">Loading clinics...</div>
+              <div className="sidebar-loading">{t('map.loadingClinics')}</div>
             ) : filteredClinics.length > 0 ? (
               <div className="clinic-cards">
                 {filteredClinics.map((clinic) => (
@@ -236,7 +247,7 @@ export function MapPage() {
                           onClick={(e) => e.stopPropagation()}
                         >
                           <Navigation size={14} />
-                          Directions
+                          {t('map.directions')}
                         </a>
                         {clinic.phone && (
                           <a
@@ -245,7 +256,7 @@ export function MapPage() {
                             onClick={(e) => e.stopPropagation()}
                           >
                             <Phone size={14} />
-                            Call
+                            {t('map.call')}
                           </a>
                         )}
                       </div>
@@ -256,8 +267,8 @@ export function MapPage() {
             ) : (
               <div className="sidebar-empty">
                 <MapPinIcon size={48} />
-                <p>No clinics found</p>
-                <p className="sidebar-empty-hint">Try adjusting your search or filters</p>
+                <p>{t('map.noClinics')}</p>
+                <p className="sidebar-empty-hint">{t('map.tryAdjusting')}</p>
               </div>
             )}
           </div>
@@ -266,7 +277,7 @@ export function MapPage() {
         {/* Map section */}
         <div className="map-page-map">
           {loading ? (
-            <div className="map-loading">Loading map...</div>
+            <div className="map-loading">{t('common.loading')}</div>
           ) : (
             <PublicMapView 
               clinics={clinicsWithLocation} 

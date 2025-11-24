@@ -4,23 +4,25 @@ import { ChevronLeft, Clock, BookOpen, Home, MessageCircle, Users, MapPin, User 
 import Navbar from '../assets/components/Navbar';
 import apiClient from '../utils/apiClient';
 import { LanguageContext } from '../contexts/AppContext';
+import { useTranslation } from '../utils/translations';
 import '../assets/css/learn/article_detail.css';
 
 const ArticleDetailPage = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const { language } = useContext(LanguageContext);
+  const { t } = useTranslation(language);
   const [article, setArticle] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
   const navItems = [
-    { icon: Home, label: "Home", path: "/" },
-    { icon: MessageCircle, label: "Chat", path: "/chat" },
-    { icon: Users, label: "Specialists", path: "/specialists" },
-    { icon: MapPin, label: "Map", path: "/map" },
-    { icon: BookOpen, label: "Learn", path: "/learn", active: true },
-    { icon: User, label: "Profile", path: "/profile" }
+    { icon: Home, label: t('nav.home'), path: "/" },
+    { icon: MessageCircle, label: t('nav.chat'), path: "/chat" },
+    { icon: Users, label: t('nav.specialists'), path: "/specialists" },
+    { icon: MapPin, label: t('nav.map'), path: "/map" },
+    { icon: BookOpen, label: t('nav.learn'), path: "/learn", active: true },
+    { icon: User, label: t('nav.profile'), path: "/profile" }
   ];
 
   useEffect(() => {
@@ -54,7 +56,7 @@ const ArticleDetailPage = () => {
       <div className="article-detail-page">
         <Navbar />
         <div className="article-detail-container">
-          <div className="article-loading">Loading article...</div>
+          <div className="article-loading">{t('article.loading')}</div>
         </div>
       </div>
     );
@@ -66,10 +68,10 @@ const ArticleDetailPage = () => {
         <Navbar />
         <div className="article-detail-container">
           <div className="article-error">
-            <p>{error || 'Article not found'}</p>
+            <p>{error || t('article.error')}</p>
             <button onClick={() => navigate('/learn')} className="article-back-btn">
               <ChevronLeft size={18} />
-              Back to Articles
+              {t('article.back')}
             </button>
           </div>
         </div>
@@ -86,7 +88,7 @@ const ArticleDetailPage = () => {
       <div className="article-detail-container">
         <button onClick={() => navigate('/learn')} className="article-back-btn">
           <ChevronLeft size={18} />
-          Back to Articles
+          {t('article.back')}
         </button>
 
         <article className="article-content">
@@ -94,7 +96,7 @@ const ArticleDetailPage = () => {
             <div className="article-meta">
               <span className="article-read-time">
                 <Clock size={16} />
-                {readTime} min read
+                {readTime} {t('article.readTime')}
               </span>
               {article.tags && article.tags.length > 0 && (
                 <div className="article-tags">

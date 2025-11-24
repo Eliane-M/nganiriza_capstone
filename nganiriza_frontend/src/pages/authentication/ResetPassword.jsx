@@ -1,11 +1,13 @@
 // src/pages/ResetPassword.jsx
-import { useState } from "react";
+import { useState, useContext } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { Lock } from "lucide-react";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
+import { LanguageContext } from '../../contexts/AppContext';
+import { useTranslation } from '../../utils/translations';
 import "../../assets/css/authPages/resetPass.css";
 import BASE_URL from "../../config";
 
@@ -16,6 +18,8 @@ const schema = z.object({
 export default function ResetPassword() {
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
+  const { language } = useContext(LanguageContext);
+  const { t } = useTranslation(language);
 
 const {
     register,
@@ -53,17 +57,17 @@ const {
           <Lock className="lock-icon" />
         </div>
 
-        <h1>Reset Password</h1>
+        <h1>{t('auth.resetPassword.title')}</h1>
         <p className="subtitle">
-          Enter your email to receive reset instructions
+          {t('auth.resetPassword.subtitle')}
         </p>
 
         <form onSubmit={handleSubmit(onSubmit)} className="form">
           <div className="input-group">
-            <label>Email Address</label>
+            <label>{t('auth.resetPassword.email')}</label>
             <input
               type="email"
-              placeholder="Enter your email address"
+              placeholder={t('auth.resetPassword.email')}
               {...register("email")}
               disabled={isLoading}
               className={errors.email ? "error" : ""}
@@ -90,12 +94,12 @@ const {
             className="submit-btn"
             disabled={isLoading}
           >
-            {isLoading ? "Sending..." : "Send Reset OTP"}
+            {isLoading ? t('common.loading') : t('auth.resetPassword.sendLink')}
           </button>
         </form>
 
         <a href="/login" className="back-link">
-          ← Back to Log In
+          ← {t('auth.resetPassword.backToLogin')}
         </a>
       </div>
     </div>

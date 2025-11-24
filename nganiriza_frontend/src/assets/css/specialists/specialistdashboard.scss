@@ -456,3 +456,143 @@ $border: #e9d5ff;
     font-size: 1.25rem;
   }
 }
+
+/* ============================================
+   DARK MODE STYLES
+   ============================================ */
+html.dark .specialist-dashboard,
+.dark .specialist-dashboard {
+  background: linear-gradient(to bottom, #09090b, #18181b);
+  color: #fafafa;
+}
+
+html.dark .dashboard-content-wrapper,
+.dark .dashboard-content-wrapper {
+  color: #fafafa;
+}
+
+/* Patient Item Dark Mode */
+html.dark .patient-item,
+.dark .patient-item {
+  color: #fafafa;
+}
+
+html.dark .patient-item:hover,
+.dark .patient-item:hover {
+  background: #27272a;
+}
+
+html.dark .patient-item.active,
+.dark .patient-item.active {
+  background: linear-gradient(135deg, rgba(168, 85, 247, 0.2), rgba(236, 72, 153, 0.2));
+  border-color: rgba(168, 85, 247, 0.4);
+}
+
+html.dark .patient-name,
+.dark .patient-name {
+  color: #fafafa;
+}
+
+html.dark .patient-meta,
+.dark .patient-meta {
+  color: #a1a1aa;
+}
+
+html.dark .loading-text,
+html.dark .empty-patients,
+.dark .loading-text,
+.dark .empty-patients {
+  color: #a1a1aa;
+}
+
+/* Dashboard Header Dark Mode */
+html.dark .dashboard-header h1,
+.dark .dashboard-header h1 {
+  color: #fafafa;
+}
+
+html.dark .dashboard-header p,
+.dark .dashboard-header p {
+  color: #a1a1aa;
+}
+
+/* Stats Card Dark Mode */
+html.dark .stat-card,
+.dark .stat-card {
+  background: #18181b;
+  border-color: #3f3f46;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+html.dark .stat-card:hover,
+.dark .stat-card:hover {
+  box-shadow: 0 8px 16px rgba(168, 85, 247, 0.2);
+}
+
+html.dark .stat-card h3,
+.dark .stat-card h3 {
+  color: #a1a1aa;
+}
+
+html.dark .stat-number,
+.dark .stat-number {
+  color: #fafafa;
+}
+
+/* Dashboard Empty State Dark Mode */
+html.dark .dashboard-empty-state,
+.dark .dashboard-empty-state {
+  background: #18181b;
+  border-color: #3f3f46;
+}
+
+html.dark .dashboard-empty-state h2,
+.dark .dashboard-empty-state h2 {
+  color: #fafafa;
+}
+
+html.dark .dashboard-empty-state p,
+.dark .dashboard-empty-state p {
+  color: #a1a1aa;
+}
+
+html.dark .dashboard-empty-state svg,
+.dark .dashboard-empty-state svg {
+  color: #c084fc;
+}
+
+/* Patient Detail View Dark Mode */
+html.dark .back-button,
+.dark .back-button {
+  border-color: #3f3f46;
+  color: #c084fc;
+}
+
+html.dark .back-button:hover,
+.dark .back-button:hover {
+  background: #27272a;
+  border-color: #a855f7;
+}
+
+html.dark .patient-header-info,
+.dark .patient-header-info {
+  background: #18181b;
+  border-color: #3f3f46;
+}
+
+html.dark .patient-header-info h2,
+.dark .patient-header-info h2 {
+  color: #fafafa;
+}
+
+html.dark .patient-header-email,
+.dark .patient-header-email {
+  color: #a1a1aa;
+}
+
+html.dark .patient-detail-content,
+.dark .patient-detail-content {
+  background: #18181b;
+  border-color: #3f3f46;
+  color: #fafafa;
+}

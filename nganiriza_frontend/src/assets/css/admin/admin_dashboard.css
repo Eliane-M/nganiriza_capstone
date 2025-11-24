@@ -423,6 +423,8 @@
   border-radius: 0.5rem;
   font-size: 0.95rem;
   transition: border-color 0.2s;
+  background: white;
+  color: #18181b;
 }
 
 .admin-form-group input:focus,
@@ -505,6 +507,18 @@
 
 .admin-tags-input input {
   flex: 1;
+  padding: 0.5rem;
+  border: 2px solid #e5e7eb;
+  border-radius: 0.5rem;
+  font-size: 0.875rem;
+  background: white;
+  color: #18181b;
+  transition: border-color 0.2s;
+}
+
+.admin-tags-input input:focus {
+  outline: none;
+  border-color: #a855f7;
 }
 
 .admin-tags-suggestions {
@@ -1300,5 +1314,637 @@
   .admin-specialist-card-actions button {
     width: 100%;
   }
+}
+
+/* Dark Mode Styles */
+html.dark .admin-dashboard {
+  background: linear-gradient(to bottom, #09090b, #18181b);
+}
+
+html.dark .admin-content {
+  background: transparent;
+  color: #fafafa;
+}
+
+html.dark .admin-sidebar-item {
+  color: #a1a1aa;
+}
+
+html.dark .admin-sidebar-item:hover {
+  background: rgba(168, 85, 247, 0.2);
+  color: #c084fc;
+}
+
+html.dark .admin-sidebar-item.active {
+  background: linear-gradient(135deg, #a855f7, #ec4899);
+  color: white;
+}
+
+html.dark .admin-page {
+  background: #18181b;
+  color: #fafafa;
+}
+
+html.dark .admin-card {
+  background: #27272a;
+  border-color: #3f3f46;
+}
+
+html.dark .admin-card-header h2 {
+  color: #fafafa;
+}
+
+html.dark .admin-card-header p {
+  color: #a1a1aa;
+}
+
+html.dark .admin-table {
+  background: #18181b;
+}
+
+html.dark .admin-table th {
+  background: #27272a;
+  color: #fafafa;
+  border-color: #3f3f46;
+}
+
+html.dark .admin-table td {
+  border-color: #3f3f46;
+  color: #d4d4d8;
+}
+
+html.dark .admin-table tr:hover {
+  background: #27272a;
+}
+
+html.dark .admin-input,
+html.dark .admin-select {
+  background: #27272a;
+  border-color: #3f3f46;
+  color: #fafafa;
+}
+
+html.dark .admin-input::placeholder,
+html.dark .admin-select::placeholder {
+  color: #71717a;
+}
+
+html.dark .admin-input:focus,
+html.dark .admin-select:focus {
+  border-color: #a855f7;
+  box-shadow: 0 0 0 3px rgba(168, 85, 247, 0.2);
+}
+
+html.dark .admin-btn {
+  background: #27272a;
+  color: #d4d4d8;
+  border-color: #3f3f46;
+}
+
+html.dark .admin-btn:hover {
+  background: #3f3f46;
+  border-color: #52525b;
+}
+
+html.dark .admin-btn-primary {
+  background: linear-gradient(135deg, #a855f7, #ec4899);
+  color: white;
+  border-color: transparent;
+}
+
+/* Admin Modal Dark Mode */
+html.dark .admin-modal,
+.dark .admin-modal {
+  background: rgba(0, 0, 0, 0.7);
+}
+
+html.dark .admin-modal-content,
+.dark .admin-modal-content {
+  background: #18181b;
+  border: 1px solid #27272a;
+  color: #fafafa;
+}
+
+html.dark .admin-modal-header,
+.dark .admin-modal-header {
+  border-bottom-color: #27272a;
+}
+
+html.dark .admin-modal-header h2,
+.dark .admin-modal-header h2 {
+  color: #fafafa;
+}
+
+html.dark .admin-modal-close,
+.dark .admin-modal-close {
+  color: #a1a1aa;
+}
+
+html.dark .admin-modal-close:hover,
+.dark .admin-modal-close:hover {
+  background: #27272a;
+  color: #fafafa;
+}
+
+html.dark .admin-modal-body,
+.dark .admin-modal-body {
+  color: #d4d4d8;
+}
+
+html.dark .admin-modal-actions,
+.dark .admin-modal-actions {
+  border-top-color: #27272a;
+}
+
+html.dark .admin-detail-grid label,
+.dark .admin-detail-grid label {
+  color: #a1a1aa;
+}
+
+html.dark .admin-detail-grid p,
+.dark .admin-detail-grid p {
+  color: #fafafa;
+}
+
+html.dark .admin-specialist-detail-section h3,
+.dark .admin-specialist-detail-section h3 {
+  color: #fafafa;
+  border-bottom-color: #3f3f46;
+}
+
+/* Admin Form Modal Dark Mode */
+html.dark .admin-form-modal,
+.dark .admin-form-modal {
+  background: rgba(0, 0, 0, 0.7);
+}
+
+html.dark .admin-form-content,
+.dark .admin-form-content {
+  background: #18181b;
+  border: 1px solid #27272a;
+  color: #fafafa;
+}
+
+html.dark .admin-form-group label,
+.dark .admin-form-group label {
+  color: #d4d4d8;
+}
+
+html.dark .admin-form-group input,
+html.dark .admin-form-group select,
+html.dark .admin-form-group textarea,
+.dark .admin-form-group input,
+.dark .admin-form-group select,
+.dark .admin-form-group textarea {
+  background: #27272a;
+  border-color: #3f3f46;
+  color: #fafafa;
+}
+
+html.dark .admin-form-group input::placeholder,
+html.dark .admin-form-group textarea::placeholder,
+.dark .admin-form-group input::placeholder,
+.dark .admin-form-group textarea::placeholder {
+  color: #71717a;
+}
+
+html.dark .admin-form-group input:focus,
+html.dark .admin-form-group select:focus,
+html.dark .admin-form-group textarea:focus,
+.dark .admin-form-group input:focus,
+.dark .admin-form-group select:focus,
+.dark .admin-form-group textarea:focus {
+  border-color: #a855f7;
+  box-shadow: 0 0 0 3px rgba(168, 85, 247, 0.2);
+}
+
+html.dark .admin-form-actions,
+.dark .admin-form-actions {
+  border-top-color: #27272a;
+}
+
+html.dark .admin-form-close-btn,
+.dark .admin-form-close-btn {
+  color: #a1a1aa;
+}
+
+html.dark .admin-form-close-btn:hover,
+.dark .admin-form-close-btn:hover {
+  background: #27272a;
+  color: #fafafa;
+}
+
+html.dark .admin-form-location-info,
+.dark .admin-form-location-info {
+  background: #27272a;
+  color: #c084fc;
+}
+
+html.dark .admin-clinic-item,
+.dark .admin-clinic-item {
+  background: #18181b;
+  border-color: #3f3f46;
+}
+
+html.dark .admin-clinic-item:hover,
+.dark .admin-clinic-item:hover {
+  border-color: #a855f7;
+}
+
+html.dark .admin-clinic-item-info h4,
+.dark .admin-clinic-item-info h4 {
+  color: #fafafa;
+}
+
+html.dark .admin-clinic-item-type,
+.dark .admin-clinic-item-type {
+  color: #a1a1aa;
+}
+
+html.dark .admin-clinic-item-hours,
+.dark .admin-clinic-item-hours {
+  color: #71717a;
+}
+
+html.dark .admin-pagination,
+.dark .admin-pagination {
+  border-top-color: #27272a;
+}
+
+html.dark .admin-pagination-info,
+.dark .admin-pagination-info {
+  color: #a1a1aa;
+}
+
+/* Admin Page Header Dark Mode */
+html.dark .admin-page-header h1,
+.dark .admin-page-header h1 {
+  color: #fafafa;
+}
+
+html.dark .admin-page-header p,
+.dark .admin-page-header p {
+  color: #a1a1aa;
+}
+
+/* Admin Page Content Dark Mode */
+html.dark .admin-page-content,
+.dark .admin-page-content {
+  background: #18181b;
+  border: 1px solid #27272a;
+  color: #fafafa;
+}
+
+/* Admin Search Box Dark Mode */
+html.dark .admin-search-box,
+.dark .admin-search-box {
+  background: #27272a;
+  border-color: #3f3f46;
+}
+
+html.dark .admin-search-box input,
+.dark .admin-search-box input {
+  color: #fafafa;
+}
+
+html.dark .admin-search-box input::placeholder,
+.dark .admin-search-box input::placeholder {
+  color: #71717a;
+}
+
+html.dark .admin-search-box svg,
+.dark .admin-search-box svg {
+  color: #c084fc;
+}
+
+/* Admin Filter Select Dark Mode */
+html.dark .admin-filter-select,
+.dark .admin-filter-select {
+  background: #27272a;
+  border-color: #3f3f46;
+  color: #fafafa;
+}
+
+html.dark .admin-filter-select option,
+.dark .admin-filter-select option {
+  background: #18181b;
+  color: #fafafa;
+}
+
+/* Admin Loading and Empty State Dark Mode */
+html.dark .admin-loading,
+.dark .admin-loading {
+  color: #a1a1aa;
+}
+
+html.dark .admin-empty-state,
+.dark .admin-empty-state {
+  color: #a1a1aa;
+}
+
+html.dark .admin-empty-state svg,
+.dark .admin-empty-state svg {
+  color: #71717a;
+}
+
+html.dark .admin-empty-hint,
+.dark .admin-empty-hint {
+  color: #71717a;
+}
+
+/* Admin Feedback Dark Mode */
+html.dark .admin-feedback.success,
+.dark .admin-feedback.success {
+  background: rgba(34, 197, 94, 0.15);
+  color: #4ade80;
+  border-color: rgba(34, 197, 94, 0.3);
+}
+
+html.dark .admin-feedback.error,
+.dark .admin-feedback.error {
+  background: rgba(239, 68, 68, 0.15);
+  color: #f87171;
+  border-color: rgba(239, 68, 68, 0.3);
+}
+
+/* Admin Home Dark Mode */
+html.dark .admin-home-header p,
+.dark .admin-home-header p {
+  color: #a1a1aa;
+}
+
+html.dark .admin-home-card,
+.dark .admin-home-card {
+  background: #18181b;
+  border-color: #3f3f46;
+}
+
+html.dark .admin-home-card:hover,
+.dark .admin-home-card:hover {
+  border-color: #a855f7;
+  box-shadow: 0 8px 16px rgba(168, 85, 247, 0.3);
+}
+
+html.dark .admin-home-card-content h3,
+.dark .admin-home-card-content h3 {
+  color: #fafafa;
+}
+
+html.dark .admin-home-card-content p,
+.dark .admin-home-card-content p {
+  color: #a1a1aa;
+}
+
+html.dark .admin-home-card-arrow,
+.dark .admin-home-card-arrow {
+  color: #c084fc;
+}
+
+/* Admin Map Management Dark Mode */
+html.dark .admin-map-management-layout,
+.dark .admin-map-management-layout {
+  color: #fafafa;
+}
+
+html.dark .admin-map-section,
+.dark .admin-map-section {
+  background: #18181b;
+  border-color: #3f3f46;
+}
+
+html.dark .admin-map-header h3,
+.dark .admin-map-header h3 {
+  color: #fafafa;
+}
+
+html.dark .admin-map-header p,
+.dark .admin-map-header p {
+  color: #a1a1aa;
+}
+
+html.dark .admin-map-wrapper,
+.dark .admin-map-wrapper {
+  background: #27272a;
+  border-color: #3f3f46;
+}
+
+html.dark .admin-clinics-list-section,
+.dark .admin-clinics-list-section {
+  background: #18181b;
+  border-color: #3f3f46;
+}
+
+html.dark .admin-clinics-list,
+.dark .admin-clinics-list {
+  color: #fafafa;
+}
+
+/* Admin Specialist Card Dark Mode */
+html.dark .admin-specialist-card,
+.dark .admin-specialist-card {
+  background: #18181b;
+  border-color: #3f3f46;
+}
+
+html.dark .admin-specialist-card-info h3,
+.dark .admin-specialist-card-info h3 {
+  color: #fafafa;
+}
+
+html.dark .admin-specialist-specialty,
+.dark .admin-specialist-specialty {
+  color: #a1a1aa;
+}
+
+html.dark .admin-specialist-detail-label,
+.dark .admin-specialist-detail-label {
+  color: #a1a1aa;
+}
+
+html.dark .admin-specialist-card-details span:not(.admin-specialist-detail-label),
+.dark .admin-specialist-card-details span:not(.admin-specialist-detail-label) {
+  color: #d4d4d8;
+}
+
+html.dark .admin-specialist-card-bio,
+.dark .admin-specialist-card-bio {
+  color: #d4d4d8;
+}
+
+html.dark .admin-specialist-card-bio p,
+.dark .admin-specialist-card-bio p {
+  color: #d4d4d8;
+}
+
+/* Admin Article Card Dark Mode */
+html.dark .admin-article-card,
+.dark .admin-article-card {
+  background: #18181b;
+  border-color: #3f3f46;
+}
+
+html.dark .admin-article-card-header h3,
+.dark .admin-article-card-header h3 {
+  color: #fafafa;
+}
+
+html.dark .admin-article-card-content,
+.dark .admin-article-card-content {
+  color: #d4d4d8;
+}
+
+html.dark .admin-article-card-content p,
+.dark .admin-article-card-content p {
+  color: #d4d4d8;
+}
+
+/* Admin Tags Dark Mode */
+html.dark .admin-tags-input input,
+.dark .admin-tags-input input {
+  background: #27272a;
+  border-color: #3f3f46;
+  color: #fafafa;
+}
+
+html.dark .admin-tags-label,
+.dark .admin-tags-label {
+  color: #a1a1aa;
+}
+
+html.dark .admin-tag-suggestion,
+.dark .admin-tag-suggestion {
+  background: #27272a;
+  border-color: #3f3f46;
+  color: #d4d4d8;
+}
+
+html.dark .admin-tag-suggestion:hover:not(:disabled),
+.dark .admin-tag-suggestion:hover:not(:disabled) {
+  background: #3f3f46;
+  border-color: #a855f7;
+  color: #c084fc;
+}
+
+html.dark .admin-tag,
+.dark .admin-tag {
+  background: #27272a;
+  color: #c084fc;
+  border: 1px solid #3f3f46;
+}
+
+html.dark .admin-tag-remove,
+.dark .admin-tag-remove {
+  color: #c084fc;
+}
+
+html.dark .admin-tag-small,
+.dark .admin-tag-small {
+  background: #27272a;
+  color: #c084fc;
+  border-color: #3f3f46;
+}
+
+/* Admin Checkbox Dark Mode */
+html.dark .admin-checkbox-label,
+.dark .admin-checkbox-label {
+  color: #d4d4d8;
+}
+
+html.dark .admin-checkbox-label input[type="checkbox"],
+.dark .admin-checkbox-label input[type="checkbox"] {
+  accent-color: #a855f7;
+}
+
+html.dark .admin-checkbox-label span,
+.dark .admin-checkbox-label span {
+  color: #d4d4d8;
+}
+
+/* Editor Dark Mode */
+html.dark .editor-wrapper,
+.dark .editor-wrapper {
+  border-color: #3f3f46;
+}
+
+html.dark .quill-editor-wrapper,
+.dark .quill-editor-wrapper {
+  background: #27272a;
+  border-color: #3f3f46;
+}
+
+html.dark .quill-editor-wrapper .ql-toolbar,
+.dark .quill-editor-wrapper .ql-toolbar {
+  background: #18181b;
+  border-bottom-color: #3f3f46;
+}
+
+html.dark .quill-editor-wrapper .ql-container,
+.dark .quill-editor-wrapper .ql-container {
+  background: #27272a;
+}
+
+html.dark .quill-editor-wrapper .ql-editor,
+.dark .quill-editor-wrapper .ql-editor {
+  color: #fafafa;
+  background: #27272a;
+}
+
+html.dark .quill-editor-wrapper .ql-stroke,
+.dark .quill-editor-wrapper .ql-stroke {
+  stroke: #d4d4d8;
+}
+
+html.dark .quill-editor-wrapper .ql-fill,
+.dark .quill-editor-wrapper .ql-fill {
+  fill: #d4d4d8;
+}
+
+html.dark .quill-editor-wrapper .ql-picker-label,
+.dark .quill-editor-wrapper .ql-picker-label {
+  color: #d4d4d8;
+}
+
+/* Admin Pagination Button Dark Mode */
+html.dark .admin-btn-pagination,
+.dark .admin-btn-pagination {
+  background: #27272a;
+  border-color: #3f3f46;
+  color: #d4d4d8;
+}
+
+html.dark .admin-btn-pagination:hover:not(:disabled),
+.dark .admin-btn-pagination:hover:not(:disabled) {
+  background: #3f3f46;
+  border-color: #a855f7;
+  color: #fafafa;
+}
+
+/* Admin Badge Dark Mode */
+html.dark .admin-badge,
+.dark .admin-badge {
+  background: #27272a;
+  color: #c084fc;
+}
+
+html.dark .admin-badge-success,
+.dark .admin-badge-success {
+  background: rgba(34, 197, 94, 0.2);
+  color: #4ade80;
+}
+
+html.dark .admin-badge-warning,
+.dark .admin-badge-warning {
+  background: rgba(251, 191, 36, 0.2);
+  color: #fbbf24;
+}
+
+html.dark .admin-badge-danger,
+.dark .admin-badge-danger {
+  background: rgba(239, 68, 68, 0.2);
+  color: #f87171;
+}
+
+html.dark .admin-btn-primary:hover {
+  background: linear-gradient(135deg, #9333ea, #db2777);
 }
 

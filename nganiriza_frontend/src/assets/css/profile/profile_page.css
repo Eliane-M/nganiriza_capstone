@@ -67,3 +67,21 @@
   }
 }
 
+/* Dark Mode Styles */
+html.dark .profile-page .bottom-nav {
+  background: #18181b;
+  border-top-color: #27272a;
+}
+
+html.dark .profile-page .nav-item {
+  color: #71717a;
+}
+
+html.dark .profile-page .nav-item.active {
+  color: #ec4899;
+}
+
+html.dark .profile-page .nav-item:hover {
+  color: #ec4899;
+}
+

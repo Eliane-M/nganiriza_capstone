@@ -102,4 +102,52 @@
   font-weight: 600;
   margin-bottom: 1rem;
   color: #374151;
+}
+
+/* Dark Mode Styles */
+html.dark .container-page,
+html.dark .resources-page {
+  background: #09090b;
+  color: #fafafa;
+}
+
+html.dark .resources-page .body .search-card {
+  background: #18181b;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+}
+
+html.dark .input-row {
+  border-color: #3f3f46;
+  background: #27272a;
+}
+
+html.dark .input-row input {
+  color: #fafafa;
+}
+
+html.dark .input-row input::placeholder {
+  color: #71717a;
+}
+
+html.dark .pill-row .pill {
+  background: #27272a;
+  color: #d4d4d8;
+}
+
+html.dark .pill-row .pill.active {
+  background: #7e22ce;
+  color: #ffffff;
+}
+
+html.dark .resources-page .body .search-card .use-location {
+  background: #0f766e;
+  color: #ccfbf1;
+}
+
+html.dark .resources-page .body h2 {
+  color: #fafafa;
+}
+
+html.dark .notice-muted {
+  color: #71717a;
 }/*# sourceMappingURL=resources_page.css.map */

@@ -300,6 +300,144 @@
   color: #71717a;
 }
 
+/* Dark Mode Styles */
+html.dark .appointment-history-view,
+.dark .appointment-history-view {
+  background: #18181b;
+  border-color: #3f3f46;
+  color: #fafafa;
+}
+
+html.dark .history-header,
+.dark .history-header {
+  background: #27272a;
+  border-bottom-color: #3f3f46;
+}
+
+html.dark .history-header h2,
+.dark .history-header h2 {
+  color: #fafafa;
+}
+
+html.dark .close-btn,
+.dark .close-btn {
+  color: #a1a1aa;
+}
+
+html.dark .close-btn:hover,
+.dark .close-btn:hover {
+  background: #3f3f46;
+  color: #fafafa;
+}
+
+html.dark .appointment-info-card,
+.dark .appointment-info-card {
+  background: #27272a;
+  border-color: #3f3f46;
+}
+
+html.dark .appointment-info-card h3,
+.dark .appointment-info-card h3 {
+  color: #fafafa;
+}
+
+html.dark .info-label,
+.dark .info-label {
+  color: #a1a1aa;
+}
+
+html.dark .info-value,
+.dark .info-value {
+  color: #fafafa;
+}
+
+html.dark .appointment-notes,
+.dark .appointment-notes {
+  background: #18181b;
+  border-color: #3f3f46;
+}
+
+html.dark .notes-label,
+.dark .notes-label {
+  color: #a1a1aa;
+}
+
+html.dark .notes-text,
+.dark .notes-text {
+  color: #d4d4d8;
+}
+
+html.dark .history-timeline h3,
+.dark .history-timeline h3 {
+  color: #fafafa;
+}
+
+html.dark .timeline::before,
+.dark .timeline::before {
+  background: #3f3f46;
+}
+
+html.dark .timeline-marker,
+.dark .timeline-marker {
+  border-color: #18181b;
+  box-shadow: 0 0 0 2px #3f3f46;
+}
+
+html.dark .timeline-content,
+.dark .timeline-content {
+  background: #27272a;
+  border-color: #3f3f46;
+}
+
+html.dark .action-type,
+.dark .action-type {
+  color: #c084fc;
+}
+
+html.dark .action-date,
+.dark .action-date {
+  color: #a1a1aa;
+}
+
+html.dark .change-label,
+.dark .change-label {
+  color: #a1a1aa;
+}
+
+html.dark .change-value,
+.dark .change-value {
+  color: #fafafa;
+}
+
+html.dark .old-status,
+.dark .old-status {
+  background: rgba(239, 68, 68, 0.2);
+  color: #f87171;
+}
+
+html.dark .new-status,
+.dark .new-status {
+  background: rgba(34, 197, 94, 0.2);
+  color: #4ade80;
+}
+
+html.dark .history-notes,
+.dark .history-notes {
+  background: #18181b;
+  border-color: #3f3f46;
+  color: #d4d4d8;
+}
+
+html.dark .changed-by,
+.dark .changed-by {
+  color: #71717a;
+}
+
+html.dark .no-history,
+.dark .no-history {
+  color: #a1a1aa;
+}
+
 @media (max-width: 768px) {
   .info-grid {
     grid-template-columns: 1fr;

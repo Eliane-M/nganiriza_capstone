@@ -258,6 +258,9 @@
   padding: 1.5rem;
   transition: all 0.3s ease;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  display: block;
+  visibility: visible;
+  opacity: 1;
 }
 .specialist-page-v2 .specialists-grid .specialist-card-v2:hover {
   transform: translateY(-4px);
@@ -657,6 +660,122 @@
   border: 1px solid #fecaca;
 }
 
+/* Dark Mode Styles for Specialist Detail View */
+html.dark .specialist-detail-view,
+.dark .specialist-detail-view {
+  background: transparent;
+  color: #fafafa;
+}
+
+html.dark .specialist-detail-view .detail-back-button,
+.dark .specialist-detail-view .detail-back-button {
+  color: #c084fc;
+}
+
+html.dark .specialist-detail-view .detail-back-button:hover,
+.dark .specialist-detail-view .detail-back-button:hover {
+  color: #a855f7;
+}
+
+html.dark .specialist-detail-view .specialist-detail-card,
+.dark .specialist-detail-view .specialist-detail-card {
+  background: #18181b;
+  border-color: #3f3f46;
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.3);
+}
+
+html.dark .specialist-detail-view .specialist-detail-card .detail-avatar,
+.dark .specialist-detail-view .specialist-detail-card .detail-avatar {
+  border-color: #3f3f46;
+}
+
+html.dark .specialist-detail-view .specialist-detail-card .detail-specialty,
+.dark .specialist-detail-view .specialist-detail-card .detail-specialty {
+  color: #c084fc;
+}
+
+html.dark .specialist-detail-view .specialist-detail-card h2,
+.dark .specialist-detail-view .specialist-detail-card h2 {
+  color: #fafafa;
+}
+
+html.dark .specialist-detail-view .specialist-detail-card .detail-clinic,
+.dark .specialist-detail-view .specialist-detail-card .detail-clinic {
+  color: #a1a1aa;
+}
+
+html.dark .specialist-detail-view .specialist-detail-card .detail-tags span,
+.dark .specialist-detail-view .specialist-detail-card .detail-tags span {
+  background: rgba(168, 85, 247, 0.2);
+  color: #c084fc;
+}
+
+html.dark .specialist-detail-view .specialist-detail-card .detail-bio,
+.dark .specialist-detail-view .specialist-detail-card .detail-bio {
+  color: #d4d4d8;
+}
+
+html.dark .specialist-detail-view .detail-form,
+.dark .specialist-detail-view .detail-form {
+  background: #18181b;
+  border-color: #3f3f46;
+  box-shadow: 0 15px 30px -10px rgba(0, 0, 0, 0.3);
+}
+
+html.dark .specialist-detail-view .detail-form .detail-form-header h3,
+.dark .specialist-detail-view .detail-form .detail-form-header h3 {
+  color: #fafafa;
+}
+
+html.dark .specialist-detail-view .detail-form .detail-form-header svg,
+.dark .specialist-detail-view .detail-form .detail-form-header svg {
+  color: #c084fc;
+}
+
+html.dark .specialist-detail-view .detail-form label,
+.dark .specialist-detail-view .detail-form label {
+  color: #d4d4d8;
+}
+
+html.dark .specialist-detail-view .detail-form input,
+html.dark .specialist-detail-view .detail-form textarea,
+.dark .specialist-detail-view .detail-form input,
+.dark .specialist-detail-view .detail-form textarea {
+  background: #27272a;
+  border-color: #3f3f46;
+  color: #fafafa;
+}
+
+html.dark .specialist-detail-view .detail-form input::placeholder,
+html.dark .specialist-detail-view .detail-form textarea::placeholder,
+.dark .specialist-detail-view .detail-form input::placeholder,
+.dark .specialist-detail-view .detail-form textarea::placeholder {
+  color: #71717a;
+}
+
+html.dark .specialist-detail-view .detail-form input:focus,
+html.dark .specialist-detail-view .detail-form textarea:focus,
+.dark .specialist-detail-view .detail-form input:focus,
+.dark .specialist-detail-view .detail-form textarea:focus {
+  border-color: #a855f7;
+  background: #27272a;
+  box-shadow: 0 0 0 3px rgba(168, 85, 247, 0.2);
+}
+
+html.dark .specialist-detail-view .form-feedback.success,
+.dark .specialist-detail-view .form-feedback.success {
+  background: rgba(34, 197, 94, 0.15);
+  color: #4ade80;
+  border-color: rgba(34, 197, 94, 0.3);
+}
+
+html.dark .specialist-detail-view .form-feedback.error,
+.dark .specialist-detail-view .form-feedback.error {
+  background: rgba(239, 68, 68, 0.15);
+  color: #f87171;
+  border-color: rgba(239, 68, 68, 0.3);
+}
+
 /* Specialist Sidebar Styles */
 .specialist-sidebar-content {
   display: flex;
@@ -705,7 +824,7 @@
   padding: 0 0.5rem;
 }
 
-:global(.dark) .group-label {
+html.dark .group-label {
   color: #a1a1aa;
 }
 
@@ -724,7 +843,7 @@
   text-align: left;
 }
 
-:global(.dark) .specialist-contact-item {
+html.dark .specialist-contact-item {
   background: #27272a;
   border-color: #3f3f46;
 }
@@ -734,7 +853,7 @@
   border-color: #a855f7;
 }
 
-:global(.dark) .specialist-contact-item:hover {
+html.dark .specialist-contact-item:hover {
   background: #3f3f46;
   border-color: #a855f7;
 }
@@ -781,7 +900,7 @@
   white-space: nowrap;
 }
 
-:global(.dark) .contact-name {
+html.dark .contact-name {
   color: #fafafa;
 }
 
@@ -793,7 +912,7 @@
   white-space: nowrap;
 }
 
-:global(.dark) .contact-specialty {
+html.dark .contact-specialty {
   color: #a1a1aa;
 }
 
@@ -820,7 +939,7 @@
   font-size: 0.875rem;
 }
 
-:global(.dark) .empty-contacts {
+html.dark .empty-contacts {
   color: #a1a1aa;
 }
 
@@ -928,6 +1047,13 @@
 .specialist-contact-detail-view {
   width: 100%;
   padding: 2rem 1.5rem 4rem;
+  background: transparent;
+}
+
+html.dark .specialist-contact-detail-view,
+.dark .specialist-contact-detail-view {
+  background: transparent;
+  color: #fafafa;
 }
 
 .detail-header-section {
@@ -951,6 +1077,16 @@
   color: #7c3aed;
 }
 
+html.dark .detail-header-section .detail-back-button,
+.dark .detail-header-section .detail-back-button {
+  color: #c084fc;
+}
+
+html.dark .detail-header-section .detail-back-button:hover,
+.dark .detail-header-section .detail-back-button:hover {
+  color: #a855f7;
+}
+
 .specialist-header-info {
   display: flex;
   align-items: center;
@@ -961,7 +1097,7 @@
   border-radius: 1rem;
 }
 
-:global(.dark) .specialist-header-info {
+html.dark .specialist-header-info {
   background: #18181b;
   border-color: #3f3f46;
 }
@@ -993,7 +1129,7 @@
   color: #18181b;
 }
 
-:global(.dark) .specialist-header-info h2 {
+html.dark .specialist-header-info h2 {
   color: #fafafa;
 }
 
@@ -1004,6 +1140,11 @@
   font-weight: 600;
 }
 
+html.dark .specialist-header-specialty,
+.dark .specialist-header-specialty {
+  color: #c084fc;
+}
+
 .detail-content-section {
   background: #ffffff;
   border: 2px solid #e9d5ff;
@@ -1011,9 +1152,11 @@
   padding: 1.5rem;
 }
 
-:global(.dark) .detail-content-section {
+html.dark .detail-content-section,
+.dark .detail-content-section {
   background: #18181b;
   border-color: #3f3f46;
+  color: #fafafa;
 }
 
 .tab-content {
@@ -1097,3 +1240,91 @@
     display: none;
   }
 }/*# sourceMappingURL=specialist_page.css.map */
+
+/* Dark mode for specialist page */
+html.dark .specialist-page-v2,
+.dark .specialist-page-v2 {
+  background: linear-gradient(to bottom, #09090b, #18181b);
+  color: #fafafa;
+}
+
+html.dark .specialist-page-v2 .specialists-grid .specialist-card-v2,
+.dark .specialist-page-v2 .specialists-grid .specialist-card-v2 {
+  background: #18181b;
+  border-color: #3f3f46;
+  color: #fafafa;
+  display: block !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+}
+
+html.dark .specialist-page-v2 .specialists-grid .specialist-card-v2:hover,
+.dark .specialist-page-v2 .specialists-grid .specialist-card-v2:hover {
+  border-color: #a855f7;
+  box-shadow: 0 20px 25px -5px rgba(168, 85, 247, 0.3);
+}
+
+html.dark .specialist-page-v2 .specialists-grid .specialist-card-v2 .card-header .specialist-info h3,
+.dark .specialist-page-v2 .specialists-grid .specialist-card-v2 .card-header .specialist-info h3 {
+  color: #fafafa;
+}
+
+html.dark .specialist-page-v2 .specialists-grid .specialist-card-v2 .card-details,
+.dark .specialist-page-v2 .specialists-grid .specialist-card-v2 .card-details {
+  color: #d4d4d8;
+}
+
+html.dark .specialist-page-v2 .search-filter-section,
+.dark .specialist-page-v2 .search-filter-section {
+  background: transparent;
+}
+
+html.dark .specialist-page-v2 .search-filter-section .search-box,
+.dark .specialist-page-v2 .search-filter-section .search-box {
+  background: #18181b;
+  border-color: #3f3f46;
+}
+
+html.dark .specialist-page-v2 .search-filter-section .search-box:focus-within,
+.dark .specialist-page-v2 .search-filter-section .search-box:focus-within {
+  border-color: #a855f7;
+  box-shadow: 0 0 0 3px rgba(168, 85, 247, 0.2);
+}
+
+html.dark .specialist-page-v2 .search-filter-section .search-box .search-icon,
+.dark .specialist-page-v2 .search-filter-section .search-box .search-icon {
+  color: #a1a1aa;
+}
+
+html.dark .specialist-page-v2 .search-filter-section .search-box input,
+.dark .specialist-page-v2 .search-filter-section .search-box input {
+  background: transparent;
+  color: #fafafa;
+}
+
+html.dark .specialist-page-v2 .search-filter-section .search-box input::placeholder,
+.dark .specialist-page-v2 .search-filter-section .search-box input::placeholder {
+  color: #71717a;
+}
+
+html.dark .specialist-page-v2 .search-filter-section .specialty-filters .specialty-pill,
+.dark .specialist-page-v2 .search-filter-section .specialty-filters .specialty-pill {
+  background: #27272a;
+  border-color: #3f3f46;
+  color: #d4d4d8;
+}
+
+html.dark .specialist-page-v2 .search-filter-section .specialty-filters .specialty-pill:hover,
+.dark .specialist-page-v2 .search-filter-section .specialty-filters .specialty-pill:hover {
+  background: #3f3f46;
+  border-color: #a855f7;
+  color: #fafafa;
+}
+
+html.dark .specialist-page-v2 .search-filter-section .specialty-filters .specialty-pill.active,
+.dark .specialist-page-v2 .search-filter-section .specialty-filters .specialty-pill.active {
+  background: linear-gradient(135deg, #a855f7, #ec4899);
+  color: white;
+  border-color: transparent;
+}
+

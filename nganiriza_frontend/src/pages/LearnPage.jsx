@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { LanguageContext } from '../contexts/AppContext';
+import { LanguageContext, ThemeContext } from '../contexts/AppContext';
+import { useTranslation } from '../utils/translations';
 import { Search, BookOpen, Clock, ChevronRight, Home, MessageCircle, Users, MapPin, User } from 'lucide-react';
 import Navbar from '../assets/components/Navbar';
 import apiClient from '../utils/apiClient';
@@ -10,37 +11,30 @@ const LearnPage = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const { language } = useContext(LanguageContext);
+  const { theme } = useContext(ThemeContext);
+  const { t } = useTranslation(language);
   const [articles, setArticles] = useState([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedTag, setSelectedTag] = useState(null);
+  const isDark = theme === 'dark';
 
   const navItems = [
-    { icon: Home, label: "Home", path: "/" },
-    { icon: MessageCircle, label: "Chat", path: "/chat" },
-    { icon: Users, label: "Specialists", path: "/specialists" },
-    { icon: MapPin, label: "Map", path: "/map" },
-    { icon: BookOpen, label: "Learn", path: "/learn", active: true },
-    { icon: User, label: "Profile", path: "/profile" }
+    { icon: Home, label: t('nav.home'), path: "/" },
+    { icon: MessageCircle, label: t('nav.chat'), path: "/chat" },
+    { icon: Users, label: t('nav.specialists'), path: "/specialists" },
+    { icon: MapPin, label: t('nav.map'), path: "/map" },
+    { icon: BookOpen, label: t('nav.learn'), path: "/learn", active: true },
+    { icon: User, label: t('nav.profile'), path: "/profile" }
   ];
 
-  const translations = {
-    title: { en: 'Learn About Health', rw: 'Wige Ku Buzima' },
-    subtitle: { en: 'Educational articles about sexual and reproductive health', rw: 'Ingingo zerekana ubuzima bw\'imyororokere' },
-    search: { en: 'Search articles...', rw: 'Shakisha ingingo...' },
-    allTopics: { en: 'All Topics', rw: 'Ingingo Zose' },
-    readMore: { en: 'Read More', rw: 'Soma Byinshi' },
-    minRead: { en: 'min read', rw: 'iminota' },
-    noArticles: { en: 'No articles found', rw: 'Nta ngingo zabonetse' },
-  };
-
   const tags = [
-    { id: 'all', label: { en: 'All Topics', rw: 'Byose' } },
-    { id: 'puberty', label: { en: 'Puberty', rw: 'Ubugimbi' } },
-    { id: 'relationships', label: { en: 'Relationships', rw: 'Imibanire' } },
-    { id: 'contraception', label: { en: 'Contraception', rw: 'Kurinda' } },
-    { id: 'sti', label: { en: 'STIs', rw: 'Indwara' } },
-    { id: 'menstruation', label: { en: 'Menstruation', rw: 'Imihango' } },
+    { id: 'all', label: t('learn.tags.all') },
+    { id: 'puberty', label: t('learn.tags.puberty') },
+    { id: 'relationships', label: t('learn.tags.relationships') },
+    { id: 'contraception', label: t('learn.tags.contraception') },
+    { id: 'sti', label: t('learn.tags.sti') },
+    { id: 'menstruation', label: t('learn.tags.menstruation') },
   ];
 
   useEffect(() => {
@@ -83,6 +77,8 @@ const LearnPage = () => {
     return matchesSearch && matchesTag;
   });
 
+  const styles = getStyles(isDark);
+
   return (
     <div className="learn-page" style={styles.page}>
       <Navbar />
@@ -90,8 +86,8 @@ const LearnPage = () => {
       <div style={styles.container}>
         {/* Header */}
         <div style={styles.header}>
-          <h1 style={styles.title}>{translations.title[language]}</h1>
-          <p style={styles.subtitle}>{translations.subtitle[language]}</p>
+          <h1 style={styles.title}>{t('learn.title')}</h1>
+          <p style={styles.subtitle}>{t('learn.subtitle')}</p>
         </div>
 
         {/* Search & Filter */}
@@ -100,7 +96,7 @@ const LearnPage = () => {
             <Search size={20} style={{ color: '#9ca3af' }} />
             <input
               type="text"
-              placeholder={translations.search[language]}
+              placeholder={t('learn.search')}
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
               style={styles.searchInput}
@@ -119,7 +115,7 @@ const LearnPage = () => {
                     : {})
                 }}
               >
-                {tag.label[language]}
+                {tag.label}
               </button>
             ))}
           </div>
@@ -127,7 +123,7 @@ const LearnPage = () => {
 
         {/* Articles Grid */}
         {loading ? (
-          <div style={styles.loading}>Loading articles...</div>
+          <div style={styles.loading}>{t('common.loading')}</div>
         ) : filteredArticles.length > 0 ? (
           <div style={styles.grid}>
             {filteredArticles.map(article => (
@@ -140,7 +136,7 @@ const LearnPage = () => {
                   <BookOpen size={24} style={{ color: '#a855f7' }} />
                   <span style={styles.readTime}>
                     <Clock size={14} />
-                    {article.read_time || 5} {translations.minRead[language]}
+                    {article.read_time || 5} {t('learn.minRead')}
                   </span>
                 </div>
 
@@ -160,7 +156,7 @@ const LearnPage = () => {
                 )}
 
                 <button style={styles.readMoreBtn}>
-                  {translations.readMore[language]}
+                  {t('learn.readMore')}
                   <ChevronRight size={16} />
                 </button>
               </article>
@@ -168,8 +164,8 @@ const LearnPage = () => {
           </div>
         ) : (
           <div style={styles.empty}>
-            <BookOpen size={48} style={{ color: '#d1d5db' }} />
-            <p>{translations.noArticles[language]}</p>
+            <BookOpen size={48} style={{ color: isDark ? '#3f3f46' : '#d1d5db' }} />
+            <p>{t('learn.noArticles')}</p>
           </div>
         )}
       </div>
@@ -191,10 +187,14 @@ const LearnPage = () => {
   );
 };
 
-const styles = {
+// Styles function that adapts to theme
+const getStyles = (isDark) => ({
   page: {
     minHeight: '100vh',
-    background: 'linear-gradient(to bottom, #fdf4ff, #faf5ff)',
+    background: isDark 
+      ? 'linear-gradient(to bottom, #09090b, #18181b)' 
+      : 'linear-gradient(to bottom, #fdf4ff, #faf5ff)',
+    color: isDark ? '#fafafa' : '#18181b',
   },
   container: {
     maxWidth: '1200px',
@@ -216,7 +216,7 @@ const styles = {
   },
   subtitle: {
     fontSize: '1.125rem',
-    color: '#666',
+    color: isDark ? '#d4d4d8' : '#666',
   },
   controls: {
     marginBottom: '2rem',
@@ -225,8 +225,8 @@ const styles = {
     display: 'flex',
     alignItems: 'center',
     gap: '0.75rem',
-    background: 'white',
-    border: '2px solid #e9d5ff',
+    background: isDark ? '#18181b' : 'white',
+    border: isDark ? '2px solid #3f3f46' : '2px solid #e9d5ff',
     borderRadius: '1rem',
     padding: '0.875rem 1.25rem',
     marginBottom: '1.5rem',
@@ -236,6 +236,8 @@ const styles = {
     border: 'none',
     outline: 'none',
     fontSize: '1rem',
+    background: 'transparent',
+    color: isDark ? '#fafafa' : '#18181b',
   },
   tagsList: {
     display: 'flex',
@@ -244,12 +246,12 @@ const styles = {
   },
   tag: {
     padding: '0.5rem 1rem',
-    background: 'white',
-    border: '2px solid #e9d5ff',
+    background: isDark ? '#27272a' : 'white',
+    border: isDark ? '2px solid #3f3f46' : '2px solid #e9d5ff',
     borderRadius: '2rem',
     fontSize: '0.875rem',
     fontWeight: '600',
-    color: '#666',
+    color: isDark ? '#d4d4d8' : '#666',
     cursor: 'pointer',
     transition: 'all 0.2s',
   },
@@ -264,8 +266,8 @@ const styles = {
     gap: '1.5rem',
   },
   card: {
-    background: 'white',
-    border: '2px solid #e9d5ff',
+    background: isDark ? '#18181b' : 'white',
+    border: isDark ? '2px solid #3f3f46' : '2px solid #e9d5ff',
     borderRadius: '1.25rem',
     padding: '1.5rem',
     cursor: 'pointer',
@@ -282,17 +284,17 @@ const styles = {
     alignItems: 'center',
     gap: '0.25rem',
     fontSize: '0.875rem',
-    color: '#666',
+    color: isDark ? '#a1a1aa' : '#666',
   },
   cardTitle: {
     fontSize: '1.25rem',
     fontWeight: '700',
-    color: '#2d1b3a',
+    color: isDark ? '#fafafa' : '#2d1b3a',
     marginBottom: '0.75rem',
   },
   cardExcerpt: {
     fontSize: '0.9rem',
-    color: '#666',
+    color: isDark ? '#d4d4d8' : '#666',
     lineHeight: '1.6',
     marginBottom: '1rem',
   },
@@ -304,17 +306,17 @@ const styles = {
   },
   cardTag: {
     padding: '0.25rem 0.75rem',
-    background: '#f3e8ff',
+    background: isDark ? '#27272a' : '#f3e8ff',
     borderRadius: '1rem',
     fontSize: '0.75rem',
-    color: '#a855f7',
+    color: isDark ? '#c084fc' : '#a855f7',
     fontWeight: '600',
   },
   readMoreBtn: {
     display: 'flex',
     alignItems: 'center',
     gap: '0.5rem',
-    color: '#a855f7',
+    color: isDark ? '#c084fc' : '#a855f7',
     background: 'none',
     border: 'none',
     fontSize: '0.9rem',
@@ -325,14 +327,14 @@ const styles = {
   loading: {
     textAlign: 'center',
     padding: '3rem',
-    color: '#666',
+    color: isDark ? '#d4d4d8' : '#666',
     fontSize: '1.125rem',
   },
   empty: {
     textAlign: 'center',
     padding: '3rem',
-    color: '#999',
+    color: isDark ? '#a1a1aa' : '#999',
   },
-};
+});
 
 export default LearnPage;

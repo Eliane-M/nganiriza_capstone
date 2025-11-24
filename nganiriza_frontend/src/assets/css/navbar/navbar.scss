@@ -21,7 +21,7 @@
   -webkit-backdrop-filter: blur(12px);
   backdrop-filter: blur(12px);
 
-  :global(.dark) & {
+  html.dark, .dark & {
     background: rgba($dark-bg, 0.8);
     border-bottom-color: rgba($dark-border, 0.7);
   }
@@ -73,7 +73,7 @@
     letter-spacing: -0.025em;
     @include gradient-text;
 
-    :global(.dark) & {
+    html.dark, .dark & {
       background: linear-gradient(to right, #c4b5fd, #d8b4fe, #f9a8d4);
       -webkit-background-clip: text;
       background-clip: text;
@@ -104,7 +104,7 @@
       color: $brand-color;
     }
 
-    :global(.dark) & {
+    html.dark, .dark & {
       color: #e4e4e7;
 
       &:hover {
@@ -179,7 +179,7 @@
       background: rgba(0, 0, 0, 0.02);
     }
 
-    :global(.dark) & {
+    html.dark, .dark & {
       border-color: $dark-border;
 
       &:hover {
@@ -190,7 +190,7 @@
     .chevron {
       color: $text-medium;
 
-      :global(.dark) & {
+      html.dark, .dark & {
         color: $dark-text-secondary;
       }
     }
@@ -206,7 +206,7 @@
       width: 1.25rem;
       color: $text-medium;
 
-      :global(.dark) & {
+      html.dark, .dark & {
         color: $dark-text-secondary;
       }
     }
@@ -220,7 +220,7 @@
         display: inline;
       }
 
-      :global(.dark) & {
+      html.dark, .dark & {
         color: $dark-text-secondary;
       }
     }
@@ -251,7 +251,7 @@
   box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1),
               0 4px 6px -2px rgba(0, 0, 0, 0.05);
 
-  :global(.dark) & {
+  html.dark, .dark & {
     background: $dark-bg;
     border-color: $dark-border;
   }
@@ -261,7 +261,7 @@
     padding-bottom: 0.5rem;
     border-bottom: 1px solid $border-color;
 
-    :global(.dark) & {
+    html.dark, .dark & {
       border-bottom-color: $dark-border;
     }
 
@@ -273,7 +273,7 @@
       align-items: center;
       font-weight: 600;
 
-      :global(.dark) & {
+      html.dark, .dark & {
         color: #a1a1aa;
       }
     }
@@ -313,7 +313,7 @@
         overflow: hidden;
         text-overflow: ellipsis;
 
-        :global(.dark) & {
+        html.dark, .dark & {
           color: $dark-text;
         }
       }
@@ -325,7 +325,7 @@
         overflow: hidden;
         text-overflow: ellipsis;
 
-        :global(.dark) & {
+        html.dark, .dark & {
           color: #a1a1aa;
         }
       }
@@ -351,7 +351,7 @@
       background: #fafafa;
     }
 
-    :global(.dark) & {
+    html.dark, .dark & {
       color: $dark-text;
 
       &:hover {
@@ -369,7 +369,7 @@
     border-top: 1px solid $border-color;
     padding-top: 0.5rem;
 
-    :global(.dark) & {
+    html.dark, .dark & {
       border-top-color: $dark-border;
     }
   }
@@ -387,7 +387,7 @@
       color: #dc2626;
     }
 
-    :global(.dark) & {
+    html.dark, .dark & {
       color: #f87171;
 
       &:hover {
@@ -416,7 +416,7 @@
     background: #fafafa;
   }
 
-  :global(.dark) & {
+  html.dark, .dark & {
     border-color: $dark-border;
 
     &:hover {
@@ -427,7 +427,7 @@
   svg {
     color: $text-dark;
 
-    :global(.dark) & {
+    html.dark, .dark & {
       color: $dark-text;
     }
   }
@@ -449,7 +449,7 @@
   background: rgba(0, 0, 0, 0.05);
 }
 
-:global(.dark) .profile-icon-btn:hover {
+html.dark, .dark .profile-icon-btn:hover {
   background: rgba(255, 255, 255, 0.1);
 }
 
@@ -496,40 +496,40 @@
   border-color: transparent;
 }
 
-:global(.dark) .lang-btn {
+html.dark, .dark .lang-btn {
   background: #27272a;
   color: #d4d4d8;
 }
 
-:global(.dark) .lang-btn:hover {
+html.dark, .dark .lang-btn:hover {
   background: #3f3f46;
 }
 
-:global(.dark) .lang-btn.active {
+html.dark, .dark .lang-btn.active {
   background: linear-gradient(to right, #a855f7, #ec4899);
   color: white;
 }
 
 /* Dark mode global styles */
-:global(.dark) {
+html.dark, .dark {
   background-color: #09090b;
   color: #fafafa;
 }
 
-:global(.dark) body {
+html.dark, .dark body {
   background: linear-gradient(to bottom, #09090b, #18181b);
 }
 
 /* Ensure dropdown visibility in dark mode */
-:global(.dark) .dropdown-menu {
+html.dark, .dark .dropdown-menu {
   background: #18181b;
   border-color: #27272a;
 }
 
-:global(.dark) .dropdown-section {
+html.dark, .dark .dropdown-section {
   border-bottom-color: #27272a;
 }
 
-:global(.dark) .section-label {
+html.dark, .dark .section-label {
   color: #a1a1aa;
 }

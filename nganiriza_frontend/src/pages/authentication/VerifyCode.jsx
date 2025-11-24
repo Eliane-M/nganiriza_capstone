@@ -1,11 +1,13 @@
 // src/pages/VerifyAndSetPassword.jsx
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { Lock, CheckCircle } from "lucide-react";
 import { useLocation, useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
+import { LanguageContext } from '../../contexts/AppContext';
+import { useTranslation } from '../../utils/translations';
 import BASE_URL from "../../config";
 import "../../assets/css/authPages/verifycode.scss";
 
@@ -22,6 +24,8 @@ export default function VerifyAndSetPassword() {
   const [isLoading, setIsLoading] = useState(false);
   const { state } = useLocation();
   const navigate = useNavigate();
+  const { language } = useContext(LanguageContext);
+  const { t } = useTranslation(language);
 
   // PROTECT: No email? Back to start
   const { register, handleSubmit, formState: { errors } } = useForm({
@@ -69,19 +73,19 @@ export default function VerifyAndSetPassword() {
           <Lock className="lock" />
         </div>
 
-        <h1>Almost Done!</h1>
+        <h1>{t('auth.verifyCode.title')}</h1>
         <p className="subtitle">
-          Enter the code sent to <strong>{email}</strong> and set your new password
+          {t('auth.verifyCode.subtitle')} <strong>{email}</strong>
         </p>
 
         <form onSubmit={handleSubmit(onSubmit)} className="form">
           {/* CODE */}
           <div className="field">
-            <label>Verification Code</label>
+            <label>{t('auth.verifyCode.enterCode')}</label>
             <input
               {...register("code")}
               maxLength="6"
-              placeholder="A1B2C3"
+              placeholder={t('auth.verifyCode.enterCode')}
               className="code-input"
               autoFocus
             />
@@ -90,32 +94,32 @@ export default function VerifyAndSetPassword() {
 
           {/* PASSWORD */}
           <div className="field">
-            <label>New Password</label>
+            <label>{t('auth.setNewPassword.newPassword')}</label>
             <input
               {...register("password")}
               type="password"
-              placeholder="••••••••"
+              placeholder={t('auth.setNewPassword.newPassword')}
             />
             {errors.password && <span className="err">{errors.password.message}</span>}
           </div>
 
           {/* CONFIRM */}
           <div className="field">
-            <label>Confirm Password</label>
+            <label>{t('auth.setNewPassword.confirmPassword')}</label>
             <input
               {...register("confirm")}
               type="password"
-              placeholder="••••••••"
+              placeholder={t('auth.setNewPassword.confirmPassword')}
             />
             {errors.confirm && <span className="err">{errors.confirm.message}</span>}
           </div>
 
           <button type="submit" disabled={isLoading} className="btn">
-            {isLoading ? "Saving..." : "Change Password"}
+            {isLoading ? t('common.loading') : t('auth.setNewPassword.updatePassword')}
           </button>
         </form>
 
-        <a href="/login" className="back">← Back to Login</a>
+        <a href="/login" className="back">← {t('auth.verifyCode.back')}</a>
       </div>
     </div>
   );
