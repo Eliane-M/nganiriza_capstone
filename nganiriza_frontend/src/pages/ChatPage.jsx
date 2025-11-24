@@ -227,6 +227,34 @@ export function ChatPage() {
     setInputText('');
     setIsLoading(true);
 
+    // Create conversation if none exists and user is authenticated
+    let conversationId = currentConversationId;
+    if (isAuthenticated && !conversationId) {
+      try {
+        const convResponse = await apiClient.post('/api/dashboard/conversations/', {
+          title: '',
+          language: language === 'rw' ? 'kin' : language === 'fr' ? 'fre' : 'eng',
+          channel: 'web'
+        });
+        conversationId = convResponse?.data?.id_number || convResponse?.data?.id;
+        setCurrentConversationId(conversationId);
+      } catch (error) {
+        console.error('Failed to create conversation', error);
+      }
+    }
+
+    // Save user message to backend if authenticated
+    if (isAuthenticated && conversationId) {
+      try {
+        await apiClient.post(`/api/dashboard/conversations/${conversationId}/messages/`, {
+          role: 'user',
+          content: messageText
+        });
+      } catch (error) {
+        console.error('Failed to save message', error);
+      }
+    }
+
     const typing = { id: 'typing', isUser: false, isTyping: true };
     setMessages(prev => [...prev, typing]);
 
