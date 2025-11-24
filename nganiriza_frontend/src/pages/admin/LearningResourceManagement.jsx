@@ -1,10 +1,14 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useContext } from 'react';
 import { Plus, Edit, Trash2, BookOpen, Search, Eye } from 'lucide-react';
 import Editor from '../../assets/components/Editor';
 import apiClient from '../../utils/apiClient';
 import Quill from 'quill';
+import { LanguageContext } from '../../contexts/AppContext';
+import { useTranslation } from '../../utils/translations';
 
 const LearningResourceManagement = () => {
+  const { language } = useContext(LanguageContext);
+  const { t } = useTranslation(language);
   const [articles, setArticles] = useState([]);
   const [loading, setLoading] = useState(true);
   const [showForm, setShowForm] = useState(false);
@@ -38,7 +42,7 @@ const LearningResourceManagement = () => {
       setArticles(response.data.results || []);
     } catch (error) {
       console.error('Failed to load articles:', error);
-      setFeedback({ type: 'error', text: 'Failed to load articles' });
+      setFeedback({ type: 'error', text: t('admin.failedToLoadArticles') || 'Failed to load articles' });
     } finally {
       setLoading(false);
     }
@@ -84,12 +88,12 @@ const LearningResourceManagement = () => {
     setFeedback(null);
 
     if (!formData.title.trim()) {
-      setFeedback({ type: 'error', text: 'Title is required' });
+      setFeedback({ type: 'error', text: t('admin.titleRequired') || 'Title is required' });
       return;
     }
 
     if (!formData.body_md.trim()) {
-      setFeedback({ type: 'error', text: 'Content is required' });
+      setFeedback({ type: 'error', text: t('admin.contentRequired') || 'Content is required' });
       return;
     }
 
@@ -101,10 +105,10 @@ const LearningResourceManagement = () => {
 
       if (editingArticle) {
         await apiClient.patch(`/api/dashboard/articles/${editingArticle.id}/update/`, payload);
-        setFeedback({ type: 'success', text: 'Article updated successfully' });
+        setFeedback({ type: 'success', text: t('admin.articleUpdated') || 'Article updated successfully' });
       } else {
         await apiClient.post('/api/dashboard/articles/create/', payload);
-        setFeedback({ type: 'success', text: 'Article created successfully' });
+        setFeedback({ type: 'success', text: t('admin.articleCreated') || 'Article created successfully' });
       }
       
       setShowForm(false);
@@ -123,7 +127,7 @@ const LearningResourceManagement = () => {
     } catch (error) {
       setFeedback({ 
         type: 'error', 
-        text: error.response?.data?.error || 'Failed to save article' 
+        text: error.response?.data?.error || t('admin.failedToSaveArticle') || 'Failed to save article' 
       });
     }
   };
@@ -148,18 +152,18 @@ const LearningResourceManagement = () => {
   };
 
   const handleDelete = async (id) => {
-    if (!window.confirm('Are you sure you want to delete this article?')) {
+    if (!window.confirm(t('admin.confirmDeleteArticle') || 'Are you sure you want to delete this article?')) {
       return;
     }
 
     try {
       await apiClient.delete(`/api/dashboard/articles/${id}/delete/`);
-      setFeedback({ type: 'success', text: 'Article deleted successfully' });
+      setFeedback({ type: 'success', text: t('admin.articleDeleted') || 'Article deleted successfully' });
       loadArticles();
     } catch (error) {
       setFeedback({ 
         type: 'error', 
-        text: error.response?.data?.error || 'Failed to delete article' 
+        text: error.response?.data?.error || t('admin.failedToDeleteArticle') || 'Failed to delete article' 
       });
     }
   };
@@ -195,16 +199,16 @@ const LearningResourceManagement = () => {
     <div className="admin-page">
       <div className="admin-page-header">
         <div>
-          <h1>Learning Resources</h1>
-          <p>Create and manage educational articles</p>
+          <h1>{t('admin.learningResources') || 'Learning Resources'}</h1>
+          <p>{t('admin.learningResourcesDescription') || 'Create and manage educational articles'}</p>
         </div>
         <button
           onClick={() => setShowForm(true)}
           className="admin-btn-primary"
-          aria-label="Add new article"
+          aria-label={t('admin.addArticle') || 'Add new article'}
         >
           <Plus size={20} />
-          Add Article
+          {t('admin.addArticle') || 'Add Article'}
         </button>
       </div>
 
@@ -217,10 +221,10 @@ const LearningResourceManagement = () => {
       {showForm && (
         <div className="admin-form-modal">
           <div className="admin-form-content admin-form-content-large">
-            <h2>{editingArticle ? 'Edit Article' : 'Create New Article'}</h2>
+            <h2>{editingArticle ? t('admin.editArticle') || 'Edit Article' : t('admin.createNewArticle') || 'Create New Article'}</h2>
             <form onSubmit={handleSubmit}>
               <div className="admin-form-group">
-                <label htmlFor="title">Title *</label>
+                <label htmlFor="title">{t('admin.title') || 'Title'} *</label>
                 <input
                   type="text"
                   id="title"
@@ -228,13 +232,13 @@ const LearningResourceManagement = () => {
                   value={formData.title}
                   onChange={handleInputChange}
                   required
-                  placeholder="Enter article title"
+                  placeholder={t('admin.enterArticleTitle') || 'Enter article title'}
                 />
               </div>
 
               <div className="admin-form-row">
                 <div className="admin-form-group">
-                  <label htmlFor="locale">Language *</label>
+                  <label htmlFor="locale">{t('admin.language') || 'Language'} *</label>
                   <select
                     id="locale"
                     name="locale"
@@ -256,13 +260,13 @@ const LearningResourceManagement = () => {
                       checked={formData.is_published}
                       onChange={handleInputChange}
                     />
-                    <span>Published</span>
+                    <span>{t('admin.published') || 'Published'}</span>
                   </label>
                 </div>
               </div>
 
               <div className="admin-form-group">
-                <label>Content *</label>
+                <label>{t('admin.content') || 'Content'} *</label>
                 <div className="editor-wrapper">
                   <Editor
                     ref={editorRef}
@@ -274,7 +278,7 @@ const LearningResourceManagement = () => {
               </div>
 
               <div className="admin-form-group">
-                <label htmlFor="tags">Tags</label>
+                <label htmlFor="tags">{t('admin.tags') || 'Tags'}</label>
                 <div className="admin-tags-input">
                   <input
                     type="text"
@@ -287,18 +291,18 @@ const LearningResourceManagement = () => {
                         handleAddTag();
                       }
                     }}
-                    placeholder="Type a tag and press Enter"
+                    placeholder={t('admin.typeTagAndPressEnter') || 'Type a tag and press Enter'}
                   />
                   <button
                     type="button"
                     onClick={handleAddTag}
                     className="admin-btn-small"
                   >
-                    Add
+                    {t('admin.add') || 'Add'}
                   </button>
                 </div>
                 <div className="admin-tags-suggestions">
-                  <span className="admin-tags-label">Quick add:</span>
+                  <span className="admin-tags-label">{t('admin.quickAdd') || 'Quick add'}:</span>
                   {commonTags.map(tag => (
                     <button
                       key={tag}
@@ -339,10 +343,10 @@ const LearningResourceManagement = () => {
 
               <div className="admin-form-actions">
                 <button type="button" onClick={handleCancel} className="admin-btn-secondary">
-                  Cancel
+                  {t('common.cancel') || 'Cancel'}
                 </button>
                 <button type="submit" className="admin-btn-primary">
-                  {editingArticle ? 'Update' : 'Create'} Article
+                  {editingArticle ? t('admin.update') || 'Update' : t('admin.create') || 'Create'} {t('admin.article') || 'Article'}
                 </button>
               </div>
             </form>
@@ -355,14 +359,14 @@ const LearningResourceManagement = () => {
           <Search size={20} />
           <input
             type="text"
-            placeholder="Search articles..."
+            placeholder={t('admin.searchArticles') || 'Search articles...'}
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
           />
         </div>
 
         {loading ? (
-          <div className="admin-loading">Loading articles...</div>
+          <div className="admin-loading">{t('admin.loadingArticles') || 'Loading articles...'}</div>
         ) : filteredArticles.length > 0 ? (
           <div className="admin-articles-grid">
             {filteredArticles.map((article) => (
@@ -412,9 +416,9 @@ const LearningResourceManagement = () => {
         ) : (
           <div className="admin-empty-state">
             <BookOpen size={48} />
-            <p>No articles found</p>
+            <p>{t('admin.noArticlesFound') || 'No articles found'}</p>
             <button onClick={() => setShowForm(true)} className="admin-btn-primary">
-              Create Your First Article
+              {t('admin.createFirstArticle') || 'Create Your First Article'}
             </button>
           </div>
         )}

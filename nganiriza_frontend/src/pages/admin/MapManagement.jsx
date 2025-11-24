@@ -1,9 +1,13 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { Plus, Edit, Trash2, MapPin, Search, X } from 'lucide-react';
 import AdminMapView from '../../assets/components/admin/AdminMapView';
 import apiClient from '../../utils/apiClient';
+import { LanguageContext } from '../../contexts/AppContext';
+import { useTranslation } from '../../utils/translations';
 
 const MapManagement = () => {
+  const { language } = useContext(LanguageContext);
+  const { t } = useTranslation(language);
   const [providers, setProviders] = useState([]);
   const [loading, setLoading] = useState(true);
   const [showForm, setShowForm] = useState(false);
@@ -35,7 +39,7 @@ const MapManagement = () => {
       setProviders(response.data || []);
     } catch (error) {
       console.error('Failed to load providers:', error);
-      setFeedback({ type: 'error', text: 'Failed to load clinics' });
+      setFeedback({ type: 'error', text: t('admin.failedToLoadClinics') || 'Failed to load clinics' });
     } finally {
       setLoading(false);
     }
@@ -70,7 +74,7 @@ const MapManagement = () => {
     setFeedback(null);
 
     if (!editingProvider && (!formData.latitude || !formData.longitude)) {
-      setFeedback({ type: 'error', text: 'Please click on the map to select a location' });
+      setFeedback({ type: 'error', text: t('admin.selectLocation') || 'Please click on the map to select a location' });
       return;
     }
 
@@ -87,10 +91,10 @@ const MapManagement = () => {
 
       if (editingProvider) {
         await apiClient.patch(`/api/admin/service-providers/${editingProvider.id}/update/`, payload);
-        setFeedback({ type: 'success', text: 'Clinic updated successfully' });
+        setFeedback({ type: 'success', text: t('admin.clinicUpdated') || 'Clinic updated successfully' });
       } else {
         await apiClient.post('/api/admin/service-providers/create/', payload);
-        setFeedback({ type: 'success', text: 'Clinic added successfully' });
+        setFeedback({ type: 'success', text: t('admin.clinicAdded') || 'Clinic added successfully' });
       }
       
       setShowForm(false);
@@ -112,7 +116,7 @@ const MapManagement = () => {
     } catch (error) {
       setFeedback({ 
         type: 'error', 
-        text: error.response?.data?.error || 'Failed to save clinic' 
+        text: error.response?.data?.error || t('admin.failedToSaveClinic') || 'Failed to save clinic' 
       });
     }
   };
@@ -138,18 +142,18 @@ const MapManagement = () => {
   };
 
   const handleDelete = async (id) => {
-    if (!window.confirm('Are you sure you want to delete this clinic?')) {
+    if (!window.confirm(t('admin.confirmDeleteClinic') || 'Are you sure you want to delete this clinic?')) {
       return;
     }
 
     try {
       await apiClient.delete(`/api/admin/service-providers/${id}/delete/`);
-      setFeedback({ type: 'success', text: 'Clinic deleted successfully' });
+      setFeedback({ type: 'success', text: t('admin.clinicDeleted') || 'Clinic deleted successfully' });
       loadProviders();
     } catch (error) {
       setFeedback({ 
         type: 'error', 
-        text: error.response?.data?.error || 'Failed to delete clinic' 
+        text: error.response?.data?.error || t('admin.failedToDeleteClinic') || 'Failed to delete clinic' 
       });
     }
   };
@@ -183,8 +187,8 @@ const MapManagement = () => {
     <div className="admin-page">
       <div className="admin-page-header">
         <div>
-          <h1>Map Management</h1>
-          <p>Add and manage health clinics and service providers</p>
+          <h1>{t('admin.mapManagement') || 'Map Management'}</h1>
+          <p>{t('admin.mapManagementDescription') || 'Add and manage health clinics and service providers'}</p>
         </div>
       </div>
 
@@ -197,8 +201,8 @@ const MapManagement = () => {
       <div className="admin-map-management-layout">
         <div className="admin-map-section">
           <div className="admin-map-header">
-            <h3>Click on the map to add a clinic</h3>
-            <p>Click anywhere on the map to set the clinic location</p>
+            <h3>{t('admin.clickMapToAdd') || 'Click on the map to add a clinic'}</h3>
+            <p>{t('admin.clickMapToSetLocation') || 'Click anywhere on the map to set the clinic location'}</p>
           </div>
           <div className="admin-map-wrapper">
             <AdminMapView
@@ -215,14 +219,14 @@ const MapManagement = () => {
             <Search size={20} />
             <input
               type="text"
-              placeholder="Search clinics..."
+              placeholder={t('admin.searchClinics') || 'Search clinics...'}
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
             />
           </div>
 
           {loading ? (
-            <div className="admin-loading">Loading clinics...</div>
+            <div className="admin-loading">{t('admin.loadingClinics') || 'Loading clinics...'}</div>
           ) : filteredProviders.length > 0 ? (
             <div className="admin-clinics-list">
               {filteredProviders.map((provider) => (
@@ -256,8 +260,8 @@ const MapManagement = () => {
           ) : (
             <div className="admin-empty-state">
               <MapPin size={48} />
-              <p>No clinics found</p>
-              <p className="admin-empty-hint">Click on the map to add your first clinic</p>
+              <p>{t('admin.noClinicsFound') || 'No clinics found'}</p>
+              <p className="admin-empty-hint">{t('admin.clickMapToAddFirst') || 'Click on the map to add your first clinic'}</p>
             </div>
           )}
         </div>
@@ -267,11 +271,11 @@ const MapManagement = () => {
         <div className="admin-form-modal">
           <div className="admin-form-content">
             <div className="admin-form-header-row">
-              <h2>{editingProvider ? 'Edit Clinic' : 'Add New Clinic'}</h2>
+              <h2>{editingProvider ? t('admin.editClinic') || 'Edit Clinic' : t('admin.addNewClinic') || 'Add New Clinic'}</h2>
               <button
                 onClick={handleCancel}
                 className="admin-form-close-btn"
-                aria-label="Close"
+                aria-label={t('common.close') || 'Close'}
               >
                 <X size={20} />
               </button>
@@ -279,12 +283,12 @@ const MapManagement = () => {
             {selectedPosition && !editingProvider && (
               <div className="admin-form-location-info">
                 <MapPin size={16} />
-                <span>Location: {selectedPosition[0].toFixed(6)}, {selectedPosition[1].toFixed(6)}</span>
+                <span>{t('admin.location') || 'Location'}: {selectedPosition[0].toFixed(6)}, {selectedPosition[1].toFixed(6)}</span>
               </div>
             )}
             <form onSubmit={handleSubmit}>
               <div className="admin-form-group">
-                <label htmlFor="name">Clinic Name *</label>
+                <label htmlFor="name">{t('admin.clinicName') || 'Clinic Name'} *</label>
                 <input
                   type="text"
                   id="name"
@@ -292,12 +296,12 @@ const MapManagement = () => {
                   value={formData.name}
                   onChange={handleInputChange}
                   required
-                  placeholder="Enter clinic name"
+                  placeholder={t('admin.enterClinicName') || 'Enter clinic name'}
                 />
               </div>
 
               <div className="admin-form-group">
-                <label htmlFor="type">Type *</label>
+                <label htmlFor="type">{t('admin.type') || 'Type'} *</label>
                 <select
                   id="type"
                   name="type"
@@ -314,7 +318,7 @@ const MapManagement = () => {
               </div>
 
               <div className="admin-form-group">
-                <label htmlFor="phone">Phone Number</label>
+                <label htmlFor="phone">{t('admin.phoneNumber') || 'Phone Number'}</label>
                 <input
                   type="tel"
                   id="phone"
@@ -327,51 +331,51 @@ const MapManagement = () => {
 
               <div className="admin-form-row">
                 <div className="admin-form-group">
-                  <label htmlFor="province">Province</label>
+                  <label htmlFor="province">{t('admin.province') || 'Province'}</label>
                   <input
                     type="text"
                     id="province"
                     name="province"
                     value={formData.province}
                     onChange={handleInputChange}
-                    placeholder="e.g., Kigali City"
+                    placeholder={t('admin.provinceExample') || 'e.g., Kigali City'}
                   />
                 </div>
 
                 <div className="admin-form-group">
-                  <label htmlFor="district">District</label>
+                  <label htmlFor="district">{t('admin.district') || 'District'}</label>
                   <input
                     type="text"
                     id="district"
                     name="district"
                     value={formData.district}
                     onChange={handleInputChange}
-                    placeholder="e.g., Gasabo"
+                    placeholder={t('admin.districtExample') || 'e.g., Gasabo'}
                   />
                 </div>
               </div>
 
               <div className="admin-form-group">
-                <label htmlFor="sector">Sector</label>
+                <label htmlFor="sector">{t('admin.sector') || 'Sector'}</label>
                 <input
                   type="text"
                   id="sector"
                   name="sector"
                   value={formData.sector}
                   onChange={handleInputChange}
-                  placeholder="e.g., Remera"
+                  placeholder={t('admin.sectorExample') || 'e.g., Remera'}
                 />
               </div>
 
               <div className="admin-form-group">
-                <label htmlFor="open_hours">Opening Hours</label>
+                <label htmlFor="open_hours">{t('admin.openingHours') || 'Opening Hours'}</label>
                 <input
                   type="text"
                   id="open_hours"
                   name="open_hours"
                   value={formData.open_hours}
                   onChange={handleInputChange}
-                  placeholder="e.g., Mon-Fri 9AM-5PM"
+                  placeholder={t('admin.openingHoursExample') || 'e.g., Mon-Fri 9AM-5PM'}
                 />
               </div>
 
@@ -383,16 +387,16 @@ const MapManagement = () => {
                     checked={formData.verified}
                     onChange={handleInputChange}
                   />
-                  <span>Verified</span>
+                  <span>{t('admin.verified') || 'Verified'}</span>
                 </label>
               </div>
 
               <div className="admin-form-actions">
                 <button type="button" onClick={handleCancel} className="admin-btn-secondary">
-                  Cancel
+                  {t('common.cancel') || 'Cancel'}
                 </button>
                 <button type="submit" className="admin-btn-primary">
-                  {editingProvider ? 'Update' : 'Create'} Clinic
+                  {editingProvider ? t('admin.update') || 'Update' : t('admin.create') || 'Create'} {t('admin.clinic') || 'Clinic'}
                 </button>
               </div>
             </form>

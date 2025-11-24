@@ -1,8 +1,12 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { Search, ChevronLeft, ChevronRight, Eye } from 'lucide-react';
 import apiClient from '../../utils/apiClient';
+import { LanguageContext } from '../../contexts/AppContext';
+import { useTranslation } from '../../utils/translations';
 
 const UserManagement = () => {
+  const { language } = useContext(LanguageContext);
+  const { t } = useTranslation(language);
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
@@ -35,7 +39,7 @@ const UserManagement = () => {
       setTotalCount(response.data.count || 0);
     } catch (error) {
       console.error('Failed to load users:', error);
-      setFeedback({ type: 'error', text: 'Failed to load users' });
+      setFeedback({ type: 'error', text: t('admin.failedToLoadUsers') || 'Failed to load users' });
     } finally {
       setLoading(false);
     }
@@ -47,7 +51,7 @@ const UserManagement = () => {
       setSelectedUser(response.data);
     } catch (error) {
       console.error('Failed to load user details:', error);
-      setFeedback({ type: 'error', text: 'Failed to load user details' });
+      setFeedback({ type: 'error', text: t('admin.failedToLoadUserDetails') || 'Failed to load user details' });
     }
   };
 
@@ -73,8 +77,8 @@ const UserManagement = () => {
     <div className="admin-page">
       <div className="admin-page-header">
         <div>
-          <h1>User Management</h1>
-          <p>View and manage all users in the system</p>
+          <h1>{t('admin.userManagement') || 'User Management'}</h1>
+          <p>{t('admin.userManagementDescription') || 'View and manage all users in the system'}</p>
         </div>
       </div>
 
@@ -90,7 +94,7 @@ const UserManagement = () => {
             <Search size={20} />
             <input
               type="text"
-              placeholder="Search users by name or email..."
+              placeholder={t('admin.searchUsers') || 'Search users by name or email...'}
               value={searchTerm}
               onChange={(e) => {
                 setSearchTerm(e.target.value);
@@ -106,29 +110,29 @@ const UserManagement = () => {
             }}
             className="admin-filter-select"
           >
-            <option value="">All Roles</option>
-            <option value="admin">Admin</option>
-            <option value="specialist">Specialist</option>
-            <option value="user">User</option>
+            <option value="">{t('admin.allRoles') || 'All Roles'}</option>
+            <option value="admin">{t('admin.admin') || 'Admin'}</option>
+            <option value="specialist">{t('admin.specialist') || 'Specialist'}</option>
+            <option value="user">{t('admin.user') || 'User'}</option>
           </select>
         </div>
 
         {loading ? (
-          <div className="admin-loading">Loading users...</div>
+          <div className="admin-loading">{t('admin.loadingUsers') || 'Loading users...'}</div>
         ) : users.length > 0 ? (
           <>
             <div className="admin-table-container">
               <table className="admin-table">
                 <thead>
                   <tr>
-                    <th>ID</th>
-                    <th>Name</th>
-                    <th>Email</th>
-                    <th>Role</th>
-                    <th>Status</th>
-                    <th>Joined</th>
-                    <th>Last Login</th>
-                    <th>Actions</th>
+                    <th>{t('admin.id') || 'ID'}</th>
+                    <th>{t('admin.name') || 'Name'}</th>
+                    <th>{t('admin.email') || 'Email'}</th>
+                    <th>{t('admin.role') || 'Role'}</th>
+                    <th>{t('admin.status') || 'Status'}</th>
+                    <th>{t('admin.joined') || 'Joined'}</th>
+                    <th>{t('admin.lastLogin') || 'Last Login'}</th>
+                    <th>{t('admin.actions') || 'Actions'}</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -144,18 +148,18 @@ const UserManagement = () => {
                       </td>
                       <td>
                         {user.is_active ? (
-                          <span className="admin-badge admin-badge-success">Active</span>
+                          <span className="admin-badge admin-badge-success">{t('admin.active') || 'Active'}</span>
                         ) : (
-                          <span className="admin-badge admin-badge-warning">Inactive</span>
+                          <span className="admin-badge admin-badge-warning">{t('admin.inactive') || 'Inactive'}</span>
                         )}
                       </td>
                       <td>{formatDate(user.date_joined)}</td>
-                      <td>{formatDate(user.last_login) || 'Never'}</td>
+                      <td>{formatDate(user.last_login) || t('admin.never') || 'Never'}</td>
                       <td>
                         <button
                           onClick={() => handleViewDetails(user.id)}
                           className="admin-btn-icon"
-                          aria-label="View user details"
+                          aria-label={t('admin.viewUserDetails') || 'View user details'}
                         >
                           <Eye size={16} />
                         </button>
@@ -172,21 +176,21 @@ const UserManagement = () => {
                   onClick={() => setPage(prev => Math.max(1, prev - 1))}
                   disabled={page === 1}
                   className="admin-btn-pagination"
-                  aria-label="Previous page"
+                  aria-label={t('admin.previousPage') || 'Previous page'}
                 >
                   <ChevronLeft size={20} />
-                  Previous
+                  {t('admin.previous') || 'Previous'}
                 </button>
                 <span className="admin-pagination-info">
-                  Page {page} of {totalPages} ({totalCount} total users)
+                  {t('admin.page') || 'Page'} {page} {t('admin.of') || 'of'} {totalPages} ({totalCount} {t('admin.totalUsers') || 'total users'})
                 </span>
                 <button
                   onClick={() => setPage(prev => Math.min(totalPages, prev + 1))}
                   disabled={page === totalPages}
                   className="admin-btn-pagination"
-                  aria-label="Next page"
+                  aria-label={t('admin.nextPage') || 'Next page'}
                 >
-                  Next
+                  {t('admin.next') || 'Next'}
                   <ChevronRight size={20} />
                 </button>
               </div>
@@ -194,7 +198,7 @@ const UserManagement = () => {
           </>
         ) : (
           <div className="admin-empty-state">
-            <p>No users found</p>
+            <p>{t('admin.noUsersFound') || 'No users found'}</p>
           </div>
         )}
       </div>
@@ -203,11 +207,11 @@ const UserManagement = () => {
         <div className="admin-modal">
           <div className="admin-modal-content">
             <div className="admin-modal-header">
-              <h2>User Details</h2>
+              <h2>{t('admin.userDetails') || 'User Details'}</h2>
               <button
                 onClick={() => setSelectedUser(null)}
                 className="admin-modal-close"
-                aria-label="Close"
+                aria-label={t('common.close') || 'Close'}
               >
                 ×
               </button>
@@ -215,23 +219,23 @@ const UserManagement = () => {
             <div className="admin-modal-body">
               <div className="admin-detail-grid">
                 <div>
-                  <label>ID</label>
+                  <label>{t('admin.id') || 'ID'}</label>
                   <p>{selectedUser.id}</p>
                 </div>
                 <div>
-                  <label>Username</label>
+                  <label>{t('admin.username') || 'Username'}</label>
                   <p>{selectedUser.username}</p>
                 </div>
                 <div>
-                  <label>Full Name</label>
+                  <label>{t('admin.fullName') || 'Full Name'}</label>
                   <p>{selectedUser.full_name || `${selectedUser.first_name} ${selectedUser.last_name}`.trim() || 'N/A'}</p>
                 </div>
                 <div>
-                  <label>Email</label>
+                  <label>{t('admin.email') || 'Email'}</label>
                   <p>{selectedUser.email}</p>
                 </div>
                 <div>
-                  <label>Role</label>
+                  <label>{t('admin.role') || 'Role'}</label>
                   <p>
                     <span className={getRoleBadgeClass(selectedUser.role)}>
                       {selectedUser.role}
@@ -239,30 +243,30 @@ const UserManagement = () => {
                   </p>
                 </div>
                 <div>
-                  <label>Status</label>
+                  <label>{t('admin.status') || 'Status'}</label>
                   <p>
                     {selectedUser.is_active ? (
-                      <span className="admin-badge admin-badge-success">Active</span>
+                      <span className="admin-badge admin-badge-success">{t('admin.active') || 'Active'}</span>
                     ) : (
-                      <span className="admin-badge admin-badge-warning">Inactive</span>
+                      <span className="admin-badge admin-badge-warning">{t('admin.inactive') || 'Inactive'}</span>
                     )}
                   </p>
                 </div>
                 <div>
-                  <label>Is Staff</label>
-                  <p>{selectedUser.is_staff ? 'Yes' : 'No'}</p>
+                  <label>{t('admin.isStaff') || 'Is Staff'}</label>
+                  <p>{selectedUser.is_staff ? t('common.yes') || 'Yes' : t('common.no') || 'No'}</p>
                 </div>
                 <div>
-                  <label>Is Superuser</label>
-                  <p>{selectedUser.is_superuser ? 'Yes' : 'No'}</p>
+                  <label>{t('admin.isSuperuser') || 'Is Superuser'}</label>
+                  <p>{selectedUser.is_superuser ? t('common.yes') || 'Yes' : t('common.no') || 'No'}</p>
                 </div>
                 <div>
-                  <label>Date Joined</label>
+                  <label>{t('admin.dateJoined') || 'Date Joined'}</label>
                   <p>{formatDate(selectedUser.date_joined)}</p>
                 </div>
                 <div>
-                  <label>Last Login</label>
-                  <p>{formatDate(selectedUser.last_login) || 'Never'}</p>
+                  <label>{t('admin.lastLogin') || 'Last Login'}</label>
+                  <p>{formatDate(selectedUser.last_login) || t('admin.never') || 'Never'}</p>
                 </div>
               </div>
               <div className="admin-modal-actions">
@@ -270,7 +274,7 @@ const UserManagement = () => {
                   onClick={() => setSelectedUser(null)}
                   className="admin-btn-secondary"
                 >
-                  Close
+                  {t('common.close') || 'Close'}
                 </button>
               </div>
             </div>
