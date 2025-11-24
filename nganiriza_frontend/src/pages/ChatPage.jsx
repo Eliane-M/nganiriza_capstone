@@ -57,7 +57,11 @@ export function ChatPage() {
     try {
       setLoadingConversations(true);
       const response = await apiClient.get('/api/dashboard/');
-      setConversations(response.data.results || []);
+      const normalized = (response?.data?.results || []).map(conv => ({
+        ...conv,
+        id: conv.id ?? conv.id_number
+      }));
+      setConversations(normalized);
     } catch (error) {
       console.error('Failed to load conversations', error);
     } finally {
@@ -73,7 +77,7 @@ export function ChatPage() {
         language: language === 'rw' ? 'kin' : language === 'fr' ? 'fre' : 'eng',
         channel: 'web'
       });
-      setCurrentConversationId(response.data.id);
+      setCurrentConversationId(response?.data?.id_number || response?.data?.id);
       setMessages([{
         id: 1,
         text: {
@@ -156,7 +160,7 @@ export function ChatPage() {
           language: language === 'rw' ? 'kin' : language === 'fr' ? 'fre' : 'eng',
           channel: 'web'
         });
-        conversationId = convResponse.data.id;
+        conversationId = convResponse?.data?.id_number || convResponse?.data?.id;
         setCurrentConversationId(conversationId);
       } catch (error) {
         console.error('Failed to create conversation', error);
