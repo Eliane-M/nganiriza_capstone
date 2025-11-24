@@ -75,8 +75,9 @@
 .navbar {
   position: sticky;
   top: 0;
-  z-index: 40;
+  z-index: 9999;
   background: transparent;
+
 }
 html.dark .navbar,
 .dark .navbar {

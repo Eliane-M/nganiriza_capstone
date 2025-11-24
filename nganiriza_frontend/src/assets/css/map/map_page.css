@@ -23,6 +23,8 @@
   flex-direction: column;
   overflow: hidden;
   box-shadow: 2px 0 8px rgba(0, 0, 0, 0.05);
+  position: relative;
+  z-index: 100;
 }
 
 .sidebar-header {
@@ -77,6 +79,11 @@
 
 .filter-dropdown-wrapper {
   position: relative;
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+  justify-content: center;
+  z-index: 3001;
 }
 
 .filter-dropdown-btn {
@@ -113,7 +120,7 @@
   border-radius: 0.75rem;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
   min-width: 180px;
-  z-index: 1000;
+  z-index: 3000;
   overflow: hidden;
   animation: slideDown 0.2s ease-out;
 }

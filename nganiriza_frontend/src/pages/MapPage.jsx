@@ -159,6 +159,23 @@ export function MapPage() {
                   <Filter size={18} />
                   <ChevronDown size={16} className={showFilterDropdown ? 'rotate' : ''} />
                 </button>
+                <button 
+              className="get-location-btn" 
+              onClick={getUserLocation} 
+              disabled={isLoadingLocation}
+            >
+              {isLoadingLocation ? (
+                <>
+                  <div className="spinner" />
+                  {/* <span>{t('map.gettingLocation')}</span> */}
+                </>
+              ) : (
+                <>
+                  <MapPinIcon size={18} />
+                  {/* <span>{userLocation ? t('map.updateLocation') : t('map.useLocation')}</span> */}
+                </>
+              )}
+            </button>
                 {showFilterDropdown && (
                   <div className="filter-dropdown-menu">
                     {filters.map((filter) => (
@@ -177,24 +194,6 @@ export function MapPage() {
                 )}
               </div>
             </div>
-
-            <button 
-              className="get-location-btn" 
-              onClick={getUserLocation} 
-              disabled={isLoadingLocation}
-            >
-              {isLoadingLocation ? (
-                <>
-                  <div className="spinner" />
-                  <span>{t('map.gettingLocation')}</span>
-                </>
-              ) : (
-                <>
-                  <MapPinIcon size={18} />
-                  <span>{userLocation ? t('map.updateLocation') : t('map.useLocation')}</span>
-                </>
-              )}
-            </button>
           </div>
 
           <div className="sidebar-content">
