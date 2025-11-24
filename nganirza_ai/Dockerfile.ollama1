@@ -7,7 +7,7 @@ WORKDIR /app
 RUN apt-get update && apt-get install -y curl && rm -rf /var/lib/apt/lists/*
 
 # Copy model files
-COPY gemma-kinyarwanda.gguf /models/
+COPY counseling-model.gguf /models/
 COPY Modelfile /models/
 COPY entrypoint1.sh /entrypoint.sh
 

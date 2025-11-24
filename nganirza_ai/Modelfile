@@ -1,7 +1,7 @@
 # Modelfile for Gemma Kinyarwanda Counseling Model
 # Fine-tuned for sex education, self-protection, and mental health counseling in Kinyarwanda
 
-FROM ./gemma-kinyarwanda_v1.gguf
+FROM ./counseling-model.gguf
 
 # Model parameters
 PARAMETER temperature 0.7

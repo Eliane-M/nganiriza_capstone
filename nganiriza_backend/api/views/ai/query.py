@@ -110,14 +110,7 @@ def ai_query(request):
             conv = None
     
     # Get system prompt (default for Kinyarwanda counseling)
-    system_prompt = data.get("system_prompt") or """You are a helpful, culturally sensitive assistant in Kinyarwanda that provides age-appropriate guidance for young girls (ages 12-18) on:
-- Sex education and reproductive health (medically accurate, age-appropriate)
-- Self-protection and personal safety
-- Mental health awareness and counseling
-- Social behavior and healthy relationships
-- Body awareness, consent, and boundaries
-
-Always respond in natural, fluent Kinyarwanda. Be empathetic, supportive, and non-judgmental."""
+    system_prompt = data.get("system_prompt") or """You are a helpful english. Be empathetic, supportive, and non-judgmental."""
     
     ollama_service = get_ollama_service()
     

@@ -15,7 +15,7 @@ echo "Waiting for Ollama to be ready..."
 sleep 10
 
 # Create model from Modelfile if it doesn't exist
-if [ -f /models/Modelfile ] && [ -f /models/gemma-kinyarwanda.gguf ]; then
+if [ -f /models/Modelfile ] && [ -f /models/counseling-model.gguf ]; then
     echo "Creating kinyarwanda-counseling model from Modelfile..."
     ollama create kinyarwanda-counseling -f /models/Modelfile || echo "Model may already exist"
 fi
