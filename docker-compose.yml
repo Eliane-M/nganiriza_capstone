@@ -63,14 +63,14 @@ services:
       context: ./nganiriza_frontend
       dockerfile: Dockerfile
       args:
-        - VITE_API_URL=${VITE_API_URL:-/api}
-        - REACT_APP_API_URL=${REACT_APP_API_URL:-/api}
+        - VITE_API_URL=${VITE_API_URL:-/backend}
+        - REACT_APP_API_URL=${REACT_APP_API_URL:-/backend}
     container_name: nganiriza_frontend
     expose:
       - "80"
     environment:
-      - REACT_APP_API_URL=${REACT_APP_API_URL:-/api}
-      - VITE_API_URL=${VITE_API_URL:-/api}
+      - REACT_APP_API_URL=${REACT_APP_API_URL:-/backend}
+      - VITE_API_URL=${VITE_API_URL:-/backend}
       - REACT_APP_OLLAMA_SERVICE_URL=${REACT_APP_OLLAMA_SERVICE_URL:-http://localhost:11435}
     depends_on:
       - backend
