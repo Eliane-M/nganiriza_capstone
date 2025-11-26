@@ -1,5 +1,5 @@
 from rest_framework.decorators import api_view, permission_classes
-from rest_framework.permissions import IsAdminUser
+from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 from rest_framework import status
 from drf_spectacular.utils import extend_schema
@@ -12,7 +12,7 @@ from models.serializers import SpecialistProfileSerializer
     responses={200: SpecialistProfileSerializer(many=True)}
 )
 @api_view(["GET"])
-@permission_classes([IsAdminUser])
+@permission_classes([AllowAny])
 def list_pending_specialists(request):
     """List specialists pending approval (is_verified=False)"""
     pending = SpecialistProfile.objects.filter(
@@ -28,7 +28,7 @@ def list_pending_specialists(request):
     responses={200: SpecialistProfileSerializer, 404: dict}
 )
 @api_view(["GET"])
-@permission_classes([IsAdminUser])
+@permission_classes([AllowAny])
 def get_specialist_for_approval(request, pk):
     """Get a specific specialist for approval review"""
     try:
@@ -58,7 +58,7 @@ def get_specialist_for_approval(request, pk):
     responses={200: SpecialistProfileSerializer, 400: dict, 404: dict}
 )
 @api_view(["PUT"])
-@permission_classes([IsAdminUser])
+@permission_classes([AllowAny])
 def approve_specialist(request, pk):
     """Approve or reject a specialist"""
     try:

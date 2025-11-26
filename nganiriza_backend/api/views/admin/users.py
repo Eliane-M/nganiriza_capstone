@@ -1,5 +1,5 @@
 from rest_framework.decorators import api_view, permission_classes
-from rest_framework.permissions import IsAdminUser
+from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 from rest_framework import status
 from drf_spectacular.utils import extend_schema
@@ -12,7 +12,7 @@ from models.models import Account
     responses={200: dict}
 )
 @api_view(["GET"])
-@permission_classes([IsAdminUser])
+@permission_classes([AllowAny])
 def list_users(request):
     """List all users with pagination"""
     page = max(int(request.GET.get("page", 1)), 1)
@@ -92,7 +92,7 @@ def list_users(request):
     responses={200: dict, 404: dict}
 )
 @api_view(["GET"])
-@permission_classes([IsAdminUser])
+@permission_classes([AllowAny])
 def get_user_detail(request, pk):
     """Get detailed information about a specific user"""
     try:

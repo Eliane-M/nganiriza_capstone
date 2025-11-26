@@ -1,5 +1,5 @@
 from rest_framework.decorators import api_view, permission_classes
-from rest_framework.permissions import AllowAny, AllowAny
+from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 from rest_framework import status
 from drf_spectacular.utils import extend_schema
@@ -207,7 +207,11 @@ def update_service_provider(request, pk):
         
         serializer = ServiceProviderSerializer(provider, data=data, partial=partial)
         if serializer.is_valid():
-            updated_provider = serializer.save(updated_by=request.user)
+            # Only set updated_by if user is authenticated
+            save_kwargs = {}
+            if request.user and request.user.is_authenticated:
+                save_kwargs['updated_by'] = request.user
+            updated_provider = serializer.save(**save_kwargs)
             return Response(ServiceProviderSerializer(updated_provider).data, status=status.HTTP_200_OK)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     except ServiceProvider.DoesNotExist:
