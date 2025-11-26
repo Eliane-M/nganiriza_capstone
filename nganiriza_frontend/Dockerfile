@@ -13,10 +13,10 @@ COPY pnpm-lock.yaml* ./
 # Install dependencies using pnpm
 # Use --frozen-lockfile only if lockfile exists, otherwise install normally
 RUN if [ -f pnpm-lock.yaml ]; then \
-      pnpm install --frozen-lockfile; \
-    else \
-      pnpm install; \
-    fi
+  pnpm install --frozen-lockfile; \
+  else \
+  pnpm install; \
+  fi
 
 # Copy source code (excluding node_modules which is already installed)
 COPY src/ ./src/
@@ -33,18 +33,24 @@ ENV REACT_APP_API_URL=$REACT_APP_API_URL
 # Build the application
 RUN pnpm run build
 
-# Production stage with nginx
-FROM nginx:alpine
+# Production stage - use Node.js with serve
+FROM node:20-alpine
+
+# Install serve globally
+RUN npm install -g serve
+
+WORKDIR /app
 
 # Copy built assets from builder stage
-COPY --from=builder /app/build /usr/share/nginx/html
-
-# Copy nginx configuration
-COPY nginx.conf /etc/nginx/conf.d/default.conf
+COPY --from=builder /app/build ./build
 
 # Expose port
-EXPOSE 80
+EXPOSE 3000
 
-# Start nginx
-CMD ["nginx", "-g", "daemon off;"]
+# Health check
+HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
+  CMD wget --quiet --tries=1 --spider http://localhost:3000/ || exit 1
+
+# Start serve on port 3000
+CMD ["serve", "-s", "build", "-l", "3000"]
 

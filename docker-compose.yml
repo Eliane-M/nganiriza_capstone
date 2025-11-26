@@ -25,7 +25,7 @@ services:
       dockerfile: dockerfile
     container_name: nganiriza_backend
     ports:
-      - "8000:8000"
+      - "8001:8000"
     expose:
       - "8000"
     environment:
@@ -59,7 +59,7 @@ services:
       - "traefik.http.routers.backend.service=backend"
       # Service definition
       - "traefik.http.services.backend.loadbalancer.server.port=8000"
-      - "traefik.docker.network=nganiriza_network"
+      - "traefik.docker.network=nganiriza_capstone_nganiriza_network"
     networks:
       - nganiriza_network
     restart: unless-stopped
@@ -80,9 +80,9 @@ services:
         - REACT_APP_API_URL=${REACT_APP_API_URL:-/backend}
     container_name: nganiriza_frontend
     ports:
-      - "3000:80"
+      - "3000:3000"
     expose:
-      - "80"
+      - "3000"
     environment:
       - REACT_APP_API_URL=${REACT_APP_API_URL:-/backend}
       - VITE_API_URL=${VITE_API_URL:-/backend}
@@ -96,16 +96,17 @@ services:
       - "traefik.http.routers.frontend.entrypoints=websecure"
       - "traefik.http.routers.frontend.tls.certresolver=letsencrypt"
       - "traefik.http.routers.frontend.priority=1"
-      - "traefik.http.services.frontend.loadbalancer.server.port=80"
-      - "traefik.docker.network=nganiriza_network"
+      - "traefik.http.services.frontend.loadbalancer.server.port=3000"
+      - "traefik.docker.network=nganiriza_capstone_nganiriza_network"
     networks:
       - nganiriza_network
     restart: unless-stopped
     healthcheck:
-      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost/health"]
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost:3000/"]
       interval: 30s
       timeout: 10s
       retries: 3
+      start_period: 10s
 
   # Ollama Service: Kinyarwanda Counseling Model
   # Uncomment this entire block to enable the AI model service

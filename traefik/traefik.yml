@@ -13,7 +13,7 @@ providers:
   docker:
     endpoint: "unix:///var/run/docker.sock"
     exposedByDefault: false
-    network: nganiriza_network
+    network: nganiriza_capstone_nganiriza_network
     watch: true
 
 api:
