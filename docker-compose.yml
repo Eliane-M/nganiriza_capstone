@@ -1,7 +1,7 @@
 services:
   # Nginx Reverse Proxy - Main Entry Point
   traefik:
-    image: traefik:v3.5.0
+    image: traefik:v2.11
     container_name: traefik_proxy
     restart: unless-stopped
     ports:
@@ -24,6 +24,8 @@ services:
       context: ./nganiriza_backend
       dockerfile: dockerfile
     container_name: nganiriza_backend
+    ports:
+      - "8000:8000"
     expose:
       - "8000"
     environment:
@@ -77,6 +79,8 @@ services:
         - VITE_API_URL=${VITE_API_URL:-/backend}
         - REACT_APP_API_URL=${REACT_APP_API_URL:-/backend}
     container_name: nganiriza_frontend
+    ports:
+      - "3000:80"
     expose:
       - "80"
     environment:
