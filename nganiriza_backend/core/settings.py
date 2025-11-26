@@ -17,7 +17,7 @@ SECRET_KEY = os.getenv('SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ["127.0.0.1", "localhost"]
+ALLOWED_HOSTS = ["*"]
 
 
 # Application definition
@@ -51,14 +51,20 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-CORS_ALLOWED_ORIGINS = [
-    "http://localhost:3000",
-    "http://127.0.0.1:8000",
-    "https://nganiriza-0x9y.onrender.com",
-]
-
+# Allow ALL origins to access the backend
+CORS_ALLOW_ALL_ORIGINS = True
 
 CORS_ALLOW_CREDENTIALS = True
+
+# CSRF trusted origins
+CSRF_TRUSTED_ORIGINS = [
+    "http://localhost:3000",
+    "http://localhost",
+    "https://localhost",
+    "http://38.242.223.113",
+    "https://38.242.223.113",
+    "https://nganiriza-0x9y.onrender.com",
+]
 
 
 
@@ -77,6 +83,8 @@ CORS_ALLOW_METHODS = [
     'POST', 
     'PUT', 
     'PATCH',
+    'DELETE',
+    'OPTIONS',
 ]
 
 CORS_ALLOW_HEADERS = [
