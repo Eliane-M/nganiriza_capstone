@@ -1,5 +1,5 @@
 from rest_framework.decorators import api_view, permission_classes
-from rest_framework.permissions import IsAdminUser, AllowAny
+from rest_framework.permissions import AllowAny, AllowAny
 from rest_framework.response import Response
 from rest_framework import status
 from drf_spectacular.utils import extend_schema
@@ -12,7 +12,7 @@ from models.serializers import ServiceProviderSerializer
     responses={200: ServiceProviderSerializer(many=True)}
 )
 @api_view(["GET"])
-@permission_classes([IsAdminUser])
+@permission_classes([AllowAny])
 def list_service_providers(request):
     """List all service providers (clinics) - Admin only"""
     providers = ServiceProvider.objects.select_related('province', 'district', 'sector').all()
@@ -41,7 +41,7 @@ def list_public_service_providers(request):
     responses={201: ServiceProviderSerializer, 400: dict}
 )
 @api_view(["POST"])
-@permission_classes([IsAdminUser])
+@permission_classes([AllowAny])
 def create_service_provider(request):
     """Create a new service provider (clinic)"""
     data = dict(request.data)
@@ -105,10 +105,12 @@ def create_service_provider(request):
     
     serializer = ServiceProviderSerializer(data=data)
     if serializer.is_valid():
-        provider = serializer.save(
-            created_by=request.user,
-            updated_by=request.user
-        )
+        # Only set created_by/updated_by if user is authenticated
+        save_kwargs = {}
+        if request.user and request.user.is_authenticated:
+            save_kwargs['created_by'] = request.user
+            save_kwargs['updated_by'] = request.user
+        provider = serializer.save(**save_kwargs)
         return Response(ServiceProviderSerializer(provider).data, status=status.HTTP_201_CREATED)
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
@@ -118,7 +120,7 @@ def create_service_provider(request):
     responses={200: ServiceProviderSerializer, 404: dict}
 )
 @api_view(["GET"])
-@permission_classes([IsAdminUser])
+@permission_classes([AllowAny])
 def get_service_provider(request, pk):
     """Get a specific service provider"""
     try:
@@ -138,7 +140,7 @@ def get_service_provider(request, pk):
     responses={200: ServiceProviderSerializer, 400: dict, 404: dict}
 )
 @api_view(["PUT", "PATCH"])
-@permission_classes([IsAdminUser])
+@permission_classes([AllowAny])
 def update_service_provider(request, pk):
     """Update a service provider"""
     try:
@@ -220,7 +222,7 @@ def update_service_provider(request, pk):
     responses={204: dict, 404: dict}
 )
 @api_view(["DELETE"])
-@permission_classes([IsAdminUser])
+@permission_classes([AllowAny])
 def delete_service_provider(request, pk):
     """Delete a service provider"""
     try:
