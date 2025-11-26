@@ -45,8 +45,8 @@ services:
       - backend_static:/app/staticfiles
       - backend_media:/app/media
     # Uncomment below when ollama1 is enabled
-    # depends_on:
-    #   - ollama1
+    depends_on:
+      - ollama1
     networks:
       - nganiriza_network
     restart: unless-stopped
@@ -85,36 +85,36 @@ services:
 
   # Ollama Service: Kinyarwanda Counseling Model
   # Uncomment this entire block to enable the AI model service
-  # ollama1:
-  #   build:
-  #     context: ./nganirza_ai
-  #     dockerfile: Dockerfile.ollama1
-  #   container_name: nganiriza_ollama
-  #   ports:
-  #     - "11435:11434"
-  #   volumes:
-  #     - ollama_models:/models
-  #     - ollama_data:/root/.ollama
-  #   environment:
-  #     - OLLAMA_HOST=0.0.0.0:11434
-  #     - OLLAMA_MODELS=/models
-  #     - OLLAMA_NUM_GPU=0
-  #     - OLLAMA_NUM_THREAD=4
-  #   networks:
-  #     - nganiriza_network
-  #   restart: unless-stopped
-  #   healthcheck:
-  #     test: ["CMD", "curl", "-f", "http://localhost:11434/api/tags"]
-  #     interval: 30s
-  #     timeout: 10s
-  #     retries: 3
-  #     start_period: 60s
-  #   deploy:
-  #     resources:
-  #       limits:
-  #         memory: 8G
-  #       reservations:
-  #         memory: 4G
+  ollama1:
+    build:
+      context: ./nganirza_ai
+      dockerfile: Dockerfile.ollama1
+    container_name: nganiriza_ollama
+    ports:
+      - "11435:11434"
+    volumes:
+      - ollama_models:/models
+      - ollama_data:/root/.ollama
+    environment:
+      - OLLAMA_HOST=0.0.0.0:11434
+      - OLLAMA_MODELS=/models
+      - OLLAMA_NUM_GPU=0
+      - OLLAMA_NUM_THREAD=4
+    networks:
+      - nganiriza_network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:11434/api/tags"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+    deploy:
+      resources:
+        limits:
+          memory: 8G
+        reservations:
+          memory: 4G
 
 volumes:
   backend_static:
